@@ -1,5 +1,13 @@
 (function() {
+  var cameraStream = null;
+  window.URL = window.URL || window.webkitURL;
+  navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
   // set up video and canvas elements needed
+
+  function fallback(e) {
+     videoInput.src = 'fallbackvideo.webm';
+     console.log('Reeeejected!', e);
+  }
 
   var videoInput = document.getElementById('vid');
   var canvasInput = document.getElementById('compare');
@@ -35,15 +43,31 @@
     "no camera" : "No camera found. Using fallback video for facedetection."
   };
 
-  document.addEventListener("headtrackrStatus", function(event) {
-    if (event.status in supportMessages) {
-      var messagep = document.getElementById('gUMMessage');
-      messagep.innerHTML = supportMessages[event.status];
-    } else if (event.status in statusMessages) {
-      var messagep = document.getElementById('headtrackerMessage');
-      messagep.innerHTML = statusMessages[event.status];
-    }
-  }, true);
+  // if (!navigator.getUserMedia) {
+  //   fallback();
+  // } else {
+  //   navigator.getUserMedia({
+  //     audio : true,
+  //     video : true
+  //    }, success, fallback);
+  // }
+
+  // function success(stream) {
+  //   alert(stream);
+  //   cameraStream = stream;
+  //   window.localStream = stream;
+  //   videoInput.src = window.URL.createObjectURL(stream);
+
+  //   // var htracker = new headtrackr.Tracker({altVideo : {ogv : "./media/capture5.ogv", mp4 : "./media/capture5.mp4"}, calcAngles : true, ui : false, headPosition : false, debug : debugOverlay});
+  //   var htracker = new headtrackr.Tracker();
+  //   htracker.init(videoInput, canvasInput);
+  //   htracker.start();
+
+  //   // var htracker = new headtrackr.Tracker();
+  //   // htracker.init(videoInput, canvasInput);
+  //   // htracker.start();
+  // }
+
 
   // the face tracking setup
 
@@ -51,10 +75,41 @@
   htracker.init(videoInput, canvasInput);
   htracker.start();
 
+
+  function getLocalStream (e) {
+    if (e.status === 'camera found') {
+      setTimeout(function() {
+        console.log('Stream is ', htracker.stream);
+        window.localStream = htracker.stream;
+        document.removeEventListener('headtrackrStatus',
+          getLocalStream);
+      }, 1); // Delay this so that headtrackr.js finishes initializing stream
+    } else {
+      console.log(e.status);
+    }
+  }
+
+  document.addEventListener('headtrackrStatus', getLocalStream);
+
   // for each facetracking event received draw rectangle around tracked face on canvas
 
   document.addEventListener("facetrackingEvent", function( event ) {
     // clear canvas
+    // overlayContext.clearRect(0,0,320,240);
+    // // once we have stable tracking, draw rectangle
+    // if (event.detection == "CS") {
+    //   overlayContext.translate(event.x, event.y)
+    //   overlayContext.rotate(event.angle-(Math.PI/2));
+    //   overlayContext.strokeStyle = "#BADA55";
+    //   overlayContext.strokeRect((-(event.width/2)) >> 0, (-(event.height/2)) >> 0, event.width, event.height);
+    //   overlayContext.rotate((Math.PI/2)-event.angle);
+    //   overlayContext.translate(-event.x, -event.y);
+    // }
+    drawRectangle(event);
+    //drawCircle(event.x, event.y);
+  });
+
+  function drawRectangle(event) {
     overlayContext.clearRect(0,0,320,240);
     // once we have stable tracking, draw rectangle
     if (event.detection == "CS") {
@@ -65,7 +120,47 @@
       overlayContext.rotate((Math.PI/2)-event.angle);
       overlayContext.translate(-event.x, -event.y);
     }
-  });
+  }
+
+  function drawCircle(x, y) {
+     //overlayContext.clearRect(0, 0, canvasInput.width, canvasInput.height);
+     overlayContext.strokeStyle = '#0000FF';
+     overlayContext.fillStyle = '#FFFF00';
+     overlayContext.lineWidth = 4;
+     overlayContext.beginPath();
+     overlayContext.arc(x, y, 50, 0, Math.PI * 2, true);
+     overlayContext.closePath();
+     overlayContext.stroke();
+     overlayContext.fill();
+
+      // The smile
+      overlayContext.strokeStyle = '#FF0000';
+      overlayContext.lineWidth = 2;
+      overlayContext.beginPath();
+      overlayContext.arc(x, y - 10, 40, 0.2 * Math.PI, 0.8 * Math.PI, false);
+      // overlayContext.closePath();
+      overlayContext.stroke();
+      // overlayContext.fill();
+
+      // The Left eye
+      overlayContext.strokeStyle = '#000000';
+      overlayContext.fillStyle = '#000000';
+      overlayContext.beginPath();
+      overlayContext.arc(x - 20, y - 15, 10, 0 * Math.PI, 2 * Math.PI, false);
+      overlayContext.closePath();
+      overlayContext.stroke();
+      overlayContext.fill();
+
+      // The Right Eye
+      overlayContext.strokeStyle = '#000000';
+      overlayContext.fillStyle = '#000000';
+      overlayContext.beginPath();
+      overlayContext.arc(x + 20, y - 15, 10, 0 * Math.PI, 2 * Math.PI, false);
+      overlayContext.closePath();
+      overlayContext.stroke();
+      overlayContext.fill();
+  }
+
 
   // turn off or on the canvas showing probability
   function showProbabilityCanvas() {
