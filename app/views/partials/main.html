@@ -1,0 +1,127 @@
+<div ng-include="'partials/navbar'"></div>
+
+
+<canvas id="compare" width="320" height="240" style="display:none"></canvas>
+<video id="vid" autoplay loop width="320" height="240"></video>
+<canvas id="overlay" width="320" height="240"></canvas>
+<canvas id="debug" width="320" height="240"></canvas>
+
+<p id='gUMMessage'></p>
+<p>Status : <span id='headtrackerMessage'></span></p>
+<p><input type="button" onclick="htracker.stop();htracker.start();" value="reinitiate facedetection"></input>
+<br/><br/>
+<input type="checkbox" onclick="showProbabilityCanvas()" value="asdfasd"></input>Show probability-map</p>
+
+<script>
+  // set up video and canvas elements needed
+
+  var videoInput = document.getElementById('vid');
+  var canvasInput = document.getElementById('compare');
+  var canvasOverlay = document.getElementById('overlay')
+  var debugOverlay = document.getElementById('debug');
+  var overlayContext = canvasOverlay.getContext('2d');
+  canvasOverlay.style.position = "absolute";
+  canvasOverlay.style.top = '110px';
+  canvasOverlay.style.zIndex = '100001';
+  canvasOverlay.style.display = 'block';
+  debugOverlay.style.position = "absolute";
+  debugOverlay.style.top = '0px';
+  debugOverlay.style.zIndex = '100002';
+  debugOverlay.style.display = 'none';
+
+  // add some custom messaging
+
+  statusMessages = {
+    "whitebalance" : "checking for stability of camera whitebalance",
+    "detecting" : "Detecting face",
+    "hints" : "Hmm. Detecting the face is taking a long time",
+    "redetecting" : "Lost track of face, redetecting",
+    "lost" : "Lost track of face",
+    "found" : "Tracking face"
+  };
+
+  supportMessages = {
+    "no getUserMedia" : "Unfortunately, <a href='http://dev.w3.org/2011/webrtc/editor/getusermedia.html'>getUserMedia</a> is not supported in your browser. Try <a href='http://www.opera.com/browser/'>downloading Opera 12</a> or <a href='http://caniuse.com/stream'>another browser that supports getUserMedia</a>. Now using fallback video for facedetection.",
+    "no camera" : "No camera found. Using fallback video for facedetection."
+  };
+
+  document.addEventListener("headtrackrStatus", function(event) {
+    if (event.status in supportMessages) {
+      var messagep = document.getElementById('gUMMessage');
+      messagep.innerHTML = supportMessages[event.status];
+    } else if (event.status in statusMessages) {
+      var messagep = document.getElementById('headtrackerMessage');
+      messagep.innerHTML = statusMessages[event.status];
+    }
+  }, true);
+
+  // the face tracking setup
+
+  var htracker = new headtrackr.Tracker({altVideo : {ogv : "./media/capture5.ogv", mp4 : "./media/capture5.mp4"}, calcAngles : true, ui : false, headPosition : false, debug : debugOverlay});
+  htracker.init(videoInput, canvasInput);
+  htracker.start();
+
+  // for each facetracking event received draw rectangle around tracked face on canvas
+
+  document.addEventListener("facetrackingEvent", function( event ) {
+    // clear canvas
+    overlayContext.clearRect(0,0,320,240);
+    // once we have stable tracking, draw rectangle
+    if (event.detection == "CS") {
+      overlayContext.translate(event.x, event.y)
+      overlayContext.rotate(event.angle-(Math.PI/2));
+      overlayContext.strokeStyle = "#00CC00";
+      overlayContext.strokeRect((-(event.width/2)) >> 0, (-(event.height/2)) >> 0, event.width, event.height);
+      overlayContext.rotate((Math.PI/2)-event.angle);
+      overlayContext.translate(-event.x, -event.y);
+    }
+  });
+
+  // turn off or on the canvas showing probability
+  function showProbabilityCanvas() {
+    var debugCanvas = document.getElementById('debug');
+    if (debugCanvas.style.display == 'none') {
+      debugCanvas.style.display = 'block';
+    } else {
+      debugCanvas.style.display = 'none';
+    }
+  }
+</script>
+
+
+<!-- <script type="text/javascript">
+  var videoInput = document.getElementById('inputVideo');
+  var canvasInput = document.getElementById('inputCanvas');
+
+  var canvasOverlay = document.getElementById('overlay')
+  var debugOverlay = document.getElementById('debug');
+  var overlayContext = canvasOverlay.getContext('2d');
+
+  var htracker = new headtrackr.Tracker();
+  htracker.init(videoInput, canvasInput);
+  htracker.start();
+
+
+  document.addEventListener('facetrackingEvent',
+    function (event) {
+      overlayContext.clearRect(0,0,320,240);
+      console.log(event.x, event.y);
+      if (event.detection == "CS") {
+        overlayContext.strokeStyle = "#bada55";
+        overlayContext.strokeRect((-(event.width/2)) >> 0, (-(event.height/2)) >> 0, event.width, event.height);
+      }
+    }
+  );
+
+</script>
+
+<canvas id="inputCanvas" width="320" height="240" style="display:none"></canvas>
+<video id="inputVideo" autoplay loop></video>
+<canvas id="overlay" width="320" height="240" style="position: absolute; top: 0px; z-index: 100001; display: block;"></canvas>
+<canvas id="debug" width="320" height="240" style="position: absolute; top: 0px; z-index: 100002; display: none;"></canvas>
+ -->
+
+
+<div class="footer">
+  <p>♥ from the Yeoman team</p>
+</div>
