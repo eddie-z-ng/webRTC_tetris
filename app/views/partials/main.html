@@ -50,7 +50,7 @@ peerurl {{peerURL}}
   <input ng-model="remotePeerId" type="text" placeholder="Enter remote peer id!">
   <button ng-click="callPeer()">Call Peer</button>
 
-  <input ng-model="dataToSend" type="text" placeholder="Data to send">
+  <input ng-model="dataToSend" type="text" placeholder="Data to send" ng-change="sendData()">
   <button ng-click="sendData()">Send Data</button>
 
   <!-- Make calls to others -->
@@ -68,6 +68,19 @@ peerurl {{peerURL}}
   <div id="step3">
     <p>Currently in call with <span id="their-id">...</span></p>
     <p><a href="#" class="pure-button pure-button-error" id="end-call">End call</a></p>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <h1>Sent Data</h1>
+      <p>{{dataToSend}}</p>
+    </div>
+    <div class="col-md-6">
+      <h1>Received Data</h1>
+      <p>{{receivedData}}</p>
+    </div>
   </div>
 </div>
 

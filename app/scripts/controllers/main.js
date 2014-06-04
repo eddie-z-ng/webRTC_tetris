@@ -5,6 +5,7 @@ angular.module('gameRtcApp')
     function ($rootScope, $scope, PeerConnect) {
       $scope.callPeer = function(){};
       $scope.peerURL = '';
+      $scope.receivedData = '';
 
       PeerConnect.getPeer().then(function(peerObject) {
         $scope.my_id = peerObject.peer.id;
@@ -12,6 +13,12 @@ angular.module('gameRtcApp')
         $rootScope.$on('connectionChange', function (event, connection) {
           console.log('Connection change event!', connection);
           $scope.peerDataConnection = connection;
+
+          $scope.peerDataConnection.on('data', function(data) {
+            $scope.receivedData = data;
+            $scope.$apply();
+          });
+
           $scope.$apply();
         });
 
@@ -24,7 +31,12 @@ angular.module('gameRtcApp')
         $scope.callPeer = function() {
           var remotePeerId = $scope.remotePeerId;
           $scope.peerDataConnection = peerObject.makeCall(remotePeerId);
-          // $scope.peerDataConnection = peerObject.makeConnection(remotePeerId);
+
+          $scope.peerDataConnection.on('data', function(data) {
+            $scope.receivedData = data;
+
+            $scope.$apply();
+          });
         };
 
         $scope.sendData = function() {
