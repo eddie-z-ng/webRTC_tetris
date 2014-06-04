@@ -1,7 +1,10 @@
 'use strict';
 
+// Returns a promise that resolves to an object that has the peer and makeCall function
+// makeCall calls and connects to the given remotePeerId
+// this also emits 'connectionChange' events to the $rootScope
 angular.module('gameRtcApp.factories')
-  .factory('PeerConnect', ['$q', function ($q) {
+  .factory('PeerConnect', ['$q', '$rootScope', function ($q, $rootScope) {
 
     var deferred = $q.defer();
     var streamReady = false;
@@ -15,7 +18,6 @@ angular.module('gameRtcApp.factories')
     var peer = new Peer({ key: peerKey, debug: 3, config: {'iceServers': [
       { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
     ]}});
-
 
     peer.on('open', function(){
       peerIdReady = true;
@@ -43,7 +45,23 @@ angular.module('gameRtcApp.factories')
 
             var call = peer.call(remotePeerId, window.localStream);
             step3(call);
+
+            // Initiate a data connection!
+            console.log('Initiating a data connection to: ', remotePeerId);
+
+            var conn = peer.connect(remotePeerId, window.localStream);
+            conn.on('data', function(data) {
+              console.log('Received:', data);
+            });
+            return conn;
           }
+          // makeConnection: function(remotePeerId) {
+          //   // Initiate a data connection!
+          //   console.log('Initiating a data connection to: ', remotePeerId);
+
+          //   var conn = peer.connect(remotePeerId, window.localStream);
+          //   return conn;
+          // }
         };
         deferred.resolve(peerObject);
       }
@@ -63,6 +81,16 @@ angular.module('gameRtcApp.factories')
       step2();
     });
 
+    // Receiving a connection
+    peer.on('connection', function(connection) {
+      console.log('Answering a connection!');
+
+      connection.on('data', function(data) {
+        console.log('Received:', data);
+      });
+
+      $rootScope.$emit('connectionChange', connection);
+    });
 
     // // Click handlers setup
     // $(function(){

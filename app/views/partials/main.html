@@ -34,6 +34,9 @@
   <input ng-model="remotePeerId" type="text" placeholder="Enter remote peer id!">
   <button ng-click="callPeer()">Call Peer</button>
 
+  <input ng-model="dataToSend" type="text" placeholder="Data to send">
+  <button ng-click="sendData()">Send Data</button>
+
   <!-- Make calls to others -->
   <div id="step2">
     <p>Your id: <span id="my-id">...</span></p>
