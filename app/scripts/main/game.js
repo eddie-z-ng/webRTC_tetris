@@ -16,16 +16,16 @@
   var overlayContext = canvasOverlay.getContext('2d');
   var photo        = document.querySelector('#photo');
   var startbutton  = document.querySelector('#startbutton');
-  var width = 320;
+  var width = videoInput.width;
   var height = 0;
-  canvasOverlay.style.position = "absolute";
-  canvasOverlay.style.top = '110px';
-  canvasOverlay.style.zIndex = '100001';
-  canvasOverlay.style.display = 'block';
-  debugOverlay.style.position = "absolute";
-  debugOverlay.style.top = '0px';
-  debugOverlay.style.zIndex = '100002';
-  debugOverlay.style.display = 'none';
+  // canvasOverlay.style.position = "absolute";
+  // canvasOverlay.style.top = '110px';
+  // canvasOverlay.style.zIndex = '100001';
+  // canvasOverlay.style.display = 'block';
+  // debugOverlay.style.position = "absolute";
+  // debugOverlay.style.top = '0px';
+  // debugOverlay.style.zIndex = '100002';
+  // debugOverlay.style.display = 'none';
 
   // add some custom messaging
 
@@ -49,14 +49,17 @@
   htracker.init(videoInput, canvasInput);
   htracker.start();
 
+  window.htracker = htracker;
+  window.showProbabilityCanvas = showProbabilityCanvas;
+
 
   function getLocalStream (e) {
     if (e.status === 'camera found') {
       setTimeout(function() {
         console.log('Stream is ', htracker.stream);
         window.localStream = htracker.stream;
-        document.removeEventListener('headtrackrStatus',
-          getLocalStream);
+        // document.removeEventListener('headtrackrStatus',
+        //   getLocalStream);
 
         // emit event
         var event = new Event('localStreamReady');
@@ -66,6 +69,16 @@
     } else {
       console.log(e.status);
     }
+
+
+    if (e.status in supportMessages) {
+      var messagep = document.getElementById('gUMMessage');
+      messagep.innerHTML = supportMessages[e.status];
+    } else if (e.status in statusMessages) {
+      var messagep = document.getElementById('headtrackerMessage');
+      messagep.innerHTML = statusMessages[e.status];
+    }
+
   }
 
   document.addEventListener('headtrackrStatus', getLocalStream);
@@ -78,13 +91,13 @@
   });
 
   function drawRectangle(event) {
-    overlayContext.clearRect(0,0,320,240);
+    overlayContext.clearRect(0,0,canvasInput.width,canvasInput.height);
     // once we have stable tracking, draw rectangle
     if (event.detection == "CS") {
       overlayContext.translate(event.x, event.y)
       overlayContext.rotate(event.angle-(Math.PI/2));
       overlayContext.strokeStyle = "#BADA55";
-      overlayContext.strokeRect((-(event.width/2)) >> 0, (-(event.height/2)) >> 0, event.width, event.height);
+      overlayContext.strokeRect((-(event.width/2)) >> 0, (-(event.height/2)) >> 0, event.width, event.height/1.2);
       overlayContext.rotate((Math.PI/2)-event.angle);
       overlayContext.translate(-event.x, -event.y);
     }

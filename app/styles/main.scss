@@ -70,7 +70,7 @@ body {
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
     .container {
-        max-width: 730px;
+        // max-width: 730px;
     }
 
     /* Remove the padding we set earlier */
@@ -137,12 +137,7 @@ body {
 //   background-color: #eee;
 // }
 
-#their-video {
-  width: 100%;
-  height: 75%;
-  max-height: 480px;
-  background-color: #eee;
-}
+
 
 #video-container {
   padding: 25px;
@@ -154,4 +149,46 @@ body {
 }
 #my-id {
   font-weight: bold;
+}
+
+
+// #my-video, #their-video {
+//   width: 640px;
+//   height: 480px;
+//   background-color: #eee;
+// }
+// #my-video-canvas, #my-video-overlay, #their-video-overlay {
+//     width: 640px;
+//     height: 480px;
+// }
+
+// canvas {
+//     width: 640px;
+//     height: 480px;
+// }
+
+canvas, video {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+#my-overlay, #their-overlay {
+  position: absolute;
+  top: 0px;
+  z-index: 100001;
+  display: block;
+}
+
+.no-pad {
+    margin:0;
+    padding:0;
+    border:1px;
+}
+
+#debug {
+  position: absolute;
+  top: 0px;
+  z-index: 100002;
+  display: none;
 }

@@ -2,9 +2,10 @@
 
 // Returns a promise that resolves to an object that has the peer and makeCall function
 // makeCall calls and connects to the given remotePeerId
-// this also emits 'connectionChange' events to the $rootScope
+// Emits: 'connectionChange' events to the $rootScope
+//        'peerStream' events to the $rootScope
 angular.module('gameRtcApp.factories')
-  .factory('PeerConnect', ['$q', '$rootScope', function ($q, $rootScope) {
+  .factory('PeerConnect', ['$q', '$rootScope', '$sce', function ($q, $rootScope, $sce) {
 
     var deferred = $q.defer();
     var streamReady = false;
@@ -54,14 +55,10 @@ angular.module('gameRtcApp.factories')
               console.log('Received:', data);
             });
             return conn;
-          }
-          // makeConnection: function(remotePeerId) {
-          //   // Initiate a data connection!
-          //   console.log('Initiating a data connection to: ', remotePeerId);
+          },
+          endCall: function() {
 
-          //   var conn = peer.connect(remotePeerId, window.localStream);
-          //   return conn;
-          // }
+          }
         };
         deferred.resolve(peerObject);
       }
@@ -116,17 +113,6 @@ angular.module('gameRtcApp.factories')
     //   step1();
     // });
 
-    // function step1 () {
-    //   // Get audio/video stream
-    //   navigator.getUserMedia({audio: true, video: true}, function(stream){
-    //     // Set your video displays
-    //     $('#my-video').prop('src', URL.createObjectURL(stream));
-
-    //     window.localStream = stream;
-    //     step2();
-    //   }, function(){ $('#step1-error').show(); });
-    // }
-
     function step1 () {
       console.log("Step 1: Local Stream is: ", window.localStream);
       step2();
@@ -146,8 +132,8 @@ angular.module('gameRtcApp.factories')
       // Wait for stream on the call, then set peer video display
       call.on('stream', function(stream){
         console.log(URL.createObjectURL(stream));
-
-        $('#their-video').prop('src', URL.createObjectURL(stream));
+        var blobURL = $sce.trustAsResourceUrl(URL.createObjectURL(stream));
+        $rootScope.$emit('peerStream', blobURL);
       });
 
       // UI stuff
@@ -157,7 +143,6 @@ angular.module('gameRtcApp.factories')
       $('#step1, #step2').hide();
       $('#step3').show();
     }
-
 
     return {
       getPeer: function() {

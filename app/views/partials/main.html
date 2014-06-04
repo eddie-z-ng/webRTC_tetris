@@ -1,14 +1,30 @@
 <div ng-include="'partials/navbar'"></div>
 
-<canvas id="my-video-canvas" width="320" height="240" style="display:none"></canvas>
-<video id="my-video" autoplay loop width="320" height="240"></video>
-<canvas id="my-overlay" width="320" height="240"></canvas>
-<canvas id="debug" width="320" height="240"></canvas>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-6 no-pad">
+      <canvas id="my-video-canvas"style="display:none"></canvas>
+      <video id="my-video" autoplay loop></video>
+      <canvas id="my-overlay"></canvas>
+    </div>
+
+    <div class="col-md-6 no-pad">
+      <video id="their-video" ng-src="{{peerURL}}" autoplay></video>
+      <canvas id="their-overlay"></canvas>
+    </div>
+
+  </div>
+</div>
+
+<canvas id="debug" width="640" height="480"></canvas>
 <button id="startbutton">Take photo</button>
-<img src="http://placekitten.com/g/320/261" id="photo" alt="photo">
 
-<video id="their-video" autoplay></video>
+<!-- <img src="http://placekitten.com/g/320/261" id="photo" alt="photo"> -->
 
+
+peerurl {{peerURL}}
 
 <p id='gUMMessage'></p>
 <p>Status : <span id='headtrackerMessage'></span></p>
