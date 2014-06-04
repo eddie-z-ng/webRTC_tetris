@@ -9,9 +9,9 @@
      console.log('Reeeejected!', e);
   }
 
-  var videoInput = document.getElementById('vid');
-  var canvasInput = document.getElementById('compare');
-  var canvasOverlay = document.getElementById('overlay')
+  var videoInput = document.getElementById('my-video');
+  var canvasInput = document.getElementById('my-video-canvas');
+  var canvasOverlay = document.getElementById('my-overlay');
   var debugOverlay = document.getElementById('debug');
   var overlayContext = canvasOverlay.getContext('2d');
   var photo        = document.querySelector('#photo');
@@ -43,32 +43,6 @@
     "no camera" : "No camera found. Using fallback video for facedetection."
   };
 
-  // if (!navigator.getUserMedia) {
-  //   fallback();
-  // } else {
-  //   navigator.getUserMedia({
-  //     audio : true,
-  //     video : true
-  //    }, success, fallback);
-  // }
-
-  // function success(stream) {
-  //   alert(stream);
-  //   cameraStream = stream;
-  //   window.localStream = stream;
-  //   videoInput.src = window.URL.createObjectURL(stream);
-
-  //   // var htracker = new headtrackr.Tracker({altVideo : {ogv : "./media/capture5.ogv", mp4 : "./media/capture5.mp4"}, calcAngles : true, ui : false, headPosition : false, debug : debugOverlay});
-  //   var htracker = new headtrackr.Tracker();
-  //   htracker.init(videoInput, canvasInput);
-  //   htracker.start();
-
-  //   // var htracker = new headtrackr.Tracker();
-  //   // htracker.init(videoInput, canvasInput);
-  //   // htracker.start();
-  // }
-
-
   // the face tracking setup
 
   var htracker = new headtrackr.Tracker({altVideo : {ogv : "./media/capture5.ogv", mp4 : "./media/capture5.mp4"}, calcAngles : true, ui : false, headPosition : false, debug : debugOverlay});
@@ -83,6 +57,11 @@
         window.localStream = htracker.stream;
         document.removeEventListener('headtrackrStatus',
           getLocalStream);
+
+        // emit event
+        var event = new Event('localStreamReady');
+        event.stream = htracker.stream;
+        document.dispatchEvent(event);
       }, 1); // Delay this so that headtrackr.js finishes initializing stream
     } else {
       console.log(e.status);
@@ -94,17 +73,6 @@
   // for each facetracking event received draw rectangle around tracked face on canvas
 
   document.addEventListener("facetrackingEvent", function( event ) {
-    // clear canvas
-    // overlayContext.clearRect(0,0,320,240);
-    // // once we have stable tracking, draw rectangle
-    // if (event.detection == "CS") {
-    //   overlayContext.translate(event.x, event.y)
-    //   overlayContext.rotate(event.angle-(Math.PI/2));
-    //   overlayContext.strokeStyle = "#BADA55";
-    //   overlayContext.strokeRect((-(event.width/2)) >> 0, (-(event.height/2)) >> 0, event.width, event.height);
-    //   overlayContext.rotate((Math.PI/2)-event.angle);
-    //   overlayContext.translate(-event.x, -event.y);
-    // }
     drawRectangle(event);
     //drawCircle(event.x, event.y);
   });
@@ -123,7 +91,6 @@
   }
 
   function drawCircle(x, y) {
-     //overlayContext.clearRect(0, 0, canvasInput.width, canvasInput.height);
      overlayContext.strokeStyle = '#0000FF';
      overlayContext.fillStyle = '#FFFF00';
      overlayContext.lineWidth = 4;

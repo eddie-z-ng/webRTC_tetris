@@ -4,7 +4,8 @@ angular.module('gameRtcApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute'
+  'ngRoute',
+  'gameRtcApp.factories'
 ])
   .config(function ($routeProvider, $locationProvider) {
     $routeProvider
@@ -15,6 +16,8 @@ angular.module('gameRtcApp', [
       .otherwise({
         redirectTo: '/'
       });
-      
+
     $locationProvider.html5Mode(true);
   });
+
+angular.module('gameRtcApp.factories', []);
