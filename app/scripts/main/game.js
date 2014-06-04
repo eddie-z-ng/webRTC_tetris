@@ -8,6 +8,8 @@
   var overlayContext = canvasOverlay.getContext('2d');
   var photo        = document.querySelector('#photo');
   var startbutton  = document.querySelector('#startbutton');
+  var width = 320;
+  var height = 0;
   canvasOverlay.style.position = "absolute";
   canvasOverlay.style.top = '110px';
   canvasOverlay.style.zIndex = '100001';
