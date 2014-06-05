@@ -5,12 +5,14 @@
 // Emits: 'connectionChange' events to the $rootScope
 //        'peerStream' events to the $rootScope
 angular.module('gameRtcApp.factories')
-  .factory('PeerConnect', ['$q', '$rootScope', '$sce', function ($q, $rootScope, $sce) {
+  .factory('PeerConnect', ['$q', '$rootScope', '$sce',
+    function ($q, $rootScope, $sce) {
 
     var deferred = $q.defer();
-    var streamReady = false;
+    // var streamReady = false;
     var peerIdReady = false;
     var allReady = false;
+    var peerLocalStream;
 
     var peerKey = '7k99lrngvwle4s4i';
     var stunURL = 'stun:stun.l.google.com:19302';
@@ -25,17 +27,18 @@ angular.module('gameRtcApp.factories')
       resolvePeer();
     });
 
-    document.addEventListener('localStreamReady', function(event) {
-      streamReady = true;
-      resolvePeer();
-    });
+    // document.addEventListener('localStreamReady', function(event) {
+    //   streamReady = true;
+    //   resolvePeer();
+    // });
 
-    document.addEventListener('localStreamFail', function(event) {
-      deferred.reject(event);
-    });
+    // document.addEventListener('localStreamFail', function(event) {
+    //   deferred.reject(event);
+    // });
 
     function resolvePeer() {
-      allReady = streamReady && peerIdReady;
+      // allReady = streamReady && peerIdReady;
+      allReady = peerIdReady;
 
       if (allReady) {
         var peerObject = {
@@ -44,16 +47,18 @@ angular.module('gameRtcApp.factories')
             // Initiate a call!
             console.log('Initiating a call to: ', remotePeerId);
 
-            var call = peer.call(remotePeerId, window.localStream);
+            // var call = peer.call(remotePeerId, window.localStream);
+            var call = peer.call(remotePeerId, peerLocalStream);
             step3(call);
 
             // Initiate a data connection!
             console.log('Initiating a data connection to: ', remotePeerId);
 
-            var conn = peer.connect(remotePeerId, window.localStream);
-            conn.on('data', function(data) {
-              console.log('Received:', data);
-            });
+            // var conn = peer.connect(remotePeerId, window.localStream);
+            var conn = peer.connect(remotePeerId, peerLocalStream);
+            // conn.on('data', function(data) {
+            //   console.log('Received:', data);
+            // });
             return conn;
           },
           endCall: function() {
@@ -69,7 +74,8 @@ angular.module('gameRtcApp.factories')
       // Answer the call automatically (instead of prompting user) for demo purposes
       console.log('Answering a call!');
 
-      call.answer(window.localStream);
+      // call.answer(window.localStream);
+      call.answer(peerLocalStream);
       step3(call);
     });
     peer.on('error', function(err){
@@ -82,9 +88,9 @@ angular.module('gameRtcApp.factories')
     peer.on('connection', function(connection) {
       console.log('Answering a connection!');
 
-      connection.on('data', function(data) {
-        console.log('Received:', data);
-      });
+      // connection.on('data', function(data) {
+      //   console.log('Received:', data);
+      // });
 
       $rootScope.$emit('connectionChange', connection);
     });
@@ -145,7 +151,8 @@ angular.module('gameRtcApp.factories')
     }
 
     return {
-      getPeer: function() {
+      getPeer: function(localStream) {
+        peerLocalStream = localStream;
         return deferred.promise;
       }
     };

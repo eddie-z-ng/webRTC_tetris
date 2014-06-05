@@ -18,16 +18,6 @@
   var startbutton  = document.querySelector('#startbutton');
   var width = videoInput.width;
   var height = 0;
-  // canvasOverlay.style.position = "absolute";
-  // canvasOverlay.style.top = '110px';
-  // canvasOverlay.style.zIndex = '100001';
-  // canvasOverlay.style.display = 'block';
-  // debugOverlay.style.position = "absolute";
-  // debugOverlay.style.top = '0px';
-  // debugOverlay.style.zIndex = '100002';
-  // debugOverlay.style.display = 'none';
-
-  // add some custom messaging
 
   statusMessages = {
     "whitebalance" : "checking for stability of camera whitebalance",
@@ -44,7 +34,6 @@
   };
 
   // the face tracking setup
-
   var htracker = new headtrackr.Tracker({altVideo : {ogv : "./media/capture5.ogv", mp4 : "./media/capture5.mp4"}, calcAngles : true, ui : false, headPosition : false, debug : debugOverlay});
   htracker.init(videoInput, canvasInput);
   htracker.start();
@@ -78,7 +67,6 @@
       var messagep = document.getElementById('headtrackerMessage');
       messagep.innerHTML = statusMessages[e.status];
     }
-
   }
 
   document.addEventListener('headtrackrStatus', getLocalStream);
