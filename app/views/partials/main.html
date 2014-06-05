@@ -1,52 +1,6 @@
 <div ng-include="'partials/navbar'"></div>
 
-
-<div class="container">
-  <div class="row">
-
-    <div class="col-md-6 no-pad">
-      <canvas id="my-video-canvas"style="display:none"></canvas>
-      <video id="my-video" autoplay loop></video>
-      <canvas id="my-overlay"></canvas>
-    </div>
-
-    <div class="col-md-6 no-pad">
-      <canvas id="their-video-canvas"style="display:none"></canvas>
-      <video id="their-video" ng-src="{{peerURL}}" autoplay></video>
-      <canvas id="their-overlay"></canvas>
-    </div>
-
-  </div>
-</div>
-
-<canvas id="debug" width="640" height="480"></canvas>
-<button id="startbutton">Take photo</button>
-
-<!-- <img src="http://placekitten.com/g/320/261" id="photo" alt="photo"> -->
-
-peerurl {{peerURL}}
-
-<p id='gUMMessage'></p>
-<p>Status : <span id='headtrackerMessage'></span></p>
-<p><input type="button" onclick="htracker.stop();htracker.start();" value="reinitiate facedetection"></input>
-<br/><br/>
-<input type="checkbox" onclick="showProbabilityCanvas()" value="asdfasd"></input>Show probability-map</p>
-
 <h3>Your Peer ID: {{my_id}}</h3>
-
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-6">
-      <h1>Sent Data</h1>
-      <p>{{dataToSend}}</p>
-    </div>
-    <div class="col-md-6">
-      <h1>Received Data</h1>
-      <p>{{receivedData}}</p>
-    </div>
-  </div>
-</div>
-
 <!-- Steps -->
 <div class="pure-u-1-3">
   <h2>PeerJS Video Chat</h2>
@@ -84,6 +38,64 @@ peerurl {{peerURL}}
   </div>
 </div>
 
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-6 no-pad">
+      <canvas id="my-video-canvas"style="display:none"></canvas>
+      <video id="my-video" autoplay loop></video>
+      <canvas id="my-overlay"></canvas>
+      <canvas id="my-gamecanvas"></canvas>
+    </div>
+
+    <div class="col-md-6 no-pad">
+      <canvas id="their-video-canvas"style="display:none"></canvas>
+      <video id="their-video" ng-src="{{peerURL}}" autoplay></video>
+      <canvas id="their-overlay"></canvas>
+      <canvas id="their-gamecanvas"></canvas>
+    </div>
+
+  </div>
+</div>
+
+<div id="tetris">
+  <div id="menu">
+    <p id="start"><a href="javascript:play();">Press Space to Play.</a></p>
+    <p><canvas id="upcoming"></canvas></p>
+    <p>score <span id="score">00000</span></p>
+    <p>rows <span id="rows">0</span></p>
+  </div>
+</div>
+
+<canvas id="debug" width="640" height="480"></canvas>
+<button id="startbutton">Take photo</button>
+
+<!-- <img src="http://placekitten.com/g/320/261" id="photo" alt="photo"> -->
+
+peerurl {{peerURL}}
+
+<p id='gUMMessage'></p>
+<p>Status : <span id='headtrackerMessage'></span></p>
+<p><input type="button" onclick="htracker.stop();htracker.start();" value="reinitiate facedetection"></input>
+<br/><br/>
+<input type="checkbox" onclick="showProbabilityCanvas()" value="asdfasd"></input>Show probability-map</p>
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <h1>Sent Data</h1>
+      <p>{{dataToSend}}</p>
+    </div>
+    <div class="col-md-6">
+      <h1>Received Data</h1>
+      <p>{{receivedData}}</p>
+    </div>
+  </div>
+</div>
+
+
 <script>
   function drawRectangle(canvasInput, overlayContext, event) {
     overlayContext.clearRect(0,0,canvasInput.width, canvasInput.height);
@@ -98,6 +110,9 @@ peerurl {{peerURL}}
     }
   }
 </script>
+
+<script src="scripts/vendor/stats.js"></script>
+<script src="scripts/tetris.js"></script>
 <div class="footer">
   <p>♥ from the Yeoman team</p>
 </div>
