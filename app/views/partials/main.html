@@ -57,16 +57,28 @@
     </div>
 
   </div>
-</div>
 
-<div id="tetris">
-  <div id="menu">
-    <p id="start"><a href="javascript:play();">Press Space to Play.</a></p>
-    <p><canvas id="upcoming"></canvas></p>
-    <p>score <span id="score">00000</span></p>
-    <p>rows <span id="rows">0</span></p>
+  <div class="row">
+    <div class="col-md-6 no-pad">
+      <div id="menu">
+        <p id="start"><a href="javascript:play();">Press Space to Play.</a></p>
+        <p><canvas id="upcoming"></canvas></p>
+        <p>score <span id="score">00000</span></p>
+        <p>rows <span id="rows">0</span></p>
+      </div>
+    </div>
+
+    <div class="col-md-6 no-pad">
+      <div id="menu">
+        <p><canvas id="their-upcoming"></canvas></p>
+        <p>score <span id="their-score">00000</span></p>
+        <p>rows <span id="their-rows">0</span></p>
+      </div>
+    </div>
   </div>
 </div>
+
+
 
 <canvas id="debug" width="640" height="480"></canvas>
 <button id="startbutton">Take photo</button>

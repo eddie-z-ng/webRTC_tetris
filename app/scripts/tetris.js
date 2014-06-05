@@ -1,4 +1,13 @@
 'use strict';
+//# sourceURL=dynamicScript.js
+
+/* Original Author: Jake S. Gordon
+   https://github.com/jakesgordon
+
+   Modified by: Eddie Ng
+   https://github.com/wardsng
+*/
+
 //-------------------------------------------------------------------------
 // base helper methods
 //-------------------------------------------------------------------------
@@ -12,14 +21,15 @@ function timestamp()           { return new Date().getTime();                   
 function random(min, max)      { return (min + (Math.random() * (max - min)));            }
 function randomChoice(choices) { return choices[Math.round(random(0, choices.length-1))]; }
 
-if (!window.requestAnimationFrame) { // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+if (!window.requestAnimationFrame) {
+  // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
   window.requestAnimationFrame = window.webkitRequestAnimationFrame ||
                                  window.mozRequestAnimationFrame    ||
                                  window.oRequestAnimationFrame      ||
                                  window.msRequestAnimationFrame     ||
                                  function(callback, element) {
                                    window.setTimeout(callback, 1000 / 60);
-                                 }
+                                 };
 }
 
 //-------------------------------------------------------------------------
@@ -155,11 +165,16 @@ function run() {
   last = now = timestamp();
   function frame() {
     now = timestamp();
-    update(Math.min(1, (now - last) / 1000.0)); // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
-    draw();
+    update(Math.min(1, (now - last) / 1000.0));
+
+    collectBoardRepresentation();
+
+    // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
+    draw(ctx);
+
     stats.update();
     last = now;
-    requestAnimationFrame(frame, canvas);
+    window.requestAnimationFrame(frame, canvas);
   }
 
   resize(); // setup all our sizing information
@@ -241,8 +256,9 @@ function reset() {
 
 function update(idt) {
   if (playing) {
-    if (vscore < score)
+    if (vscore < score) {
       setVisualScore(vscore + 1);
+    }
     handle(actions.shift());
     dt = dt + idt;
     if (dt > step) {
@@ -280,7 +296,7 @@ function move(dir) {
 }
 
 function rotate(dir) {
-  var newdir = (current.dir == DIR.MAX ? DIR.MIN : current.dir + 1);
+  var newdir = (current.dir === DIR.MAX ? DIR.MIN : current.dir + 1);
   if (unoccupied(current.type, current.x, current.y, newdir)) {
     current.dir = newdir;
     invalidate();
@@ -335,6 +351,40 @@ function removeLine(n) {
   }
 }
 
+
+// contains game board representation
+// function GameBoard() {
+//   this.current; // current piece
+//   this.next; // next piece
+//   this.ny; // rows (in blocks)
+//   this.nx; // cols (in blocks)
+//   this.nu; // width/height of upcoming preview (in blocks)
+
+
+//   this.blocks;   // 2 dimensional array (nx*ny) representing tetris court - either empty block or occupied by a 'piece'
+//   this.playing;       // true|false - game is in progress
+//   this.dt;            // time since starting this game
+//   this.current;       // the current piece
+//   this.next;          // the next piece
+//   this.score;         // the current score
+//   this.vscore;        // the currently displayed score (it catches up to score in small chunks - like a spinning slot machine)
+//   this.rows;          // number of completed rows in the current game
+//   this.step;          // how long before current piece drops by 1 row
+// }
+function collectBoardRepresentation() {
+  var result = {
+    invalid: invalid,
+    blocks: blocks,
+    playing: playing,
+    current: current,
+    score: score,
+    vscore: vscore,
+    rows: rows,
+    step: step
+  };
+  return result;
+}
+
 //-------------------------------------------------------------------------
 // RENDERING
 //-------------------------------------------------------------------------
@@ -346,30 +396,34 @@ function invalidateNext()     { invalid.next   = true; }
 function invalidateScore()    { invalid.score  = true; }
 function invalidateRows()     { invalid.rows   = true; }
 
-function draw() {
+function draw(ctx) {
   ctx.save();
   ctx.lineWidth = 1;
   ctx.translate(0.5, 0.5); // for crisp 1px black lines
-  drawCourt();
-  drawNext();
-  drawScore();
-  drawRows();
+
+  drawCourt(ctx);
+  drawNext(ctx);
+  drawScore(ctx);
+  drawRows(ctx);
+
   ctx.restore();
 }
 
-function drawCourt() {
+function drawCourt(ctx) {
   if (invalid.court) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (playing)
+    if (playing){
       drawPiece(ctx, current.type, current.x, current.y, current.dir);
+    }
     var x, y, block;
     for(y = 0 ; y < ny ; y++) {
       for (x = 0 ; x < nx ; x++) {
-        if (block = getBlock(x,y))
+        if (block = getBlock(x,y)){
           drawBlock(ctx, x, y, block.color);
+        }
       }
     }
-    ctx.strokeRect(0, 0, nx*dx - 1, ny*dy - 1); // court boundary
+    //ctx.strokeRect(0, 0, nx*dx - 1, ny*dy - 1); // court boundary
     invalid.court = false;
   }
 }
