@@ -18,9 +18,17 @@ angular.module('gameRtcApp.factories')
     var stunURL = 'stun:stun.l.google.com:19302';
 
     // PeerJS object
-    var peer = new Peer({ key: peerKey, debug: 3, config: {'iceServers': [
-      { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
+    // -- Peer JS CLOUD
+    // var peer = new Peer({ key: peerKey, debug: 3, config: {'iceServers': [
+    //   { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
+    // ]}});
+
+    // // -- My own Peer JS Server
+    var peer = new Peer({ host: 'wardsng-peerjs.herokuapp.com', path: '/', port: 80, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
     ]}});
+
+    // var peer = new Peer({ host: 'localhost', path: '/', port: 3000, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
+    // ]}});
 
     peer.on('open', function(){
       peerIdReady = true;
