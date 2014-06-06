@@ -75,7 +75,7 @@ function drawCourt(ctx, canvas, boardRepresentation) {
         }
       }
     }
-    ctx.strokeRect(0, 0, nx*dx - 1, ny*dy - 1); // court boundary
+    //ctx.strokeRect(0, 0, nx*dx - 1, ny*dy - 1); // court boundary
     invalid.court = false;
   }
 }
@@ -132,6 +132,16 @@ function drawBlock(ctx, x, y, color, dx, dy) {
   ctx.strokeRect(x*dx, y*dy, dx, dy);
 }
 
+window.eachblock = eachblock;
+window.getBlock = getBlock;
+window.draw = draw;
+window.drawCourt = drawCourt;
+window.drawNext = drawNext;
+window.drawScore = drawScore;
+window.drawRows = drawRows;
+window.drawPiece = drawPiece;
+window.drawBlock = drawBlock;
+
 
 (function() {
   function timestamp()           { return new Date().getTime();                             }
@@ -157,7 +167,6 @@ function drawBlock(ctx, x, y, color, dx, dy) {
       DIR     = { UP: 0, RIGHT: 1, DOWN: 2, LEFT: 3, MIN: 0, MAX: 3 },
       stats   = new Stats(),
       canvas  = get('my-gamecanvas'),
-      // canvas  = get('my-overlay'),
       ctx     = canvas.getContext('2d'),
       ucanvas = get('upcoming'),
       uctx    = ucanvas.getContext('2d'),
@@ -256,6 +265,8 @@ function drawBlock(ctx, x, y, color, dx, dy) {
   // GAME LOOP
   //-------------------------------------------------------------------------
 
+  var boardChangeEvent = new Event('boardChange');
+
   function run() {
 
     showStats(); // initialize FPS counter
@@ -270,6 +281,10 @@ function drawBlock(ctx, x, y, color, dx, dy) {
       update(Math.min(1, (now - last) / 1000.0));
 
       boardRepresentation = collectBoardRepresentation();
+
+      // Dispatch the event
+      boardChangeEvent.boardRepresentation = boardRepresentation;
+      document.dispatchEvent(boardChangeEvent);
 
       // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
       draw(ctx, canvas, uctx, boardRepresentation);
@@ -488,7 +503,11 @@ function drawBlock(ctx, x, y, color, dx, dy) {
       dx: dx,
       dy: dy,
       nx: nx,
-      ny: ny
+      ny: ny,
+      canvasWidth: canvas.width,
+      canvasHeight: canvas.height,
+      ucanvasWidth: ucanvas.width,
+      ucanvasHeight: ucanvas.height
     };
     return result;
   }

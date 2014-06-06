@@ -3,6 +3,65 @@
 angular.module('gameRtcApp')
   .controller('MainCtrl', ['$rootScope', '$scope', 'HeadTrackerMedia', 'PeerConnect',
     function ($rootScope, $scope, HeadTrackerMedia, PeerConnect) {
+
+      var theirCanvas  = document.getElementById('their-gamecanvas'),
+          theirCtx     = theirCanvas.getContext('2d'),
+          theirUcanvas = document.getElementById('their-upcoming'),
+          theirUctx    = theirUcanvas.getContext('2d');
+
+          theirCanvas.width   = theirCanvas.clientWidth;  // set canvas logical size equal to its physical size
+          theirCanvas.height  = theirCanvas.clientHeight; // (ditto)
+          theirUcanvas.width  = theirUcanvas.clientWidth;
+          theirUcanvas.height = theirUcanvas.clientHeight;
+
+      function handleReceiptPeerData (data) {
+        if (data.drawEvent) {
+          // draw the received rectangle event
+          //console.log("Should draw rectangle for event:", data.drawEvent);
+          var theirCanvasInput = document.getElementById('their-video-canvas');
+          var theirCanvasOverlay = document.getElementById('their-overlay');
+          var theirOverlayContext = theirCanvasOverlay.getContext('2d');
+
+          window.drawRectangle(theirCanvasInput, theirOverlayContext, data);
+        } else {
+
+          data = JSON.parse(data);
+          if (data.boardData) {
+            // console.log("Received ", data);
+
+
+            // var resize = function (data) {
+            //   theirCanvas.width   = theirCanvas.clientWidth;  // set canvas logical size equal to its physical size
+            //   theirCanvas.height  = theirCanvas.clientHeight; // (ditto)
+            //   theirUcanvas.width  = theirUcanvas.clientWidth;
+            //   theirUcanvas.height = theirUcanvas.clientHeight;
+            //   data.dx = theirCanvas.width  / data.nx; // pixel size of a single tetris block
+            //   data.dy = theirCanvas.height / data.ny; // (ditto)
+
+            //   // invalidate court
+            //   data.invalid.court = true;
+            //   // invalidate next pattern
+            //   data.invalid.next = true;
+            // };
+
+            // data = resize(data);
+            theirCanvas.width = data.canvasWidth;
+            theirCanvas.height = data.canvasHeight;
+            theirUcanvas.width = data.ucanvasWidth;
+            theirUcanvas.height = data.ucanvasHeight;
+
+            data.invalid.court = true;
+            data.invalid.next = true;
+
+            window.draw(theirCtx, theirUcanvas, theirUctx, data);
+          } else {
+            $scope.receivedData = data;
+            $scope.$apply();
+          }
+
+        }
+      }
+
       $scope.callPeer = function(){};
       $scope.peerURL = '';
       $scope.receivedData = '';
@@ -17,10 +76,6 @@ angular.module('gameRtcApp')
         // var canvasOverlay = hTrackObject.canvasOverlay;
         // var overlayContext = hTrackObject.overlayContext;
 
-        var theirCanvasInput = document.getElementById('their-video-canvas');
-        var theirCanvasOverlay = document.getElementById('their-overlay');
-        var theirOverlayContext = theirCanvasOverlay.getContext('2d');
-
         PeerConnect.getPeer(localStream).then(function(peerObject) {
           $scope.my_id = peerObject.peer.id;
 
@@ -28,17 +83,21 @@ angular.module('gameRtcApp')
             console.log('Connection change event!', connection);
             $scope.peerDataConnection = connection;
 
-            // Set up receipt of data (this is the original peer receiver)
-            $scope.peerDataConnection.on('data', function(data) {
-              if (data.drawEvent) {
-                // draw the received rectangle event
-                //console.log("Should draw rectangle for event:", data.drawEvent);
-                window.drawRectangle(theirCanvasInput, theirOverlayContext, data);
-              } else {
-                $scope.receivedData = data;
-                $scope.$apply();
+            // Connected to peer -- listen for boardChange event
+            document.addEventListener('boardChange', function(event) {
+              if (event.boardRepresentation) {
+                var data = event.boardRepresentation;
+                data.boardData = true;
+
+                data = JSON.stringify(data);
+                //console.log("Sending ", boardRepresentation);
+                // console.log("Sending ", data);
+                $scope.peerDataConnection.send(data);
               }
             });
+
+            // Set up receipt of data (this is the original peer receiver)
+            $scope.peerDataConnection.on('data', handleReceiptPeerData);
 
             $scope.$apply();
           });
@@ -71,17 +130,45 @@ angular.module('gameRtcApp')
             var remotePeerId = $scope.remotePeerId;
             $scope.peerDataConnection = peerObject.makeCall(remotePeerId);
 
-            // Set up receipt of data (this is the original peer connector)
-            $scope.peerDataConnection.on('data', function(data) {
-              if (data.drawEvent) {
-                // draw the received rectangle event
-                //console.log("Should draw rectangle for event:", data.drawEvent);
-                window.drawRectangle(theirCanvasInput, theirOverlayContext, data);
-              } else {
-                $scope.receivedData = data;
-                $scope.$apply();
+            // Connected to peer -- listen for boardChange event
+            document.addEventListener('boardChange', function(event) {
+              // console.log("got event:", event.boardRepresentation);
+              if (event.boardRepresentation) {
+                var data = event.boardRepresentation;
+                data.boardData = true;
+
+                data = JSON.stringify(data);
+                //console.log("Sending ", boardRepresentation);
+                // console.log("Sending ", data);
+                $scope.peerDataConnection.send(data);
               }
             });
+
+            // Set up receipt of data (this is the original peer connector)
+            // $scope.peerDataConnection.on('data', function(data) {
+            //   if (data.drawEvent) {
+            //     // draw the received rectangle event
+            //     //console.log("Should draw rectangle for event:", data.drawEvent);
+            //     window.drawRectangle(theirCanvasInput, theirOverlayContext, data);
+
+            //   } else {
+
+            //     data = JSON.parse(data);
+            //     if (data.boardData) {
+            //       console.log("Received ", data);
+            //       var theirCanvas  = window.get('their-gamecanvas'),
+            //           theirCtx     = theirCanvas.getContext('2d'),
+            //           theirUcanvas = window.get('their-upcoming'),
+            //           theirUctx    = theirUcanvas.getContext('2d');
+            //       window.draw(theirCtx, theirUcanvas, theirUctx, data);
+            //     } else {
+            //       $scope.receivedData = data;
+            //       $scope.$apply();
+            //     }
+
+            //   }
+            // });
+            $scope.peerDataConnection.on('data', handleReceiptPeerData);
           };
 
           $scope.sendData = function() {
