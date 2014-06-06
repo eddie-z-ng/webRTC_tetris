@@ -481,11 +481,9 @@ window.drawBlock = drawBlock;
       for(x = 0; x < nx; ++x) {
         setBlock(x, y, getBlock(blocks, x, y+n));
       }
-      console.log("Moving row ", y+n, "to row", y);
     }
 
     for(y = ny; y >= ny-n ; --y) {
-      console.log("Filling row ", y, " with garbage");
       for(x = 0 ; x < nx ; ++x) {
         setBlock(x, y, garbageBlock);
       }
@@ -495,7 +493,6 @@ window.drawBlock = drawBlock;
   window.addGarbageLines = addGarbageLines;
 
   function removeLine(n) {
-    console.log("Removing line ", n);
     var x, y;
     for(y = n ; y >= 0 ; --y) {
       for(x = 0 ; x < nx ; ++x)

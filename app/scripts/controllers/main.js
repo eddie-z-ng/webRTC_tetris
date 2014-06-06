@@ -39,7 +39,6 @@ angular.module('gameRtcApp')
             window.draw(theirCtx, theirUcanvas, theirUctx, data);
           } else if (data.garbageRowData) {
 
-            console.log("Adding garbage lines count ", data.garbageRowData, " to my game");
             window.addGarbageLines(data.garbageRowData);
 
           } else {
@@ -48,6 +47,30 @@ angular.module('gameRtcApp')
           }
 
         }
+      }
+
+      function attachReceiptListeners() {
+        // Connected to peer -- listen for boardChange event
+        document.addEventListener('boardChange', function(event) {
+          if (event.boardRepresentation) {
+            var data = event.boardRepresentation;
+            data.boardData = true;
+
+            data = JSON.stringify(data);
+            $scope.peerDataConnection.send(data);
+          }
+        });
+
+        // Connected to peer -- listen for garbageRow event
+        document.addEventListener('garbageRow', function(event) {
+          var data = { garbageRowData: event.garbageRows};
+
+          data = JSON.stringify(data);
+          $scope.peerDataConnection.send(data);
+        });
+
+        // Set up receipt of data (this is the original peer receiver)
+        $scope.peerDataConnection.on('data', handleReceiptPeerData);
       }
 
       $scope.callPeer = function(){};
@@ -66,30 +89,7 @@ angular.module('gameRtcApp')
             console.log('Connection change event!', connection);
             $scope.peerDataConnection = connection;
 
-            // Connected to peer -- listen for boardChange event
-            document.addEventListener('boardChange', function(event) {
-              if (event.boardRepresentation) {
-                var data = event.boardRepresentation;
-                data.boardData = true;
-
-                data = JSON.stringify(data);
-                //console.log("Sending ", boardRepresentation);
-                // console.log("Sending ", data);
-                $scope.peerDataConnection.send(data);
-              }
-            });
-
-            // Connected to peer -- listen for garbageRow event
-            document.addEventListener('garbageRow', function(event) {
-              var data = { garbageRowData: event.garbageRows};
-
-              data = JSON.stringify(data);
-              console.log("Sending garbageRowData: ", data);
-              $scope.peerDataConnection.send(data);
-            });
-
-            // Set up receipt of data (this is the original peer receiver)
-            $scope.peerDataConnection.on('data', handleReceiptPeerData);
+            attachReceiptListeners();
 
             $scope.$apply();
           });
@@ -122,34 +122,10 @@ angular.module('gameRtcApp')
             var remotePeerId = $scope.remotePeerId;
             $scope.peerDataConnection = peerObject.makeCall(remotePeerId);
 
-            // Connected to peer -- listen for boardChange event
-            document.addEventListener('boardChange', function(event) {
-              // console.log("got event:", event.boardRepresentation);
-              if (event.boardRepresentation) {
-                var data = event.boardRepresentation;
-                data.boardData = true;
-
-                data = JSON.stringify(data);
-                //console.log("Sending ", boardRepresentation);
-                // console.log("Sending ", data);
-                $scope.peerDataConnection.send(data);
-              }
-            });
-
-            // Connected to peer -- listen for garbageRow event
-            document.addEventListener('garbageRow', function(event) {
-              var data = { garbageRowData: event.garbageRows};
-
-              data = JSON.stringify(data);
-              console.log("Sending garbageRowData: ", data);
-              $scope.peerDataConnection.send(data);
-            });
-
-            $scope.peerDataConnection.on('data', handleReceiptPeerData);
+            attachReceiptListeners();
           };
 
           $scope.sendData = function() {
-            //console.log('Sending:', $scope.dataToSend);
             $scope.peerDataConnection.send($scope.dataToSend);
           };
 
