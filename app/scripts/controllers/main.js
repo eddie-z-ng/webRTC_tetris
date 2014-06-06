@@ -15,7 +15,6 @@ angular.module('gameRtcApp')
           theirUcanvas.height = theirUcanvas.clientHeight;
 
       function handleReceiptPeerData (data) {
-        data = JSON.parse(data);
         if (data.drawEvent) {
           // draw the received rectangle event
           //console.log("Should draw rectangle for event:", data.drawEvent);
@@ -25,6 +24,8 @@ angular.module('gameRtcApp')
 
           window.drawRectangle(theirCanvasInput, theirOverlayContext, data);
         } else {
+
+          data = JSON.parse(data);
           if (data.boardData) {
 
             theirCanvas.width = data.canvasWidth;
@@ -36,6 +37,11 @@ angular.module('gameRtcApp')
             data.invalid.next = true;
 
             window.draw(theirCtx, theirUcanvas, theirUctx, data);
+          } else if (data.garbageRowData) {
+
+            console.log("Adding garbage lines count ", data.garbageRowData, " to my game");
+            window.addGarbageLines(data.garbageRowData);
+
           } else {
             $scope.receivedData = data;
             $scope.$apply();
@@ -49,14 +55,9 @@ angular.module('gameRtcApp')
       $scope.receivedData = '';
 
       HeadTrackerMedia.getHTrackMedia().then(function(hTrackObject) {
-        // htracker: htracker,
-        // stream: htracker.stream,
-        // canvasOverlay: canvasOverlay,
-        // overlayContext: overlayContext
+
         console.log("Got htrackmedia: ", hTrackObject);
         var localStream = hTrackObject.stream;
-        // var canvasOverlay = hTrackObject.canvasOverlay;
-        // var overlayContext = hTrackObject.overlayContext;
 
         PeerConnect.getPeer(localStream).then(function(peerObject) {
           $scope.my_id = peerObject.peer.id;
@@ -76,6 +77,15 @@ angular.module('gameRtcApp')
                 // console.log("Sending ", data);
                 $scope.peerDataConnection.send(data);
               }
+            });
+
+            // Connected to peer -- listen for garbageRow event
+            document.addEventListener('garbageRow', function(event) {
+              var data = { garbageRowData: event.garbageRows};
+
+              data = JSON.stringify(data);
+              console.log("Sending garbageRowData: ", data);
+              $scope.peerDataConnection.send(data);
             });
 
             // Set up receipt of data (this is the original peer receiver)
@@ -126,30 +136,15 @@ angular.module('gameRtcApp')
               }
             });
 
-            // Set up receipt of data (this is the original peer connector)
-            // $scope.peerDataConnection.on('data', function(data) {
-            //   if (data.drawEvent) {
-            //     // draw the received rectangle event
-            //     //console.log("Should draw rectangle for event:", data.drawEvent);
-            //     window.drawRectangle(theirCanvasInput, theirOverlayContext, data);
+            // Connected to peer -- listen for garbageRow event
+            document.addEventListener('garbageRow', function(event) {
+              var data = { garbageRowData: event.garbageRows};
 
-            //   } else {
+              data = JSON.stringify(data);
+              console.log("Sending garbageRowData: ", data);
+              $scope.peerDataConnection.send(data);
+            });
 
-            //     data = JSON.parse(data);
-            //     if (data.boardData) {
-            //       console.log("Received ", data);
-            //       var theirCanvas  = window.get('their-gamecanvas'),
-            //           theirCtx     = theirCanvas.getContext('2d'),
-            //           theirUcanvas = window.get('their-upcoming'),
-            //           theirUctx    = theirUcanvas.getContext('2d');
-            //       window.draw(theirCtx, theirUcanvas, theirUctx, data);
-            //     } else {
-            //       $scope.receivedData = data;
-            //       $scope.$apply();
-            //     }
-
-            //   }
-            // });
             $scope.peerDataConnection.on('data', handleReceiptPeerData);
           };
 

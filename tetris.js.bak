@@ -350,7 +350,7 @@ window.drawBlock = drawBlock;
   // GAME LOGIC
   //-------------------------------------------------------------------------
 
-  function play() { hide('start'); reset();          playing = true;  }
+  function play() { hide('start'); reset();          playing = true; }
   function lose() { show('start'); setVisualScore(); playing = false; }
 
   function setVisualScore(n)      { vscore = n || score; invalidateScore(); }
@@ -387,6 +387,7 @@ window.drawBlock = drawBlock;
         dt = dt - step;
         drop();
       }
+      console.log("Step", step);
     }
   }
 
@@ -477,14 +478,14 @@ window.drawBlock = drawBlock;
     var holeIndex = Math.floor(Math.random()*nx);
 
     // Push everything up by "n"
-    for (y = 0; y < ny-n ; ++y) {
+    for (y = 0; y <= ny-n ; ++y) {
       for(x = 0; x < nx; ++x) {
         setBlock(x, y, getBlock(blocks, x, y+n));
       }
       console.log("Moving row ", y+n, "to row", y);
     }
 
-    for(y = ny; y >= ny-n ; --y) {
+    for(y = ny; y > ny-n ; --y) {
       console.log("Filling row ", y, " with garbage");
       for(x = 0 ; x < nx ; ++x) {
         setBlock(x, y, garbageBlock);
@@ -492,7 +493,6 @@ window.drawBlock = drawBlock;
       setBlock(holeIndex, y, null);
     }
   }
-  window.addGarbageLines = addGarbageLines;
 
   function removeLine(n) {
     console.log("Removing line ", n);
