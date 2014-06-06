@@ -151,7 +151,6 @@ body {
   font-weight: bold;
 }
 
-
 // #my-video, #their-video {
 //   width: 640px;
 //   height: 480px;
@@ -168,22 +167,26 @@ body {
 // }
 
 canvas, video {
-    width: 100%;
+    width: 96%;
     height: 100%;
+    display: block;
     margin: 0 auto;
 }
 
-#my-overlay, #their-overlay {
+#my-overlay, #their-overlay,
+#my-gamecanvas, #their-gamecanvas {
   position: absolute;
   top: 0px;
+  left: 2%;
   z-index: 100001;
   display: block;
+  margin: 0 auto;
 }
 
 .no-pad {
     margin:0;
     padding:0;
-    border:1px;
+    // border:1px;
 }
 
 #debug {

@@ -6,6 +6,7 @@ angular.module('gameRtcApp', [
   'ngSanitize',
   'ngRoute',
   'gameRtcApp.factories'
+  // 'gameRtcApp.directives'
 ])
   .config(function ($routeProvider, $locationProvider) {
     $routeProvider
