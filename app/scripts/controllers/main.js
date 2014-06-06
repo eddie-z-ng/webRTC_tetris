@@ -15,6 +15,7 @@ angular.module('gameRtcApp')
           theirUcanvas.height = theirUcanvas.clientHeight;
 
       function handleReceiptPeerData (data) {
+        data = JSON.parse(data);
         if (data.drawEvent) {
           // draw the received rectangle event
           //console.log("Should draw rectangle for event:", data.drawEvent);
@@ -24,33 +25,14 @@ angular.module('gameRtcApp')
 
           window.drawRectangle(theirCanvasInput, theirOverlayContext, data);
         } else {
-
-          data = JSON.parse(data);
           if (data.boardData) {
-            // console.log("Received ", data);
 
-
-            // var resize = function (data) {
-            //   theirCanvas.width   = theirCanvas.clientWidth;  // set canvas logical size equal to its physical size
-            //   theirCanvas.height  = theirCanvas.clientHeight; // (ditto)
-            //   theirUcanvas.width  = theirUcanvas.clientWidth;
-            //   theirUcanvas.height = theirUcanvas.clientHeight;
-            //   data.dx = theirCanvas.width  / data.nx; // pixel size of a single tetris block
-            //   data.dy = theirCanvas.height / data.ny; // (ditto)
-
-            //   // invalidate court
-            //   data.invalid.court = true;
-            //   // invalidate next pattern
-            //   data.invalid.next = true;
-            // };
-
-            // data = resize(data);
             theirCanvas.width = data.canvasWidth;
             theirCanvas.height = data.canvasHeight;
             theirUcanvas.width = data.ucanvasWidth;
             theirUcanvas.height = data.ucanvasHeight;
 
-            data.invalid.court = true;
+            data.invalid.court = true; // prevent blinking
             data.invalid.next = true;
 
             window.draw(theirCtx, theirUcanvas, theirUctx, data);

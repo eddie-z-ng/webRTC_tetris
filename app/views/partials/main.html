@@ -38,22 +38,26 @@
   </div>
 </div>
 
-
+<p id="start"><a href="javascript:play();">Press Space to Play.</a></p>
 <div class="container">
   <div class="row">
 
     <div class="col-md-6 no-pad">
-      <canvas id="my-video-canvas"style="display:none"></canvas>
-      <video id="my-video" autoplay loop></video>
-      <canvas id="my-overlay"></canvas>
-      <canvas id="my-gamecanvas"></canvas>
+      <div>
+        <canvas id="my-video-canvas"style="display:none"></canvas>
+        <video id="my-video" autoplay loop></video>
+        <canvas id="my-overlay"></canvas>
+        <canvas id="my-gamecanvas"></canvas>
+      </div>
     </div>
 
     <div class="col-md-6 no-pad">
-      <canvas id="their-video-canvas"style="display:none"></canvas>
-      <video id="their-video" ng-src="{{peerURL}}" autoplay></video>
-      <canvas id="their-overlay"></canvas>
-      <canvas id="their-gamecanvas"></canvas>
+      <div>
+        <canvas id="their-video-canvas"style="display:none"></canvas>
+        <video id="their-video" ng-src="{{peerURL}}" autoplay></video>
+        <canvas id="their-overlay"></canvas>
+        <canvas id="their-gamecanvas"></canvas>
+      </div>
     </div>
 
   </div>
@@ -61,7 +65,6 @@
   <div class="row">
     <div class="col-md-6 no-pad">
       <div id="menu">
-        <p id="start"><a href="javascript:play();">Press Space to Play.</a></p>
         <p><canvas id="upcoming"></canvas></p>
         <p>score <span id="score">00000</span></p>
         <p>rows <span id="rows">0</span></p>

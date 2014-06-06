@@ -75,7 +75,7 @@ function drawCourt(ctx, canvas, boardRepresentation) {
         }
       }
     }
-    //ctx.strokeRect(0, 0, nx*dx - 1, ny*dy - 1); // court boundary
+    ctx.strokeRect(0, 0, nx*dx - 1, ny*dy - 1); // court boundary
     invalid.court = false;
   }
 }
@@ -217,6 +217,8 @@ window.drawBlock = drawBlock;
     z: { size: 3, blocks: [0x0C60, 0x4C80, 0xC600, 0x2640], color: 'red' }
   };
 
+  var garbageBlock = { color: 'D3D3D3'};
+
   //-----------------------------------------------------
   // check if a piece can fit into a position in the grid
   //-----------------------------------------------------
@@ -266,6 +268,7 @@ window.drawBlock = drawBlock;
   //-------------------------------------------------------------------------
 
   var boardChangeEvent = new Event('boardChange');
+  var garbageRowEvent = new Event('garbageRow');
 
   function run() {
 
@@ -338,15 +341,16 @@ window.drawBlock = drawBlock;
       play();
       handled = true;
     }
-    if (handled)
+    if (handled){
       ev.preventDefault(); // prevent arrow keys from scrolling the page (supported in IE9+ and all other browsers)
+    }
   }
 
   //-------------------------------------------------------------------------
   // GAME LOGIC
   //-------------------------------------------------------------------------
 
-  function play() { hide('start'); reset();          playing = true;  }
+  function play() { hide('start'); reset();          playing = true; }
   function lose() { show('start'); setVisualScore(); playing = false; }
 
   function setVisualScore(n)      { vscore = n || score; invalidateScore(); }
@@ -383,6 +387,7 @@ window.drawBlock = drawBlock;
         dt = dt - step;
         drop();
       }
+      console.log("Step", step);
     }
   }
 
@@ -458,10 +463,39 @@ window.drawBlock = drawBlock;
     if (n > 0) {
       addRows(n);
       addScore(100*Math.pow(2,n-1)); // 1: 100, 2: 200, 3: 400, 4: 800
+
+      // Emit garbage rows
+      garbageRowEvent.garbageRows = n;
+      document.dispatchEvent(garbageRowEvent);
+
+      // addGarbageLines(n);
+
+    }
+  }
+
+  function addGarbageLines(n) {
+    var x, y;
+    var holeIndex = Math.floor(Math.random()*nx);
+
+    // Push everything up by "n"
+    for (y = 0; y <= ny-n ; ++y) {
+      for(x = 0; x < nx; ++x) {
+        setBlock(x, y, getBlock(blocks, x, y+n));
+      }
+      console.log("Moving row ", y+n, "to row", y);
+    }
+
+    for(y = ny; y > ny-n ; --y) {
+      console.log("Filling row ", y, " with garbage");
+      for(x = 0 ; x < nx ; ++x) {
+        setBlock(x, y, garbageBlock);
+      }
+      setBlock(holeIndex, y, null);
     }
   }
 
   function removeLine(n) {
+    console.log("Removing line ", n);
     var x, y;
     for(y = n ; y >= 0 ; --y) {
       for(x = 0 ; x < nx ; ++x)
