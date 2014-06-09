@@ -309,7 +309,7 @@ window.drawBlock = drawBlock;
 
   function showStats() {
     stats.domElement.id = 'stats';
-    get('menu').appendChild(stats.domElement);
+    get('stats-menu').appendChild(stats.domElement);
   }
 
   function addEvents() {
@@ -351,20 +351,11 @@ window.drawBlock = drawBlock;
   //-------------------------------------------------------------------------
   // GAME LOGIC
   //-------------------------------------------------------------------------
-  var readyCount = 0;
 
   function play() {
-    // hide('start');
-    // readyCount++;
-
-    // if (readyCount >= 2) {
-      reset();
-      playing = true;
-      console.log('Starting game!');
-    // } else {
-    //   dispatchGameStart();
-    // }
-    // console.log('Ready Count: ', readyCount);
+    reset();
+    playing = true;
+    console.log('Starting game!');
   }
   window.play = play;
 
@@ -372,10 +363,8 @@ window.drawBlock = drawBlock;
     if (orig) {
       dispatchGameOver();
     }
-    // show('start');
     setVisualScore();
     playing = false;
-    // readyCount = 0;
   }
   window.lose = lose;
 
@@ -383,24 +372,6 @@ window.drawBlock = drawBlock;
     gameOverEvent.gameOver = true;
     document.dispatchEvent(gameOverEvent);
   }
-  // function dispatchGameStart() {
-  //   gameStartEvent.gameStart = true;
-  //   document.dispatchEvent(gameStartEvent);
-  // }
-  // function handleGameStart(event) {
-  //   // if (event.gameStart) {
-  //     readyCount++;
-  //     play();
-  //   // }
-  // }
-  // function handleGameOver(event) {
-  //   // if (event.gameOver) {
-  //     lose();
-  //   // }
-  // }
-
-  // document.addEventListener('gameStart', handleGameStart);
-  // document.addEventListener('gameOver', handleGameOver);
 
   function setVisualScore(n)      { vscore = n || score; invalidateScore(); }
   function setScore(n)            { score = n; setVisualScore(n);  }
@@ -516,8 +487,6 @@ window.drawBlock = drawBlock;
       garbageRowEvent.garbageRows = n;
       document.dispatchEvent(garbageRowEvent);
 
-      // addGarbageLines(n);
-
     }
   }
 
@@ -568,6 +537,7 @@ window.drawBlock = drawBlock;
   //   this.rows;          // number of completed rows in the current game
   //   this.step;          // how long before current piece drops by 1 row
   // }
+
   function collectBoardRepresentation() {
     var result = {
       invalid: invalid,

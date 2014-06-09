@@ -48,6 +48,7 @@ angular.module('gameRtcApp')
 
             theirCanvas.width = data.canvasWidth;
             theirCanvas.height = data.canvasHeight;
+
             theirUcanvas.width = data.ucanvasWidth;
             theirUcanvas.height = data.ucanvasHeight;
 
@@ -66,7 +67,7 @@ angular.module('gameRtcApp')
 
           } else if (data.gameOver) {
 
-            console.log("Received game over");
+            // console.log("Received game over");
             window.lose(false);
             $scope.gameStartCount = 0;
             $scope.$apply();

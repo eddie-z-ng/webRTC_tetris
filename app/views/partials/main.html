@@ -4,7 +4,8 @@
 <!-- Steps -->
 <div class="pure-u-1-3">
   <h2>PeerJS Video Chat</h2>
-
+  <div id="stats-menu">
+  </div>
   <!-- Get local audio/video stream -->
   <div id="step1">
     <p>Please click `allow` on the top of the screen so we can access your webcam and microphone for calls.</p>
@@ -43,7 +44,7 @@
 <div class="container">
   <div class="row">
 
-    <div class="col-md-6 no-pad">
+    <div class="col-md-4 no-pad">
       <div>
         <canvas id="my-video-canvas"style="display:none"></canvas>
         <video id="my-video" autoplay loop></video>
@@ -52,7 +53,15 @@
       </div>
     </div>
 
-    <div class="col-md-6 no-pad">
+    <div class="col-md-2 no-pad">
+      <div id="menu">
+        <p><canvas id="upcoming"></canvas></p>
+        <p>score <span id="score">00000</span></p>
+        <p>rows <span id="rows">0</span></p>
+      </div>
+    </div>
+
+    <div class="col-md-4 no-pad">
       <div>
         <canvas id="their-video-canvas"style="display:none"></canvas>
         <video id="their-video" ng-src="{{peerURL}}" autoplay></video>
@@ -61,28 +70,27 @@
       </div>
     </div>
 
-  </div>
-
-  <div class="row">
-    <div class="col-md-6 no-pad">
-      <div id="menu">
-        <p><canvas id="upcoming"></canvas></p>
-        <p>score <span id="score">00000</span></p>
-        <p>rows <span id="rows">0</span></p>
-      </div>
-    </div>
-
-    <div class="col-md-6 no-pad">
+    <div class="col-md-2 no-pad">
       <div id="menu">
         <p><canvas id="their-upcoming"></canvas></p>
         <p>score <span id="their-score">00000</span></p>
         <p>rows <span id="their-rows">0</span></p>
       </div>
     </div>
+
   </div>
+
+<!--   <div class="row">
+    <div class="col-md-6 no-pad">
+
+    </div>
+
+    <div class="col-md-6 no-pad">
+
+    </div>
+  </div> -->
+
 </div>
-
-
 
 <canvas id="debug" width="640" height="480"></canvas>
 <button id="startbutton">Take photo</button>
