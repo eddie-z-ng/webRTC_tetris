@@ -2,6 +2,8 @@
 
 var express = require('express');
 
+var PeerServer = require('peer').PeerServer;
+
 /**
  * Main application file
  */
@@ -19,6 +21,17 @@ require('./lib/routes')(app);
 // Start server
 app.listen(config.port, config.ip, function () {
   console.log('Express server listening on %s:%d, in %s mode', config.ip, config.port, app.get('env'));
+
+  var peerServer = new PeerServer({port:3000, path:'/'});
+
+   peerServer.on('connection', function(id) {
+     console.log('Connection from ' + id);
+   });
+
+   peerServer.on('disconnect', function(id) {
+     console.log('Disconnect of ' + id);
+   });
+
 });
 
 // Expose app

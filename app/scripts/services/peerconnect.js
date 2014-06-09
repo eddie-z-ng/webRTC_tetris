@@ -14,6 +14,8 @@ angular.module('gameRtcApp.factories')
     var allReady = false;
     var peerLocalStream;
 
+    var existingCall;
+
     var peerKey = '7k99lrngvwle4s4i';
     var stunURL = 'stun:stun.l.google.com:19302';
 
@@ -24,7 +26,10 @@ angular.module('gameRtcApp.factories')
     // ]}});
 
     // // -- My own Peer JS Server
-    var peer = new Peer({ host: 'wardsng-peerjs.herokuapp.com', path: '/', port: 80, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
+    // var peer = new Peer({ host: 'wardsng-peerjs.herokuapp.com', path: '/', port: 80, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
+    // ]}});
+
+    var peer = new Peer({ host: 'localhost', path: '/', port: 3000, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
     ]}});
 
     // var peer = new Peer({ host: 'localhost', path: '/', port: 3000, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
@@ -57,20 +62,17 @@ angular.module('gameRtcApp.factories')
 
             // var call = peer.call(remotePeerId, window.localStream);
             var call = peer.call(remotePeerId, peerLocalStream);
-            step3(call);
+            initiateCall(call);
 
             // Initiate a data connection!
             console.log('Initiating a data connection to: ', remotePeerId);
 
-            // var conn = peer.connect(remotePeerId, window.localStream);
             var conn = peer.connect(remotePeerId, peerLocalStream);
-            // conn.on('data', function(data) {
-            //   console.log('Received:', data);
-            // });
+
             return conn;
           },
           endCall: function() {
-
+            existingCall.close();
           }
         };
         deferred.resolve(peerObject);
@@ -84,7 +86,7 @@ angular.module('gameRtcApp.factories')
 
       // call.answer(window.localStream);
       call.answer(peerLocalStream);
-      step3(call);
+      initiateCall(call);
     });
     peer.on('error', function(err){
       alert(err.message);
@@ -94,7 +96,7 @@ angular.module('gameRtcApp.factories')
 
     // Receiving a connection
     peer.on('connection', function(connection) {
-      console.log('Answering a connection!');
+      console.log('Answering a connection!', connection);
 
       // connection.on('data', function(data) {
       //   console.log('Received:', data);
@@ -132,15 +134,15 @@ angular.module('gameRtcApp.factories')
       step2();
     }
 
-    function step2 () {
-      $('#step1, #step3').hide();
-      $('#step2').show();
-    }
+    // function step2 () {
+    //   $('#step1, #step3').hide();
+    //   $('#step2').show();
+    // }
 
-    function step3 (call) {
+    function initiateCall (call) {
       // Hang up on an existing call if present
-      if (window.existingCall) {
-        window.existingCall.close();
+      if (existingCall) {
+        existingCall.close();
       }
 
       // Wait for stream on the call, then set peer video display
@@ -151,11 +153,12 @@ angular.module('gameRtcApp.factories')
       });
 
       // UI stuff
-      window.existingCall = call;
-      $('#their-id').text(call.peer);
-      call.on('close', step2);
-      $('#step1, #step2').hide();
-      $('#step3').show();
+      existingCall = call;
+
+      // $('#their-id').text(call.peer);
+      // call.on('close', step2);
+      // $('#step1, #step2').hide();
+      // $('#step3').show();
     }
 
     return {

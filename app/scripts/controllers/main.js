@@ -15,10 +15,17 @@ angular.module('gameRtcApp')
           theirUcanvas.height = theirUcanvas.clientHeight;
 
       $scope.gameStartCount = 0;
+      $scope.gameWon = false;
       $scope.connected = false;
+      $scope.gameCount = 0;
+      $scope.playing = false;
+      $scope.waiting = false;
 
       $scope.play = function(originator) {
+        $scope.gameWon = false;
+
         $scope.gameStartCount += 1;
+        $scope.waiting = true;
 
         if (originator) {
           var data = {};
@@ -29,18 +36,38 @@ angular.module('gameRtcApp')
         }
 
         if ($scope.gameStartCount >= 2) {
-          window.play();
+
+          $scope.countDown = 3;
+          var timer = setInterval(function(){
+            $scope.countDown--;
+            $scope.$apply();
+            console.log($scope.countDown);
+
+            if ($scope.countDown === 0) {
+              $scope.waiting = false;
+              window.play();
+
+              $scope.playing = true;
+              $scope.gameCount += 1;
+
+              console.log("Starting game in scope", $scope.waiting);
+              clearInterval(timer);
+
+              $scope.countDown = null;
+            }
+            $scope.$apply();
+          }, 1000);
+
         }
       };
 
       function handleReceiptPeerData (data) {
         if (data.drawEvent) {
           // draw the received rectangle event
-          var theirCanvasInput = document.getElementById('their-video-canvas');
           var theirCanvasOverlay = document.getElementById('their-overlay');
           var theirOverlayContext = theirCanvasOverlay.getContext('2d');
 
-          window.drawRectangle(theirCanvasInput, theirOverlayContext, data);
+          window.drawRectangle(theirCanvasOverlay, theirOverlayContext, data);
         } else {
 
           data = JSON.parse(data);
@@ -69,7 +96,11 @@ angular.module('gameRtcApp')
 
             // console.log("Received game over");
             window.lose(false);
+
             $scope.gameStartCount = 0;
+            $scope.playing = false;
+            $scope.gameWon = true;
+
             $scope.$apply();
 
           } else {
@@ -101,6 +132,9 @@ angular.module('gameRtcApp')
           $scope.peerDataConnection.send(data);
 
           $scope.gameStartCount = 0;
+          $scope.playing = false;
+          $scope.gameWon = false;
+
           $scope.$apply();
         });
 
@@ -136,6 +170,8 @@ angular.module('gameRtcApp')
 
             $scope.connected = true;
 
+            $scope.remotePeerId = connection.peer;
+
             $scope.$apply();
           });
 
@@ -163,6 +199,12 @@ angular.module('gameRtcApp')
             $scope.$apply();
           });
 
+
+          $scope.endCall = function() {
+            peerObject.endCall();
+            $scope.connected = false;
+          };
+
           $scope.callPeer = function() {
             var remotePeerId = $scope.remotePeerId;
             $scope.peerDataConnection = peerObject.makeCall(remotePeerId);
@@ -180,3 +222,12 @@ angular.module('gameRtcApp')
       });
 
   }]);
+
+
+// function takepicture() {
+//   canvas.width = width;
+//   canvas.height = height;
+//   canvas.getContext('2d').drawImage(video, 0, 0, width, height);
+//   var data = canvas.toDataURL('image/png');
+//   photo.setAttribute('src', data);
+// }

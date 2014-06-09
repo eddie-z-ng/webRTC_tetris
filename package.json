@@ -13,6 +13,7 @@
     "lodash": "~2.4.1",
     "method-override": "~1.0.0",
     "morgan": "~1.0.0",
+    "peer": "^0.2.5",
     "static-favicon": "~1.0.1"
   },
   "devDependencies": {

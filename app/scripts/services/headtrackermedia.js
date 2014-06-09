@@ -75,7 +75,7 @@ angular.module('gameRtcApp')
           }, 1); // Delay this so that headtrackr.js finishes initializing stream
         } else {
           console.log(e.status);
-          // deferred.reject("error getting stream");
+          deferred.reject("error getting stream");
         }
 
         // Debug messages

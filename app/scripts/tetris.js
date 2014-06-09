@@ -42,6 +42,12 @@ function draw(ctx, canvas, uctx, boardRepresentation) {
   ctx.lineWidth = 1;
   ctx.translate(0.5, 0.5); // for crisp 1px black lines
 
+  ctx.shadowOffsetX = 1;
+  ctx.shadowOffsetY = 1;
+
+  ctx.shadowBlur = 1;
+  ctx.shadowColor = 'rgba(204, 204, 204, 0.5)';
+
   drawCourt(ctx, canvas, boardRepresentation);
   drawNext(uctx, boardRepresentation);
   drawScore(boardRepresentation);
@@ -322,7 +328,7 @@ window.drawBlock = drawBlock;
     canvas.height  = canvas.clientHeight; // (ditto)
     ucanvas.width  = ucanvas.clientWidth;
     ucanvas.height = ucanvas.clientHeight;
-    dx = canvas.width  / nx; // pixel size of a single tetris block
+    dx = canvas.width  / nx / 2; // pixel size of a single tetris block
     dy = canvas.height / ny; // (ditto)
     invalidate();
     invalidateNext();
