@@ -14,10 +14,28 @@ angular.module('gameRtcApp')
           theirUcanvas.width  = theirUcanvas.clientWidth;
           theirUcanvas.height = theirUcanvas.clientHeight;
 
+      $scope.gameStartCount = 0;
+      $scope.connected = false;
+
+      $scope.play = function(originator) {
+        $scope.gameStartCount += 1;
+
+        if (originator) {
+          var data = {};
+          data.gameStart = true;
+
+          data = JSON.stringify(data);
+          $scope.peerDataConnection.send(data);
+        }
+
+        if ($scope.gameStartCount >= 2) {
+          window.play();
+        }
+      };
+
       function handleReceiptPeerData (data) {
         if (data.drawEvent) {
           // draw the received rectangle event
-          //console.log("Should draw rectangle for event:", data.drawEvent);
           var theirCanvasInput = document.getElementById('their-video-canvas');
           var theirCanvasOverlay = document.getElementById('their-overlay');
           var theirOverlayContext = theirCanvasOverlay.getContext('2d');
@@ -41,6 +59,18 @@ angular.module('gameRtcApp')
 
             window.addGarbageLines(data.garbageRowData);
 
+          } else if (data.gameStart) {
+
+            // console.log("Received game start!");
+            $scope.play(false);
+
+          } else if (data.gameOver) {
+
+            console.log("Received game over");
+            window.lose(false);
+            $scope.gameStartCount = 0;
+            $scope.$apply();
+
           } else {
             $scope.receivedData = data;
             $scope.$apply();
@@ -59,6 +89,18 @@ angular.module('gameRtcApp')
             data = JSON.stringify(data);
             $scope.peerDataConnection.send(data);
           }
+        });
+
+        // Connected to peer -- listen for gameOver event
+        document.addEventListener('gameOver', function(event) {
+          var data = {};
+          data.gameOver = true;
+
+          data = JSON.stringify(data);
+          $scope.peerDataConnection.send(data);
+
+          $scope.gameStartCount = 0;
+          $scope.$apply();
         });
 
         // Connected to peer -- listen for garbageRow event
@@ -90,6 +132,8 @@ angular.module('gameRtcApp')
             $scope.peerDataConnection = connection;
 
             attachReceiptListeners();
+
+            $scope.connected = true;
 
             $scope.$apply();
           });
@@ -123,6 +167,8 @@ angular.module('gameRtcApp')
             $scope.peerDataConnection = peerObject.makeCall(remotePeerId);
 
             attachReceiptListeners();
+
+            $scope.connected = true;
           };
 
           $scope.sendData = function() {

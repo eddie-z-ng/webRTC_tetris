@@ -267,6 +267,8 @@ window.drawBlock = drawBlock;
   // GAME LOOP
   //-------------------------------------------------------------------------
 
+  var gameOverEvent = new Event('gameOver');
+  var gameStartEvent = new Event('gameStart');
   var boardChangeEvent = new Event('boardChange');
   var garbageRowEvent = new Event('garbageRow');
 
@@ -334,13 +336,13 @@ window.drawBlock = drawBlock;
         case KEY.RIGHT:  actions.push(DIR.RIGHT); handled = true; break;
         case KEY.UP:     actions.push(DIR.UP);    handled = true; break;
         case KEY.DOWN:   actions.push(DIR.DOWN);  handled = true; break;
-        case KEY.ESC:    lose();                  handled = true; break;
+        case KEY.ESC:    lose(true);                  handled = true; break;
       }
     }
-    else if (ev.keyCode == KEY.SPACE) {
-      play();
-      handled = true;
-    }
+    // else if (ev.keyCode == KEY.SPACE) {
+    //   play();
+    //   handled = true;
+    // }
     if (handled){
       ev.preventDefault(); // prevent arrow keys from scrolling the page (supported in IE9+ and all other browsers)
     }
@@ -349,9 +351,56 @@ window.drawBlock = drawBlock;
   //-------------------------------------------------------------------------
   // GAME LOGIC
   //-------------------------------------------------------------------------
+  var readyCount = 0;
 
-  function play() { hide('start'); reset();          playing = true;  }
-  function lose() { show('start'); setVisualScore(); playing = false; }
+  function play() {
+    // hide('start');
+    // readyCount++;
+
+    // if (readyCount >= 2) {
+      reset();
+      playing = true;
+      console.log('Starting game!');
+    // } else {
+    //   dispatchGameStart();
+    // }
+    // console.log('Ready Count: ', readyCount);
+  }
+  window.play = play;
+
+  function lose(orig) {
+    if (orig) {
+      dispatchGameOver();
+    }
+    // show('start');
+    setVisualScore();
+    playing = false;
+    // readyCount = 0;
+  }
+  window.lose = lose;
+
+  function dispatchGameOver() {
+    gameOverEvent.gameOver = true;
+    document.dispatchEvent(gameOverEvent);
+  }
+  // function dispatchGameStart() {
+  //   gameStartEvent.gameStart = true;
+  //   document.dispatchEvent(gameStartEvent);
+  // }
+  // function handleGameStart(event) {
+  //   // if (event.gameStart) {
+  //     readyCount++;
+  //     play();
+  //   // }
+  // }
+  // function handleGameOver(event) {
+  //   // if (event.gameOver) {
+  //     lose();
+  //   // }
+  // }
+
+  // document.addEventListener('gameStart', handleGameStart);
+  // document.addEventListener('gameOver', handleGameOver);
 
   function setVisualScore(n)      { vscore = n || score; invalidateScore(); }
   function setScore(n)            { score = n; setVisualScore(n);  }
@@ -434,7 +483,7 @@ window.drawBlock = drawBlock;
       setNextPiece(randomPiece());
       clearActions();
       if (occupied(current.type, current.x, current.y, current.dir)) {
-        lose();
+        lose(true);
       }
     }
   }
