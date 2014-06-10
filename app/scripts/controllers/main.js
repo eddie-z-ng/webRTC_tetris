@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('gameRtcApp')
-  .controller('MainCtrl', ['$rootScope', '$scope', 'HeadTrackerMedia', 'PeerConnect',
-    function ($rootScope, $scope, HeadTrackerMedia, PeerConnect) {
+  .controller('MainCtrl', ['$rootScope', '$scope', 'HeadTrackerMedia', 'PeerConnect', '$http',
+    function ($rootScope, $scope, HeadTrackerMedia, PeerConnect, $http) {
 
       var theirCanvas  = document.getElementById('their-gamecanvas'),
           theirCtx     = theirCanvas.getContext('2d'),
@@ -16,13 +16,21 @@ angular.module('gameRtcApp')
 
       $scope.gameStartCount = 0;
       $scope.gameWon = false;
+      $scope.streamReady = false;
       $scope.connected = false;
       $scope.gameCount = 0;
       $scope.playing = false;
       $scope.waiting = false;
 
+      $scope.callRandomPeer = function() {
+        $http.post('/connectRandom', { id: $scope.my_id}).success(function(res) {
+          console.log(res);
+        });
+      };
+
       $scope.play = function(originator) {
         $scope.gameWon = false;
+        $scope.gameCount = 0;
 
         $scope.gameStartCount += 1;
         $scope.waiting = true;
@@ -85,7 +93,7 @@ angular.module('gameRtcApp')
             window.draw(theirCtx, theirUcanvas, theirUctx, data);
           } else if (data.garbageRowData) {
 
-            window.addGarbageLines(data.garbageRowData);
+            window.queueGarbageLines(data.garbageRowData);
 
           } else if (data.gameStart) {
 
@@ -155,6 +163,7 @@ angular.module('gameRtcApp')
       $scope.receivedData = '';
 
       HeadTrackerMedia.getHTrackMedia().then(function(hTrackObject) {
+        $scope.streamReady = true;
 
         console.log("Got htrackmedia: ", hTrackObject);
         var localStream = hTrackObject.stream;
@@ -203,6 +212,9 @@ angular.module('gameRtcApp')
           $scope.endCall = function() {
             peerObject.endCall();
             $scope.connected = false;
+            $scope.playing = false;
+
+
           };
 
           $scope.callPeer = function() {
@@ -214,9 +226,9 @@ angular.module('gameRtcApp')
             $scope.connected = true;
           };
 
-          $scope.sendData = function() {
-            $scope.peerDataConnection.send($scope.dataToSend);
-          };
+          // $scope.sendData = function() {
+          //   $scope.peerDataConnection.send($scope.dataToSend);
+          // };
 
         });
       });

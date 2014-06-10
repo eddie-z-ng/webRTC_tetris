@@ -343,6 +343,7 @@ window.drawBlock = drawBlock;
         case KEY.UP:     actions.push(DIR.UP);    handled = true; break;
         case KEY.DOWN:   actions.push(DIR.DOWN);  handled = true; break;
         case KEY.ESC:    lose(true);                  handled = true; break;
+        case KEY.SPACE:  actions.push('FASTDROP'); handled = true; break;
       }
     }
     // else if (ev.keyCode == KEY.SPACE) {
@@ -417,11 +418,19 @@ window.drawBlock = drawBlock;
   }
 
   function handle(action) {
+    var customFunc;
+    if (action && action.hasOwnProperty('customFunc')) {
+      customFunc = action.customFunc;
+      action = 'CUSTOMFUNC';
+    }
+
     switch(action) {
       case DIR.LEFT:  move(DIR.LEFT);  break;
       case DIR.RIGHT: move(DIR.RIGHT); break;
       case DIR.UP:    rotate();        break;
       case DIR.DOWN:  drop();          break;
+      case 'FASTDROP': fastdrop();     break;
+      case 'CUSTOMFUNC': customFunc(); break;
     }
   }
 
@@ -449,6 +458,11 @@ window.drawBlock = drawBlock;
       current.dir = newdir;
       invalidate();
     }
+  }
+
+  function fastdrop() {
+    while(move(DIR.DOWN)) {}
+    drop();
   }
 
   function drop() {
@@ -514,7 +528,11 @@ window.drawBlock = drawBlock;
       setBlock(holeIndex, y, null);
     }
   }
-  window.addGarbageLines = addGarbageLines;
+
+  window.queueGarbageLines = function(n) {
+    actions.push({ customFunc: function() {addGarbageLines(n);} });
+  };
+
 
   function removeLine(n) {
     var x, y;

@@ -5,8 +5,8 @@
 // Emits: 'connectionChange' events to the $rootScope
 //        'peerStream' events to the $rootScope
 angular.module('gameRtcApp.factories')
-  .factory('PeerConnect', ['$q', '$rootScope', '$sce',
-    function ($q, $rootScope, $sce) {
+  .factory('PeerConnect', ['$q', '$rootScope', '$sce', '$location',
+    function ($q, $rootScope, $sce, $location) {
 
     var deferred = $q.defer();
     // var streamReady = false;
@@ -29,7 +29,7 @@ angular.module('gameRtcApp.factories')
     // var peer = new Peer({ host: 'wardsng-peerjs.herokuapp.com', path: '/', port: 80, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
     // ]}});
 
-    var peer = new Peer({ host: 'localhost', path: '/', port: 3000, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
+    var peer = new Peer({ host: $location.host(), path: '/', port: 3000, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
     ]}});
 
     // var peer = new Peer({ host: 'localhost', path: '/', port: 3000, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility

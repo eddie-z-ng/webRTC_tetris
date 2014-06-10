@@ -1,34 +1,41 @@
-<div ng-include="'partials/navbar'"></div>
+<!-- <div ng-include="'partials/navbar'"></div> -->
 
-<h3>Your Peer ID: {{my_id}}</h3>
+<h1 id="main-header">WebRTC Tetris</h1>
+
+
 <!-- Steps -->
 <div class="pure-u-1-3">
 
   <div class="container">
   <div class="row">
 
-    <div class="col-md-6">
+    <div class="col-md-2">
       <div id="stats-menu"></div>
     </div>
 
     <div class="col-md-6">
+      <h3>Your Peer ID: {{my_id}}</h3>
+    </div>
+
+    <div class="col-md-4">
       <div ng-show="gameWon && !playing && gameCount">
-      <h2>You win!</h2>
+        <h2>You win!</h2>
       </div>
       <div ng-show="!gameWon && !playing && gameCount">
-      <h2>You lose!</h2>
+        <h2>You lose!</h2>
       </div>
     </div>
+
   </div>
   </div>
 
   <!-- Get local audio/video stream -->
-  <div id="step1">
+  <div id="step1" ng-show="!streamReady">
     <p>Please click `allow` on the top of the screen so we can access your webcam and microphone for calls.</p>
-    <div id="step1-error">
+<!--     <div id="step1-error">
       <p>Failed to access the webcam and microphone. Make sure to run this demo on an http server and click allow when asked for permission by the browser.</p>
       <a href="#" class="pure-button pure-button-error" id="step1-retry">Try again</a>
-    </div>
+    </div> -->
   </div>
 
   <div class="container">
@@ -60,7 +67,7 @@
       <div class="col-md-4" ng-show="connected && !playing">
         <button class="btn btn-default" ng-click="play(true)" ng-show="gameStartCount==0 && connected">Start Game</button>
       </div>
-      <div class="col-md-4" ng-show="waiting">
+      <div class="col-md-4" ng-show="connected && waiting">
         <p ng-show="countDown">Starting in {{countDown}}</p>
         <p ng-show="!countDown">Waiting for opponent...</p>
       </div>
@@ -126,10 +133,10 @@ peerurl {{peerURL}}
 <br/><br/>
 <input type="checkbox" onclick="showProbabilityCanvas()" value="asdfasd"></input>Show probability-map</p>
 
-<input ng-model="dataToSend" type="text" placeholder="Data to send" ng-change="sendData()">
-<button ng-click="sendData()">Send Data</button>
+<!-- <input ng-model="dataToSend" type="text" placeholder="Data to send" ng-change="sendData()">
+<button ng-click="sendData()">Send Data</button> -->
 
-<div class="container-fluid">
+<!-- <div class="container-fluid">
   <div class="row">
     <div class="col-md-6">
       <h1>Sent Data</h1>
@@ -140,7 +147,7 @@ peerurl {{peerURL}}
       <p>{{receivedData}}</p>
     </div>
   </div>
-</div>
+</div> -->
 
 
 <script>

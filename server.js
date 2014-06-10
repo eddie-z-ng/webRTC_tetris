@@ -3,6 +3,7 @@
 var express = require('express');
 
 var PeerServer = require('peer').PeerServer;
+var peerPool = require('./lib/peerPool');
 
 /**
  * Main application file
@@ -24,15 +25,20 @@ app.listen(config.port, config.ip, function () {
 
   var peerServer = new PeerServer({port:3000, path:'/'});
 
-   peerServer.on('connection', function(id) {
-     console.log('Connection from ' + id);
-   });
+  peerServer.on('connection', function(id) {
+   console.log('Connection from ' + id);
 
-   peerServer.on('disconnect', function(id) {
-     console.log('Disconnect of ' + id);
-   });
+   peerPool.addPeerToPool(id);
+  });
+
+  peerServer.on('disconnect', function(id) {
+   console.log('Disconnect of ' + id);
+
+   peerPool.removePeerFromPool(id);
+  });
 
 });
+
 
 // Expose app
 exports = module.exports = app;
