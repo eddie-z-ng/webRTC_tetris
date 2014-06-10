@@ -11,6 +11,7 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
 
 /* Space out content a bit */
 body {
+    font-family: 'Audiowide', Helvetica Neue;
     padding-top: 20px;
     padding-bottom: 20px;
     background-image:url('/images/gplaypattern.png')
@@ -135,9 +136,15 @@ body {
   text-align: center;
 }
 
-#video-container {
-  padding: 25px;
+#gamestatus {
   text-align: center;
+  text-transform: uppercase;
+}
+
+#gameDirections {
+  ul {
+    list-style: none;
+  }
 }
 
 #step1-error, #step2, #step3 {
@@ -157,6 +164,8 @@ canvas, video {
 #upcoming, #their-upcoming {
     width: 100%;
     height: 100%;
+    // width: 150px;
+    // height: 150px;
 }
 
 #my-overlay, #their-overlay {

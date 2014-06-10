@@ -83,16 +83,25 @@ angular.module('gameRtcApp')
 
             theirCanvas.width = data.canvasWidth;
             theirCanvas.height = data.canvasHeight;
+            console.log(theirCanvas.width, theirCanvas.height);
 
-            theirUcanvas.width = data.ucanvasWidth;
-            theirUcanvas.height = data.ucanvasHeight;
+            // theirUcanvas.width = data.ucanvasWidth;
+            // theirUcanvas.height = data.ucanvasHeight;
+
+            //console.log("theirUCanvas", theirUcanvas);
 
             data.invalid.court = true; // prevent blinking
             data.invalid.next = true;
 
+            // theirUctx = theirUcanvas.getContext('2d');
+
             window.draw(theirCtx, theirUcanvas, theirUctx, data);
+            window.drawScore('their-score', data);
+            window.drawRows('their-cleared-rows', data);
+
           } else if (data.garbageRowData) {
 
+            console.log("Received ", data.garbageRowData, " garbage lines");
             window.queueGarbageLines(data.garbageRowData);
 
           } else if (data.gameStart) {
@@ -211,10 +220,11 @@ angular.module('gameRtcApp')
 
           $scope.endCall = function() {
             peerObject.endCall();
+
+            $scope.gameStartCount = 0;
             $scope.connected = false;
             $scope.playing = false;
-
-
+            $scope.waiting = false;
           };
 
           $scope.callPeer = function() {

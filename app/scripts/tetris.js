@@ -39,7 +39,7 @@ function getBlock(blocks,x,y)   { return (blocks && blocks[x] ? blocks[x][y] : n
 
 function draw(ctx, canvas, uctx, boardRepresentation) {
   ctx.save();
-  ctx.lineWidth = 1;
+  ctx.lineWidth = uctx.lineWidth = 1;
   ctx.translate(0.5, 0.5); // for crisp 1px black lines
 
   ctx.shadowOffsetX = 1;
@@ -48,10 +48,10 @@ function draw(ctx, canvas, uctx, boardRepresentation) {
   ctx.shadowBlur = 1;
   ctx.shadowColor = 'rgba(204, 204, 204, 0.5)';
 
+  ctx.globalAlpha = uctx.globalAlpha = 0.7;
+
   drawCourt(ctx, canvas, boardRepresentation);
-  drawNext(uctx, boardRepresentation);
-  drawScore(boardRepresentation);
-  drawRows(boardRepresentation);
+  drawNext(uctx, canvas, boardRepresentation);
 
   ctx.restore();
 }
@@ -63,8 +63,12 @@ function drawCourt(ctx, canvas, boardRepresentation) {
   var blocks = boardRepresentation.blocks;
   var dx = boardRepresentation.dx;
   var dy = boardRepresentation.dy;
+
   var nx = boardRepresentation.nx;
   var ny = boardRepresentation.ny;
+
+  // var dx = canvas.width  / nx / 2; // pixel size of a single tetris block
+  // var dy = canvas.height / ny; // (ditto)
 
   if (invalid.court) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -81,17 +85,31 @@ function drawCourt(ctx, canvas, boardRepresentation) {
         }
       }
     }
+    ctx.strokeStyle = 'white';
     ctx.strokeRect(0, 0, nx*dx - 1, ny*dy - 1); // court boundary
     invalid.court = false;
   }
 }
 
-function drawNext(uctx, boardRepresentation) {
+var counter = 0;
+function drawNext(uctx, canvas, boardRepresentation) {
   var invalid = boardRepresentation.invalid;
   var next = boardRepresentation.next;
   var nu = boardRepresentation.nu;
+  var nx = boardRepresentation.nx;
+  var ny = boardRepresentation.ny;
+
   var dx = boardRepresentation.dx;
   var dy = boardRepresentation.dy;
+
+  // var dx = canvas.width  / nx / 2; // pixel size of a single tetris block
+  // var dy = canvas.height / ny; // (ditto)
+
+counter++;
+if (counter % 1000 == 0) {
+console.log(uctx, boardRepresentation, "DX DY", dx, dy);
+counter = 0;
+}
 
   if (invalid.next) {
     var padding = (nu - next.type.size) / 2; // half-arsed attempt at centering next piece display
@@ -106,22 +124,22 @@ function drawNext(uctx, boardRepresentation) {
   }
 }
 
-function drawScore(boardRepresentation) {
+function drawScore(scoreID, boardRepresentation) {
   var invalid = boardRepresentation.invalid;
   var vscore = boardRepresentation.vscore;
 
   if (invalid.score) {
-    html('score', ("00000" + Math.floor(vscore)).slice(-5));
+    html(scoreID, ("00000" + Math.floor(vscore)).slice(-5));
     invalid.score = false;
   }
 }
 
-function drawRows(boardRepresentation) {
+function drawRows(rowsID, boardRepresentation) {
   var invalid = boardRepresentation.invalid;
   var rows = boardRepresentation.rows;
 
   if (invalid.rows) {
-    html('rows', rows);
+    html(rowsID, rows);
     invalid.rows = false;
   }
 }
@@ -136,6 +154,13 @@ function drawBlock(ctx, x, y, color, dx, dy) {
   ctx.fillStyle = color;
   ctx.fillRect(x*dx, y*dy, dx, dy);
   ctx.strokeRect(x*dx, y*dy, dx, dy);
+
+  ctx.save();
+
+  ctx.fillStyle = '#333';
+  ctx.fillRect(x*dx+2, y*dy+2, dx-4, dy-4);
+
+  ctx.restore();
 }
 
 window.eachblock = eachblock;
@@ -176,6 +201,10 @@ window.drawBlock = drawBlock;
       ctx     = canvas.getContext('2d'),
       ucanvas = get('upcoming'),
       uctx    = ucanvas.getContext('2d'),
+      // othercanvas  = get('their-gamecanvas'),
+      // otherctx     = othercanvas.getContext('2d'),
+      // otherucanvas = get('their-upcoming'),
+      // otheructx    = otherucanvas.getContext('2d'),
       speed   = { start: 0.6, decrement: 0.005, min: 0.1 }, // how long before piece drops by 1 row (seconds)
       nx      = 10, // width of tetris court (in blocks)
       ny      = 20, // height of tetris court (in blocks)
@@ -299,6 +328,8 @@ window.drawBlock = drawBlock;
 
       // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
       draw(ctx, canvas, uctx, boardRepresentation);
+      drawScore('score', boardRepresentation);
+      drawRows('cleared-rows', boardRepresentation);
 
       resetBoardInvalidity(boardRepresentation);
 
@@ -328,6 +359,13 @@ window.drawBlock = drawBlock;
     canvas.height  = canvas.clientHeight; // (ditto)
     ucanvas.width  = ucanvas.clientWidth;
     ucanvas.height = ucanvas.clientHeight;
+
+console.log("CHange of height and width: ", ucanvas.height, ucanvas.width);
+    // othercanvas.width = othercanvas.clientWidth;
+    // othercanvas.height = othercanvas.clientHeight;
+    // otherucanvas.width = otherucanvas.clientWidth;
+    // otherucanvas.height = otherucanvas.clientHeight;
+
     dx = canvas.width  / nx / 2; // pixel size of a single tetris block
     dy = canvas.height / ny; // (ditto)
     invalidate();
@@ -511,6 +549,7 @@ window.drawBlock = drawBlock;
   }
 
   function addGarbageLines(n) {
+    console.log("Adding ", n, " garbage lines");
     var x, y;
     var holeIndex = Math.floor(Math.random()*nx);
 
@@ -579,9 +618,9 @@ window.drawBlock = drawBlock;
       nx: nx,
       ny: ny,
       canvasWidth: canvas.width,
-      canvasHeight: canvas.height,
-      ucanvasWidth: ucanvas.width,
-      ucanvasHeight: ucanvas.height
+      canvasHeight: canvas.height
+      // ucanvasWidth: ucanvas.width,
+      // ucanvasHeight: ucanvas.height
     };
     return result;
   }
