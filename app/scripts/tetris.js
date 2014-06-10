@@ -91,7 +91,7 @@ function drawCourt(ctx, canvas, boardRepresentation) {
   }
 }
 
-var counter = 0;
+// var counter = 0;
 function drawNext(uctx, canvas, boardRepresentation) {
   var invalid = boardRepresentation.invalid;
   var next = boardRepresentation.next;
@@ -105,11 +105,11 @@ function drawNext(uctx, canvas, boardRepresentation) {
   // var dx = canvas.width  / nx / 2; // pixel size of a single tetris block
   // var dy = canvas.height / ny; // (ditto)
 
-counter++;
-if (counter % 1000 == 0) {
-console.log(uctx, boardRepresentation, "DX DY", dx, dy);
-counter = 0;
-}
+// counter++;
+// if (counter % 1000 == 0) {
+// console.log(uctx, boardRepresentation, "DX DY", dx, dy);
+// counter = 0;
+// }
 
   if (invalid.next) {
     var padding = (nu - next.type.size) / 2; // half-arsed attempt at centering next piece display
@@ -618,9 +618,9 @@ console.log("CHange of height and width: ", ucanvas.height, ucanvas.width);
       nx: nx,
       ny: ny,
       canvasWidth: canvas.width,
-      canvasHeight: canvas.height
-      // ucanvasWidth: ucanvas.width,
-      // ucanvasHeight: ucanvas.height
+      canvasHeight: canvas.height,
+      ucanvasWidth: ucanvas.width,
+      ucanvasHeight: ucanvas.height
     };
     return result;
   }

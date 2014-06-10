@@ -23,9 +23,25 @@ angular.module('gameRtcApp')
       $scope.waiting = false;
 
       $scope.callRandomPeer = function() {
-        $http.post('/connectRandom', { id: $scope.my_id}).success(function(res) {
-          console.log(res);
-        });
+        if ($scope.my_id) {
+          $http.post('/connectRandom', { id: $scope.my_id }).success(function(res) {
+            console.log(res);
+
+            $scope.remotePeerId = res.peerID;
+
+            $scope.callPeer();
+
+            $scope.peerError = null;
+
+            $scope.$apply();
+          }).error(function(data, status) {
+            console.log('Failed ', data, status);
+
+            $scope.peerError = data.error;
+
+            $scope.$apply();
+          });
+        }
       };
 
       $scope.play = function(originator) {
@@ -83,10 +99,10 @@ angular.module('gameRtcApp')
 
             theirCanvas.width = data.canvasWidth;
             theirCanvas.height = data.canvasHeight;
-            console.log(theirCanvas.width, theirCanvas.height);
+            // console.log(theirCanvas.width, theirCanvas.height);
 
-            // theirUcanvas.width = data.ucanvasWidth;
-            // theirUcanvas.height = data.ucanvasHeight;
+            theirUcanvas.width = data.ucanvasWidth;
+            theirUcanvas.height = data.ucanvasHeight;
 
             //console.log("theirUCanvas", theirUcanvas);
 
@@ -180,6 +196,15 @@ angular.module('gameRtcApp')
         PeerConnect.getPeer(localStream).then(function(peerObject) {
           $scope.my_id = peerObject.peer.id;
 
+          $http.post('/confirmID', { id: $scope.my_id }).success(function(res) {
+            console.log(res);
+          }).error(function(data, status) {
+            console.log('Failed ', data, status);
+
+            $scope.peerError = data.error;
+            $scope.$apply();
+          });
+
           $rootScope.$on('connectionChange', function (event, connection) {
             console.log('Connection change event!', connection);
             $scope.peerDataConnection = connection;
@@ -225,6 +250,21 @@ angular.module('gameRtcApp')
             $scope.connected = false;
             $scope.playing = false;
             $scope.waiting = false;
+
+            $http.post('/returnPool', { id: $scope.my_id }).success(function(res) {
+                console.log(res);
+                $scope.remotePeerId = null;
+
+                $scope.peerError = null;
+
+                $scope.$apply();
+            }).error(function(data, status) {
+                console.log("Failed ", data, status);
+
+                $scope.peerError = data.error;
+
+                $scope.$apply();
+            });
           };
 
           $scope.callPeer = function() {

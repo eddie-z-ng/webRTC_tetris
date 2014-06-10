@@ -29,12 +29,18 @@ app.listen(config.port, config.ip, function () {
    console.log('Connection from ' + id);
 
    peerPool.addPeerToPool(id);
+
+   console.log('Unconfirmed ==>', peerPool.unconfirmedPeers);
+   console.log('Connected ==>', peerPool.connectedPeers);
   });
 
   peerServer.on('disconnect', function(id) {
    console.log('Disconnect of ' + id);
 
    peerPool.removePeerFromPool(id);
+
+   console.log('Unconfirmed ==>', peerPool.unconfirmedPeers);
+   console.log('==>', peerPool.connectedPeers);
   });
 
 });
