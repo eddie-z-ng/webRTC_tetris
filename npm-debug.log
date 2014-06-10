@@ -1,0 +1,264 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', 'socket', '--save' ]
+2 info using npm@1.4.7
+3 info using node@v0.10.26
+4 verbose node symlink /usr/local/bin/node
+5 warn package.json gamertc@0.0.0 No description
+6 warn package.json gamertc@0.0.0 No repository field.
+7 warn package.json gamertc@0.0.0 No README data
+8 verbose readDependencies using package.json deps
+9 verbose cache add [ 'socket', null ]
+10 verbose cache add name=undefined spec="socket" args=["socket",null]
+11 verbose parsed url { protocol: null,
+11 verbose parsed url   slashes: null,
+11 verbose parsed url   auth: null,
+11 verbose parsed url   host: null,
+11 verbose parsed url   port: null,
+11 verbose parsed url   hostname: null,
+11 verbose parsed url   hash: null,
+11 verbose parsed url   search: null,
+11 verbose parsed url   query: null,
+11 verbose parsed url   pathname: 'socket',
+11 verbose parsed url   path: 'socket',
+11 verbose parsed url   href: 'socket' }
+12 silly lockFile 897d2105-socket socket
+13 verbose lock socket /Users/eddieng/.npm/897d2105-socket.lock
+14 silly lockFile 897d2105-socket socket
+15 silly lockFile 897d2105-socket socket
+16 verbose addNamed [ 'socket', '' ]
+17 verbose addNamed [ null, '*' ]
+18 silly lockFile 45707214-socket socket@
+19 verbose lock socket@ /Users/eddieng/.npm/45707214-socket.lock
+20 silly addNameRange { name: 'socket', range: '*', hasData: false }
+21 verbose url raw socket
+22 verbose url resolving [ 'https://registry.npmjs.org/', './socket' ]
+23 verbose url resolved https://registry.npmjs.org/socket
+24 info trying registry request attempt 1 at 17:40:07
+25 verbose etag "EYDXZWJAZ2C77WDYBUANYRZE6"
+26 http GET https://registry.npmjs.org/socket
+27 http 304 https://registry.npmjs.org/socket
+28 silly registry.get cb [ 304,
+28 silly registry.get   { date: 'Tue, 10 Jun 2014 21:40:08 GMT',
+28 silly registry.get     server: 'Apache',
+28 silly registry.get     via: '1.1 varnish',
+28 silly registry.get     'last-modified': 'Tue, 10 Jun 2014 21:40:08 GMT',
+28 silly registry.get     'cache-control': 'max-age=1',
+28 silly registry.get     etag: '"EYDXZWJAZ2C77WDYBUANYRZE6"',
+28 silly registry.get     'x-served-by': 'cache-iad2124-IAD',
+28 silly registry.get     'x-cache': 'MISS',
+28 silly registry.get     'x-cache-hits': '0',
+28 silly registry.get     'x-timer': 'S1402436408.596493,VS0,VE107',
+28 silly registry.get     vary: 'Accept',
+28 silly registry.get     'content-length': '0',
+28 silly registry.get     'keep-alive': 'timeout=10, max=50',
+28 silly registry.get     connection: 'Keep-Alive' } ]
+29 verbose etag socket from cache
+30 silly addNameRange number 2 { name: 'socket', range: '*', hasData: true }
+31 silly addNameRange versions [ 'socket', [ '0.0.1' ] ]
+32 verbose addNamed [ 'socket', '0.0.1' ]
+33 verbose addNamed [ '0.0.1', '0.0.1' ]
+34 silly lockFile ccbb8590-socket-0-0-1 socket@0.0.1
+35 verbose lock socket@0.0.1 /Users/eddieng/.npm/ccbb8590-socket-0-0-1.lock
+36 silly lockFile ccbb8590-socket-0-0-1 socket@0.0.1
+37 silly lockFile ccbb8590-socket-0-0-1 socket@0.0.1
+38 silly lockFile 45707214-socket socket@
+39 silly lockFile 45707214-socket socket@
+40 silly resolved [ { name: 'socket',
+40 silly resolved     description: 'Socket is a connect clone for simple socket based applications',
+40 silly resolved     version: '0.0.1',
+40 silly resolved     author:
+40 silly resolved      { name: 'Richard S Allinson',
+40 silly resolved        email: 'rsa@mounitainmansoftware.com' },
+40 silly resolved     main: 'index',
+40 silly resolved     engines: { node: '>= 0.6.0 < 0.7.0' },
+40 silly resolved     dependencies: { microtime: '=0.2.0' },
+40 silly resolved     repository: { type: 'git', url: 'https://github.com/capecodehq/socket.git' },
+40 silly resolved     license: 'MIT',
+40 silly resolved     bugs: { url: 'https://github.com/capecodehq/socket/issues' },
+40 silly resolved     readme: 'ERROR: No README data found!',
+40 silly resolved     homepage: 'https://github.com/capecodehq/socket',
+40 silly resolved     _id: 'socket@0.0.1',
+40 silly resolved     _shasum: '29ac6549f15a65b19f3444a4178d537a8c161a8b',
+40 silly resolved     _from: 'socket@',
+40 silly resolved     _resolved: 'https://registry.npmjs.org/socket/-/socket-0.0.1.tgz' } ]
+41 info install socket@0.0.1 into /Users/eddieng/FullStack/game_rtc
+42 info installOne socket@0.0.1
+43 warn engine socket@0.0.1: wanted: {"node":">= 0.6.0 < 0.7.0"} (current: {"node":"v0.10.26","npm":"1.4.7"})
+44 info /Users/eddieng/FullStack/game_rtc/node_modules/socket unbuild
+45 verbose tar unpack /Users/eddieng/.npm/socket/0.0.1/package.tgz
+46 silly lockFile 61b9aa3d-ack-game-rtc-node-modules-socket tar:///Users/eddieng/FullStack/game_rtc/node_modules/socket
+47 verbose lock tar:///Users/eddieng/FullStack/game_rtc/node_modules/socket /Users/eddieng/.npm/61b9aa3d-ack-game-rtc-node-modules-socket.lock
+48 silly lockFile 6256b2f5-eng-npm-socket-0-0-1-package-tgz tar:///Users/eddieng/.npm/socket/0.0.1/package.tgz
+49 verbose lock tar:///Users/eddieng/.npm/socket/0.0.1/package.tgz /Users/eddieng/.npm/6256b2f5-eng-npm-socket-0-0-1-package-tgz.lock
+50 silly gunzTarPerm modes [ '755', '644' ]
+51 silly gunzTarPerm extractEntry examples/
+52 silly gunzTarPerm extractEntry examples/echo-server.js
+53 silly gunzTarPerm extractEntry examples/simple-test.js
+54 silly gunzTarPerm extractEntry examples/simple-time-server.js
+55 silly gunzTarPerm extractEntry index.js
+56 silly gunzTarPerm extractEntry lib/
+57 silly gunzTarPerm extractEntry lib/index.js
+58 silly gunzTarPerm extractEntry lib/middleware/
+59 silly gunzTarPerm extractEntry lib/middleware/echo.js
+60 silly gunzTarPerm extractEntry lib/middleware/errorHandler.js
+61 silly gunzTarPerm extractEntry lib/middleware/json.js
+62 silly gunzTarPerm extractEntry lib/middleware/profiler.js
+63 silly gunzTarPerm extractEntry lib/proto.js
+64 silly gunzTarPerm extractEntry lib/utils.js
+65 silly gunzTarPerm extractEntry nbproject/
+66 silly gunzTarPerm extractEntry nbproject/private/
+67 silly gunzTarPerm extractEntry nbproject/private/private.properties
+68 silly gunzTarPerm extractEntry nbproject/project.properties
+69 silly gunzTarPerm extractEntry nbproject/project.xml
+70 silly gunzTarPerm extractEntry package.json
+71 silly gunzTarPerm extractEntry scripts/
+72 silly gunzTarPerm extractEntry scripts/lint
+73 silly lockFile 61b9aa3d-ack-game-rtc-node-modules-socket tar:///Users/eddieng/FullStack/game_rtc/node_modules/socket
+74 silly lockFile 61b9aa3d-ack-game-rtc-node-modules-socket tar:///Users/eddieng/FullStack/game_rtc/node_modules/socket
+75 silly lockFile 6256b2f5-eng-npm-socket-0-0-1-package-tgz tar:///Users/eddieng/.npm/socket/0.0.1/package.tgz
+76 silly lockFile 6256b2f5-eng-npm-socket-0-0-1-package-tgz tar:///Users/eddieng/.npm/socket/0.0.1/package.tgz
+77 info preinstall socket@0.0.1
+78 verbose readDependencies using package.json deps
+79 verbose readDependencies using package.json deps
+80 verbose cache add [ 'microtime@=0.2.0', null ]
+81 verbose cache add name=undefined spec="microtime@=0.2.0" args=["microtime@=0.2.0",null]
+82 verbose parsed url { protocol: null,
+82 verbose parsed url   slashes: null,
+82 verbose parsed url   auth: null,
+82 verbose parsed url   host: null,
+82 verbose parsed url   port: null,
+82 verbose parsed url   hostname: null,
+82 verbose parsed url   hash: null,
+82 verbose parsed url   search: null,
+82 verbose parsed url   query: null,
+82 verbose parsed url   pathname: 'microtime@=0.2.0',
+82 verbose parsed url   path: 'microtime@=0.2.0',
+82 verbose parsed url   href: 'microtime@=0.2.0' }
+83 verbose cache add name="microtime" spec="=0.2.0" args=["microtime","=0.2.0"]
+84 verbose parsed url { protocol: null,
+84 verbose parsed url   slashes: null,
+84 verbose parsed url   auth: null,
+84 verbose parsed url   host: null,
+84 verbose parsed url   port: null,
+84 verbose parsed url   hostname: null,
+84 verbose parsed url   hash: null,
+84 verbose parsed url   search: null,
+84 verbose parsed url   query: null,
+84 verbose parsed url   pathname: '=0.2.0',
+84 verbose parsed url   path: '=0.2.0',
+84 verbose parsed url   href: '=0.2.0' }
+85 verbose addNamed [ 'microtime', '=0.2.0' ]
+86 verbose addNamed [ null, '=0.2.0' ]
+87 silly lockFile 2e0a3709-microtime-0-2-0 microtime@=0.2.0
+88 verbose lock microtime@=0.2.0 /Users/eddieng/.npm/2e0a3709-microtime-0-2-0.lock
+89 verbose url raw microtime
+90 verbose url resolving [ 'https://registry.npmjs.org/', './microtime' ]
+91 verbose url resolved https://registry.npmjs.org/microtime
+92 info trying registry request attempt 1 at 17:40:08
+93 verbose etag "4N6TIQ9S8HY81P1UOBMJASSJ"
+94 http GET https://registry.npmjs.org/microtime
+95 http 304 https://registry.npmjs.org/microtime
+96 silly registry.get cb [ 304,
+96 silly registry.get   { date: 'Tue, 10 Jun 2014 21:40:09 GMT',
+96 silly registry.get     server: 'Apache',
+96 silly registry.get     via: '1.1 varnish',
+96 silly registry.get     'last-modified': 'Tue, 10 Jun 2014 21:40:09 GMT',
+96 silly registry.get     'cache-control': 'max-age=1',
+96 silly registry.get     etag: '"4N6TIQ9S8HY81P1UOBMJASSJ"',
+96 silly registry.get     'x-served-by': 'cache-iad2122-IAD',
+96 silly registry.get     'x-cache': 'MISS',
+96 silly registry.get     'x-cache-hits': '0',
+96 silly registry.get     'x-timer': 'S1402436409.453665,VS0,VE103',
+96 silly registry.get     vary: 'Accept',
+96 silly registry.get     'content-length': '0',
+96 silly registry.get     'keep-alive': 'timeout=10, max=50',
+96 silly registry.get     connection: 'Keep-Alive' } ]
+97 verbose etag microtime from cache
+98 silly lockFile 2e0a3709-microtime-0-2-0 microtime@=0.2.0
+99 silly lockFile 2e0a3709-microtime-0-2-0 microtime@=0.2.0
+100 silly resolved [ { name: 'microtime',
+100 silly resolved     version: '0.2.0',
+100 silly resolved     description: 'Get the current time in microseconds',
+100 silly resolved     author:
+100 silly resolved      { name: 'Wade Simmons',
+100 silly resolved        email: 'wade@wades.im',
+100 silly resolved        url: 'http://wades.im/mons' },
+100 silly resolved     homepage: 'https://github.com/wadey/node-microtime',
+100 silly resolved     repository:
+100 silly resolved      { type: 'git',
+100 silly resolved        url: 'git://github.com/wadey/node-microtime.git' },
+100 silly resolved     main: './index',
+100 silly resolved     engines: { node: '>= 0.2.0' },
+100 silly resolved     scripts: { install: 'node-waf configure build', test: 'node test.js' },
+100 silly resolved     readme: '# node-microtime\n\nDate.now() will only give you accuracy in milliseconds. This module calls\n`gettimeofday(2)` to get the time in microseconds and provides it in a few\ndifferent formats. The same warning from that function applies:\n_The resolution of the system clock is hardware dependent, and the time may\nbe updated continuously or in ``ticks.\'\'_\n\n# Installation\n\n    npm install microtime\n\n# Usage\n\n### microtime.now()\n\nGet the current time in microseconds as an integer. Since JavaScript can only\nrepresent integer values accurately up to `Math.pow(2, 53)`, this value will\nbe accurate up to _Tue, 05 Jun 2255 23:47:34 GMT_.\n\n### microtime.nowDouble()\n\nGet the current time in seconds as a floating point number with microsecond\naccuracy (similar to `time.time()` in Python and `Time.now.to_f` in Ruby).\n\n### microtime.nowStruct()\n\nGet the current time and return as a list with seconds and microseconds (matching the return value of `gettimeofday(2)`).\n\n# Example\n\n    > var microtime = require(\'microtime\')\n    > microtime.now()\n    1297448895297028\n    > microtime.nowDouble()\n    1297448897.600976\n    > microtime.nowStruct()\n    [ 1297448902, 753875 ]\n\n## Estimating clock resolution\n\nStarting with version 0.1.3, there is a test script that tries to guess the clock resolution. You can run it with `npm test microtime`. Example output:\n\n    microtime.now() = 1298960083489806\n    microtime.nowDouble() = 1298960083.511521\n    microtime.nowStruct() = [ 1298960083, 511587 ]\n\n    Guessing clock resolution...\n    Clock resolution observed: 1us\n\n## Tested on\n\n    Node.js 0.2.6\n      - OS X 10.6.6\n      - Ubuntu 10.04\n\n    Node.js 0.4.1\n      - OS X 10.6.6\n      - Windows 7 64bit (Cygwin) *\n\n## Warning for Cygwin users\n\nIt appears that Cygwin only implements `gettimeofday(2)` with [millisecond accuracy](http://old.nabble.com/gettimeofday---millisecond-accuracy-p21085475.html).\n',
+100 silly resolved     readmeFilename: 'README.md',
+100 silly resolved     bugs: { url: 'https://github.com/wadey/node-microtime/issues' },
+100 silly resolved     _id: 'microtime@0.2.0',
+100 silly resolved     _shasum: '45ee5cb061f9948a3ade221e620d5117a8a2bdb4',
+100 silly resolved     _from: 'microtime@=0.2.0',
+100 silly resolved     _resolved: 'https://registry.npmjs.org/microtime/-/microtime-0.2.0.tgz' } ]
+101 info install microtime@0.2.0 into /Users/eddieng/FullStack/game_rtc/node_modules/socket
+102 info installOne microtime@0.2.0
+103 info /Users/eddieng/FullStack/game_rtc/node_modules/socket/node_modules/microtime unbuild
+104 verbose tar unpack /Users/eddieng/.npm/microtime/0.2.0/package.tgz
+105 silly lockFile 85f313df-es-socket-node-modules-microtime tar:///Users/eddieng/FullStack/game_rtc/node_modules/socket/node_modules/microtime
+106 verbose lock tar:///Users/eddieng/FullStack/game_rtc/node_modules/socket/node_modules/microtime /Users/eddieng/.npm/85f313df-es-socket-node-modules-microtime.lock
+107 silly lockFile 5340cb7f--npm-microtime-0-2-0-package-tgz tar:///Users/eddieng/.npm/microtime/0.2.0/package.tgz
+108 verbose lock tar:///Users/eddieng/.npm/microtime/0.2.0/package.tgz /Users/eddieng/.npm/5340cb7f--npm-microtime-0-2-0-package-tgz.lock
+109 silly gunzTarPerm modes [ '755', '644' ]
+110 silly gunzTarPerm extractEntry index.js
+111 silly gunzTarPerm extractEntry LICENSE
+112 silly gunzTarPerm extractEntry package.json
+113 silly gunzTarPerm extractEntry README.md
+114 silly gunzTarPerm extractEntry test.js
+115 silly gunzTarPerm extractEntry wscript
+116 silly gunzTarPerm extractEntry src/microtime.cc
+117 silly lockFile 85f313df-es-socket-node-modules-microtime tar:///Users/eddieng/FullStack/game_rtc/node_modules/socket/node_modules/microtime
+118 silly lockFile 85f313df-es-socket-node-modules-microtime tar:///Users/eddieng/FullStack/game_rtc/node_modules/socket/node_modules/microtime
+119 silly lockFile 5340cb7f--npm-microtime-0-2-0-package-tgz tar:///Users/eddieng/.npm/microtime/0.2.0/package.tgz
+120 silly lockFile 5340cb7f--npm-microtime-0-2-0-package-tgz tar:///Users/eddieng/.npm/microtime/0.2.0/package.tgz
+121 info preinstall microtime@0.2.0
+122 verbose readDependencies using package.json deps
+123 verbose readDependencies using package.json deps
+124 silly resolved []
+125 verbose about to build /Users/eddieng/FullStack/game_rtc/node_modules/socket/node_modules/microtime
+126 info build /Users/eddieng/FullStack/game_rtc/node_modules/socket/node_modules/microtime
+127 verbose linkStuff [ false,
+127 verbose linkStuff   false,
+127 verbose linkStuff   false,
+127 verbose linkStuff   '/Users/eddieng/FullStack/game_rtc/node_modules/socket/node_modules' ]
+128 info linkStuff microtime@0.2.0
+129 verbose linkBins microtime@0.2.0
+130 verbose linkMans microtime@0.2.0
+131 verbose rebuildBundles microtime@0.2.0
+132 info install microtime@0.2.0
+133 verbose unsafe-perm in lifecycle true
+134 info microtime@0.2.0 Failed to exec install script
+135 info /Users/eddieng/FullStack/game_rtc/node_modules/socket/node_modules/microtime unbuild
+136 info preuninstall microtime@0.2.0
+137 info uninstall microtime@0.2.0
+138 verbose false,/Users/eddieng/FullStack/game_rtc/node_modules,/Users/eddieng/FullStack/game_rtc/node_modules/socket/node_modules unbuild microtime@0.2.0
+139 info postuninstall microtime@0.2.0
+140 verbose about to build /Users/eddieng/FullStack/game_rtc/node_modules/socket
+141 info /Users/eddieng/FullStack/game_rtc/node_modules/socket unbuild
+142 info preuninstall socket@0.0.1
+143 info uninstall socket@0.0.1
+144 verbose true,/Users/eddieng/FullStack/game_rtc/node_modules,/Users/eddieng/FullStack/game_rtc/node_modules unbuild socket@0.0.1
+145 info postuninstall socket@0.0.1
+146 error microtime@0.2.0 install: `node-waf configure build`
+146 error Exit status 127
+147 error Failed at the microtime@0.2.0 install script.
+147 error This is most likely a problem with the microtime package,
+147 error not with npm itself.
+147 error Tell the author that this fails on your system:
+147 error     node-waf configure build
+147 error You can get their info via:
+147 error     npm owner ls microtime
+147 error There is likely additional logging output above.
+148 error System Darwin 13.2.0
+149 error command "node" "/usr/local/bin/npm" "install" "socket" "--save"
+150 error cwd /Users/eddieng/FullStack/game_rtc
+151 error node -v v0.10.26
+152 error npm -v 1.4.7
+153 error code ELIFECYCLE
+154 verbose exit [ 1, true ]

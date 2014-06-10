@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('gameRtcApp')
-  .controller('MainCtrl', ['$rootScope', '$scope', 'HeadTrackerMedia', 'PeerConnect', '$http',
-    function ($rootScope, $scope, HeadTrackerMedia, PeerConnect, $http) {
+  .controller('MainCtrl', ['$rootScope', '$scope', 'HeadTrackerMedia', 'PeerConnect', '$http', 'socket',
+    function ($rootScope, $scope, HeadTrackerMedia, PeerConnect, $http, socket) {
 
       var theirCanvas  = document.getElementById('their-gamecanvas'),
           theirCtx     = theirCanvas.getContext('2d'),
@@ -21,6 +21,13 @@ angular.module('gameRtcApp')
       $scope.gameCount = 0;
       $scope.playing = false;
       $scope.waiting = false;
+
+      // Socket listeners
+      // ================
+
+      socket.on('peer_pool', function(data) {
+        $scope.onlineUsers = data.length;
+      });
 
       $scope.callRandomPeer = function() {
         if ($scope.my_id) {
@@ -214,6 +221,8 @@ angular.module('gameRtcApp')
             $scope.connected = true;
 
             $scope.remotePeerId = connection.peer;
+
+            $scope.peerError = null;
 
             $scope.$apply();
           });

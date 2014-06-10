@@ -35,7 +35,7 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-md-8"  ng-show="my_id">
+      <div class="col-md-7"  ng-show="my_id">
         <div class="input-group" ng-show="!connected">
           <span class="input-group-addon">#</span>
           <input type="text" class="form-control" ng-model="remotePeerId" type="text" placeholder="Enter remote peer id!">
@@ -56,16 +56,18 @@
         </div>
       </div>
 
-      <div class="col-md-4" ng-show="!connected && my_id">
+      <div class="col-md-5" ng-show="!connected && my_id">
         <button class="btn btn-primary" ng-click="callRandomPeer()" type="button"><i class="fa fa-users"></i> Find random peer</button>
+        <span class="badge" ng-show="my_id">Online Users: {{onlineUsers}}</span>
       </div>
-      <div class="col-md-4" ng-show="connected && !playing">
+      <div class="col-md-5" ng-show="connected && !playing">
         <button class="btn btn-success" ng-click="play(true)" ng-show="gameStartCount==0 && connected"><i class="fa fa-play"></i> Start Game</button>
       </div>
-      <div class="col-md-4" ng-show="connected && waiting">
+      <div class="col-md-5" ng-show="connected && waiting">
         <p ng-show="countDown">Starting in {{countDown}}</p>
         <p ng-show="!countDown"><i class="fa fa-cog fa-spin"></i> Waiting for opponent...</p>
       </div>
+
     </div>
   <div>
 

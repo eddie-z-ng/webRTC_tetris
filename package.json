@@ -14,6 +14,7 @@
     "method-override": "~1.0.0",
     "morgan": "~1.0.0",
     "peer": "^0.2.5",
+    "socket.io": "^1.0.4",
     "static-favicon": "~1.0.1"
   },
   "devDependencies": {
