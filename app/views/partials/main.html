@@ -51,7 +51,7 @@
           <input type="text" class="form-control" type="text" placeholder="Currently in call with {{remotePeerId}}" disabled>
 
           <span class="input-group-btn">
-            <button class="btn btn-danger" ng-click="endCall()" type="button"><i class="fa fa-stop"></i> End Call</button>
+            <button class="btn btn-danger" ng-click="endCall()" type="button"><i class="fa fa-power-off"></i> End Call</button>
           </span>
         </div>
       </div>
@@ -61,7 +61,7 @@
         <span class="badge" ng-show="my_id">Online Users: {{onlineUsers}}</span>
       </div>
       <div class="col-md-5" ng-show="connected && !playing">
-        <button class="btn btn-success" ng-click="play(true)" ng-show="gameStartCount==0 && connected"><i class="fa fa-play"></i> Start Game</button>
+        <button class="btn btn-success" ng-click="play(true)" ng-show="gameStartCount==0 && connected"><i class="fa fa-play-circle-o"></i> Start Game</button>
       </div>
       <div class="col-md-5" ng-show="connected && waiting">
         <p ng-show="countDown">Starting in {{countDown}}</p>
@@ -131,20 +131,47 @@
   </div>
 </div>
 
-<div id="gameDirections" ng-show="streamReady">
-  <i class="fa fa-keyboard-o"></i> Keyboard Controls
-  <ul class="list-group">
-    <li class="list-group-item"><i class="fa fa-arrow-circle-up"></i> UP: Rotates the tetronome</li>
-    <li class="list-group-item"><i class="fa fa-arrow-circle-down"></i> DOWN: Moves the tetronome down</li>
-    <li class="list-group-item"><i class="fa fa-arrow-circle-left"></i> LEFT: Moves the tetronome left</li>
-    <li class="list-group-item"><i class="fa fa-arrow-circle-right"></i> RIGHT: Moves the tetronome right</li>
-    <li class="list-group-item"><i class="fa fa-square-o"></i> SPACEBAR: Drops the tetronome</li>
-  </ul>
+<div class="container">
+  <div class="row">
+    <div id="gameDirections" class="col-md-6">
+      <i class="fa fa-keyboard-o"></i> Keyboard Controls
+      <ul class="list-group">
+        <li class="list-group-item"><i class="fa fa-arrow-circle-up"></i> UP: Rotates the tetronome</li>
+        <li class="list-group-item"><i class="fa fa-arrow-circle-down"></i> DOWN: Moves the tetronome down</li>
+        <li class="list-group-item"><i class="fa fa-arrow-circle-left"></i> LEFT: Moves the tetronome left</li>
+        <li class="list-group-item"><i class="fa fa-arrow-circle-right"></i> RIGHT: Moves the tetronome right</li>
+        <li class="list-group-item"><i class="fa fa-square-o"></i> SPACEBAR: Drops the tetronome</li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <div ng-show="musicEnabled">
+        Auto-Play Music: <input type="checkbox" ng-model="allowMusic">
+
+        MUSIC:
+        <button class="btn btn-default" ng-click="playMusic()"><i class="fa fa-play"></i> PLAY</button>
+        <button class="btn btn-default" ng-click="pauseMusic()"><i class="fa fa-pause"></i> PAUSE</button>
+        <button class="btn btn-default" ng-click="stopMusic()"><i class="fa fa-stop"></i> STOP</button>
+
+        <div ng-show="peerIDs.length > 1">
+          <h3>Online Users:</h3>
+          <ul id="onlinePeersList" ng-show="!connected && my_id" class="list-group">
+            <li class="list-group-item" ng-repeat="peerID in peerIDs" ng-if="my_id!=peerID">
+              <div class="row">
+                <div class="col-xs-8">Peer ID: {{peerID}}</div>
+                <div class="col-xs-4"><button class="btn btn-primary" ng-click="callPeerHelper(peerID)" type="button"><i class="fa fa-phone"></i> Call Peer</button></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </div>
 
 <canvas id="debug" width="640" height="480"></canvas>
-<button id="startbutton" ng-click="getPicture()">Take photo</button>
-<img ng-src="{{photo}}" id="photo" alt="photo" ng-show="!!photo">
+<!-- <button id="startbutton" ng-click="getPicture()">Take photo</button>
+<img ng-src="{{photo}}" id="photo" alt="photo" ng-show="!!photo"> -->
 
 <!-- <img src="http://placekitten.com/g/320/261" id="photo" alt="photo"> -->
 <!-- peerurl {{peerURL}} -->
@@ -171,13 +198,7 @@
   </div>
 </div> -->
 
-<ul ng-show="!connected && my_id" class="list-group">
-  <li class="list-group-item" ng-repeat="peerID in peerIDs" ng-if="my_id!=peerID">
-  Peer ID: {{peerID}}
-  <button class="btn btn-primary" ng-click="callPeerHelper(peerID)" type="button"><i class="fa fa-phone"></i> Call Peer</button>
-  </li>
-</ul>
-
+<!-- <img id="image" src="/images/github.png"> -->
 <script>
   function drawRectangle(canvasInput, overlayContext, event) {
     overlayContext.clearRect(0,0,canvasInput.width, canvasInput.height);

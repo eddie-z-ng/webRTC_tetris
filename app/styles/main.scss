@@ -147,6 +147,10 @@ body {
   }
 }
 
+#onlinePeersList {
+  overflow: scroll;
+}
+
 #step1-error, #step2, #step3 {
   display: none;
 }

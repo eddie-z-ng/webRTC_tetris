@@ -61,6 +61,16 @@ angular.module('gameRtcApp')
             getPicture: function takepicture() {
               // canvasInput.width = width;
               // canvasInput.height = height;
+              width = videoInput.clientWidth;
+              height = videoInput.clientHeight;
+
+              canvasInput.width = width;
+              canvasInput.height = height;
+
+              // console.log("CanvasInput", canvasInput, canvasInput.width, canvasInput.height);
+              // console.log("VideoInput", videoInput, videoInput.width, videoInput.height);
+              // console.log("Width - Height", width, height);
+
               canvasInput.getContext('2d').drawImage(videoInput, 0, 0, width, height);
               var data = canvasInput.toDataURL('image/png');
               return data;

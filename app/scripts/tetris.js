@@ -625,4 +625,31 @@ window.drawBlock = drawBlock;
 
   run();
 
+  soundManager.setup({
+    url: '/sounds/',
+    onready: function() {
+      console.log('SoundManager ready');
+      var tetrisTheme = soundManager.createSound({
+        url: '/sounds/tetris-theme.mp3'
+      });
+
+      function loopSound(sound) {
+        sound.play({
+          onfinish: function() {
+            loopSound(sound);
+          }
+        });
+      }
+
+      tetrisTheme.loopSound = loopSound.bind(null, tetrisTheme);
+
+      // Make tetrisTheme globally available to window
+      window.tetrisMusic = tetrisTheme;
+    },
+    ontimeout: function() {
+      console.log('No HTML5 support, SWF missing, Flash blocked, or other issue');
+    }
+
+  });
+
 })();
