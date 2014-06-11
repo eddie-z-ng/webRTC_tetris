@@ -146,8 +146,7 @@
 <button id="startbutton">Take photo</button>
 
 <!-- <img src="http://placekitten.com/g/320/261" id="photo" alt="photo"> -->
-
-peerurl {{peerURL}}
+<!-- peerurl {{peerURL}} -->
 
 <p id='gUMMessage'></p>
 <p>Status : <span id='headtrackerMessage'></span></p>
@@ -172,9 +171,9 @@ peerurl {{peerURL}}
 </div> -->
 
 <ul ng-show="!connected && my_id" class="list-group">
-  <li class="list-group-item" ng-repeat="peer_id in peer_ids" ng-if="my_id!=peer_id">
-  Peer ID: {{peer_id}}
-  <button class="btn btn-primary" ng-click="callPeerHelper(peer_id)" type="button"><i class="fa fa-phone"></i> Call Peer</button>
+  <li class="list-group-item" ng-repeat="peerID in peerIDs" ng-if="my_id!=peerID">
+  Peer ID: {{peerID}}
+  <button class="btn btn-primary" ng-click="callPeerHelper(peerID)" type="button"><i class="fa fa-phone"></i> Call Peer</button>
   </li>
 </ul>
 

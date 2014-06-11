@@ -27,7 +27,7 @@ angular.module('gameRtcApp')
 
       socket.on('peer_pool', function(data) {
         $scope.onlineUsers = data.length;
-        $scope.peer_ids = data;
+        $scope.peerIDs = data;
       });
 
       $scope.callRandomPeer = function() {
@@ -40,14 +40,10 @@ angular.module('gameRtcApp')
             $scope.callPeer();
 
             $scope.peerError = null;
-
-            $scope.$apply();
           }).error(function(data, status) {
             console.log('Failed ', data, status);
 
             $scope.peerError = data.error;
-
-            $scope.$apply();
           });
         }
       };
@@ -125,7 +121,7 @@ angular.module('gameRtcApp')
 
           } else if (data.garbageRowData) {
 
-            console.log("Received ", data.garbageRowData, " garbage lines");
+            console.log('Received ', data.garbageRowData, ' garbage lines');
             window.queueGarbageLines(data.garbageRowData);
 
           } else if (data.gameStart) {

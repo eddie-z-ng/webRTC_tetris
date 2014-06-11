@@ -217,6 +217,7 @@ window.drawBlock = drawBlock;
   var dx, dy,        // pixel size of a single tetris block
       blocks,        // 2 dimensional array (nx*ny) representing tetris court - either empty block or occupied by a 'piece'
       actions,       // queue of user actions (inputs)
+      tasks,         // queue of game actions (e.g. garbage blocks)
       playing,       // true|false - game is in progress
       dt,            // time since starting this game
       current,       // the current piece
@@ -428,12 +429,14 @@ console.log("CHange of height and width: ", ucanvas.height, ucanvas.width);
   function setBlock(x,y,type)     { blocks[x] = blocks[x] || []; blocks[x][y] = type; invalidate(); }
   function clearBlocks()          { blocks = []; invalidate(); }
   function clearActions()         { actions = []; }
+  function clearTasks()           { tasks = []; }
   function setCurrentPiece(piece) { current = piece || randomPiece(); invalidate();     }
   function setNextPiece(piece)    { next    = piece || randomPiece(); invalidateNext(); }
 
   function reset() {
     dt = 0;
     clearActions();
+    clearTasks();
     clearBlocks();
     clearRows();
     clearScore();
@@ -456,19 +459,12 @@ console.log("CHange of height and width: ", ucanvas.height, ucanvas.width);
   }
 
   function handle(action) {
-    var customFunc;
-    if (action && action.hasOwnProperty('customFunc')) {
-      customFunc = action.customFunc;
-      action = 'CUSTOMFUNC';
-    }
-
     switch(action) {
       case DIR.LEFT:  move(DIR.LEFT);  break;
       case DIR.RIGHT: move(DIR.RIGHT); break;
       case DIR.UP:    rotate();        break;
       case DIR.DOWN:  drop();          break;
       case 'FASTDROP': fastdrop();     break;
-      case 'CUSTOMFUNC': customFunc(); break;
     }
   }
 
@@ -511,6 +507,7 @@ console.log("CHange of height and width: ", ucanvas.height, ucanvas.width);
       setCurrentPiece(next);
       setNextPiece(randomPiece());
       clearActions();
+      handleQueuedTasks();
       if (occupied(current.type, current.x, current.y, current.dir)) {
         lose(true);
       }
@@ -569,9 +566,15 @@ console.log("CHange of height and width: ", ucanvas.height, ucanvas.width);
   }
 
   window.queueGarbageLines = function(n) {
-    actions.push({ customFunc: function() {addGarbageLines(n);} });
+    tasks.push( function() { addGarbageLines(n); } );
   };
 
+  function handleQueuedTasks() {
+    tasks.forEach(function(task) {
+      task.call(null);
+    });
+    clearTasks();
+  }
 
   function removeLine(n) {
     var x, y;
