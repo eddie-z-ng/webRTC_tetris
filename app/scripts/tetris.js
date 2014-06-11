@@ -61,14 +61,12 @@ function drawCourt(ctx, canvas, boardRepresentation) {
   var current = boardRepresentation.current;
   var playing = boardRepresentation.playing;
   var blocks = boardRepresentation.blocks;
-  var dx = boardRepresentation.dx;
-  var dy = boardRepresentation.dy;
 
   var nx = boardRepresentation.nx;
   var ny = boardRepresentation.ny;
 
-  // var dx = canvas.width  / nx / 2; // pixel size of a single tetris block
-  // var dy = canvas.height / ny; // (ditto)
+  var dx = canvas.width  / nx / 2; // pixel size of a single tetris block
+  var dy = canvas.height / ny; // (ditto)
 
   if (invalid.court) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -99,17 +97,8 @@ function drawNext(uctx, canvas, boardRepresentation) {
   var nx = boardRepresentation.nx;
   var ny = boardRepresentation.ny;
 
-  var dx = boardRepresentation.dx;
-  var dy = boardRepresentation.dy;
-
-  // var dx = canvas.width  / nx / 2; // pixel size of a single tetris block
-  // var dy = canvas.height / ny; // (ditto)
-
-// counter++;
-// if (counter % 1000 == 0) {
-// console.log(uctx, boardRepresentation, "DX DY", dx, dy);
-// counter = 0;
-// }
+  var dx = canvas.width  / nx / 2; // pixel size of a single tetris block
+  var dy = canvas.height / ny; // (ditto)
 
   if (invalid.next) {
     var padding = (nu - next.type.size) / 2; // half-arsed attempt at centering next piece display
@@ -319,20 +308,23 @@ window.drawBlock = drawBlock;
       var boardRepresentation;
 
       now = timestamp();
-      update(Math.min(1, (now - last) / 1000.0));
 
-      boardRepresentation = collectBoardRepresentation();
+      if (playing) {
+        update(Math.min(1, (now - last) / 1000.0));
 
-      // Dispatch the event
-      boardChangeEvent.boardRepresentation = boardRepresentation;
-      document.dispatchEvent(boardChangeEvent);
+        boardRepresentation = collectBoardRepresentation();
 
-      // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
-      draw(ctx, canvas, uctx, boardRepresentation);
-      drawScore('score', boardRepresentation);
-      drawRows('cleared-rows', boardRepresentation);
+        // Dispatch the event
+        boardChangeEvent.boardRepresentation = boardRepresentation;
+        document.dispatchEvent(boardChangeEvent);
 
-      resetBoardInvalidity(boardRepresentation);
+        // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
+        draw(ctx, canvas, uctx, boardRepresentation);
+        drawScore('score', boardRepresentation);
+        drawRows('cleared-rows', boardRepresentation);
+
+        resetBoardInvalidity(boardRepresentation);
+      }
 
       stats.update();
       last = now;
@@ -361,12 +353,6 @@ window.drawBlock = drawBlock;
     ucanvas.width  = ucanvas.clientWidth;
     ucanvas.height = ucanvas.clientHeight;
 
-console.log("CHange of height and width: ", ucanvas.height, ucanvas.width);
-    // othercanvas.width = othercanvas.clientWidth;
-    // othercanvas.height = othercanvas.clientHeight;
-    // otherucanvas.width = otherucanvas.clientWidth;
-    // otherucanvas.height = otherucanvas.clientHeight;
-
     dx = canvas.width  / nx / 2; // pixel size of a single tetris block
     dy = canvas.height / ny; // (ditto)
     invalidate();
@@ -385,10 +371,6 @@ console.log("CHange of height and width: ", ucanvas.height, ucanvas.width);
         case KEY.SPACE:  actions.push('FASTDROP'); handled = true; break;
       }
     }
-    // else if (ev.keyCode == KEY.SPACE) {
-    //   play();
-    //   handled = true;
-    // }
     if (handled){
       ev.preventDefault(); // prevent arrow keys from scrolling the page (supported in IE9+ and all other browsers)
     }
@@ -616,14 +598,8 @@ console.log("CHange of height and width: ", ucanvas.height, ucanvas.width);
       rows: rows,
       step: step,
       nu: nu,
-      dx: dx,
-      dy: dy,
       nx: nx,
-      ny: ny,
-      canvasWidth: canvas.width,
-      canvasHeight: canvas.height,
-      ucanvasWidth: ucanvas.width,
-      ucanvasHeight: ucanvas.height
+      ny: ny
     };
     return result;
   }

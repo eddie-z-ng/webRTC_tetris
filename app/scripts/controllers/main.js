@@ -1,18 +1,14 @@
 'use strict';
 
 angular.module('gameRtcApp')
-  .controller('MainCtrl', ['$rootScope', '$scope', 'HeadTrackerMedia', 'PeerConnect', '$http', 'socket',
-    function ($rootScope, $scope, HeadTrackerMedia, PeerConnect, $http, socket) {
+  .controller('MainCtrl',
+    ['$rootScope', '$scope', 'PeerConnect', 'HeadTrackerMedia', '$http', 'socket',
+    function ($rootScope, $scope, PeerConnect, HeadTrackerMedia, $http, socket) {
 
       var theirCanvas  = document.getElementById('their-gamecanvas'),
           theirCtx     = theirCanvas.getContext('2d'),
           theirUcanvas = document.getElementById('their-upcoming'),
           theirUctx    = theirUcanvas.getContext('2d');
-
-          theirCanvas.width   = theirCanvas.clientWidth;  // set canvas logical size equal to its physical size
-          theirCanvas.height  = theirCanvas.clientHeight; // (ditto)
-          theirUcanvas.width  = theirUcanvas.clientWidth;
-          theirUcanvas.height = theirUcanvas.clientHeight;
 
       $scope.gameStartCount = 0;
       $scope.gameWon = false;
@@ -21,6 +17,15 @@ angular.module('gameRtcApp')
       $scope.gameCount = 0;
       $scope.playing = false;
       $scope.waiting = false;
+
+      window.addEventListener('resize', resize);
+
+      function resize(event) {
+        theirCanvas.width   = theirCanvas.clientWidth;  // set canvas logical size equal to its physical size
+        theirCanvas.height  = theirCanvas.clientHeight; // (ditto)
+        theirUcanvas.width  = theirUcanvas.clientWidth;
+        theirUcanvas.height = theirUcanvas.clientHeight;
+      }
 
       // Socket listeners
       // ================
@@ -101,21 +106,10 @@ angular.module('gameRtcApp')
           data = JSON.parse(data);
           if (data.boardData) {
 
-            theirCanvas.width = data.canvasWidth;
-            theirCanvas.height = data.canvasHeight;
-            // console.log(theirCanvas.width, theirCanvas.height);
-
-            theirUcanvas.width = data.ucanvasWidth;
-            theirUcanvas.height = data.ucanvasHeight;
-
-            //console.log("theirUCanvas", theirUcanvas);
-
             data.invalid.court = true; // prevent blinking
             data.invalid.next = true;
 
-            // theirUctx = theirUcanvas.getContext('2d');
-
-            window.draw(theirCtx, theirUcanvas, theirUctx, data);
+            window.draw(theirCtx, theirCanvas, theirUctx, data);
             window.drawScore('their-score', data);
             window.drawRows('their-cleared-rows', data);
 
@@ -191,14 +185,17 @@ angular.module('gameRtcApp')
       $scope.peerURL = '';
       $scope.receivedData = '';
 
-      HeadTrackerMedia.getHTrackMedia().then(function(hTrackObject) {
-        $scope.streamReady = true;
+      // HeadTrackerMedia.getHTrackMedia().then(function(hTrackObject) {
+        // $scope.streamReady = true;
 
-        console.log("Got htrackmedia: ", hTrackObject);
-        var localStream = hTrackObject.stream;
+        // console.log("Got htrackmedia: ", hTrackObject);
+        // var localStream = hTrackObject.stream;
 
-        PeerConnect.getPeer(localStream).then(function(peerObject) {
+        PeerConnect.getPeer().then(function(peerObject) {
           $scope.my_id = peerObject.peer.id;
+          $scope.streamReady = true;
+
+          $scope.videoURL = peerObject.videoURL;
 
           $http.post('/confirmID', { id: $scope.my_id }).success(function(res) {
             console.log(res);
@@ -216,34 +213,14 @@ angular.module('gameRtcApp')
             attachReceiptListeners();
 
             $scope.connected = true;
-
             $scope.remotePeerId = connection.peer;
-
             $scope.peerError = null;
 
             $scope.$apply();
           });
 
-
-          $rootScope.$on('drawEvent', function(event, dataEvent) {
-            if ($scope.peerDataConnection) {
-              var data = {
-                x: dataEvent.x,
-                y: dataEvent.y,
-                angle: dataEvent.angle,
-                detection: dataEvent.detection,
-                width: dataEvent.width,
-                height: dataEvent.height,
-                style: '#3052db'
-              };
-              data.drawEvent = true;
-              $scope.peerDataConnection.send(data);
-            }
-          });
-
-
           $rootScope.$on('peerStream', function(event, objURL) {
-            console.log('Peer stream!', objURL);
+            console.log('Peer video stream received!', objURL);
             $scope.peerURL = objURL;
             $scope.$apply();
           });
@@ -262,14 +239,10 @@ angular.module('gameRtcApp')
                 $scope.remotePeerId = null;
 
                 $scope.peerError = null;
-
-                // $scope.$apply();
             }).error(function(data, status) {
                 console.log("Failed ", data, status);
 
                 $scope.peerError = data.error;
-
-                // $scope.$apply();
             });
           };
 
@@ -291,16 +264,33 @@ angular.module('gameRtcApp')
           //   $scope.peerDataConnection.send($scope.dataToSend);
           // };
 
+          HeadTrackerMedia.getHTrackMedia(peerObject.peerLocalStream)
+          .then(function(hTrackObject) {
+            console.log('Htrack object: ', hTrackObject);
+
+            $rootScope.$on('drawEvent', function(event, dataEvent) {
+              if ($scope.peerDataConnection) {
+                var data = {
+                  x: dataEvent.x,
+                  y: dataEvent.y,
+                  angle: dataEvent.angle,
+                  detection: dataEvent.detection,
+                  width: dataEvent.width,
+                  height: dataEvent.height,
+                  style: '#3052db'
+                };
+                data.drawEvent = true;
+                $scope.peerDataConnection.send(data);
+              }
+            });
+
+            $scope.getPicture = function() {
+              $scope.photo = hTrackObject.getPicture();
+            };
+
+          });
+
         });
-      });
+      // });
 
   }]);
-
-
-// function takepicture() {
-//   canvas.width = width;
-//   canvas.height = height;
-//   canvas.getContext('2d').drawImage(video, 0, 0, width, height);
-//   var data = canvas.toDataURL('image/png');
-//   photo.setAttribute('src', data);
-// }

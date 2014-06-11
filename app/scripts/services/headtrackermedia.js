@@ -6,6 +6,8 @@ angular.module('gameRtcApp')
       var deferred = $q.defer();
       var cameraStream = null;
 
+      var resolved = false;
+
       var statusMessages = {
         'whitebalance' : 'checking for stability of camera whitebalance',
         'detecting' : 'Detecting face',
@@ -39,49 +41,47 @@ angular.module('gameRtcApp')
       var width = videoInput.width;
       var height = 0;
 
-
       // the face tracking setup
       var htracker = new headtrackr.Tracker({altVideo : {ogv : "./media/capture5.ogv", mp4 : "./media/capture5.mp4"}, calcAngles : true, ui : false, headPosition : false, debug : debugOverlay});
-      htracker.init(videoInput, canvasInput);
+      htracker.init(videoInput, canvasInput, false);
       htracker.start();
 
       window.htracker = htracker;
       window.showProbabilityCanvas = showProbabilityCanvas;
 
       function getLocalStream (e) {
-        if (e.status === 'camera found') {
-          console.log(e.status);
-          setTimeout(function() {
-            console.log('Stream is ', htracker.stream);
-            window.localStream = htracker.stream;
-            cameraStream = htracker.stream;
-            // document.removeEventListener('headtrackrStatus',
-            //   getLocalStream);
+        if ( (e.status === 'camera found' || e.status in statusMessages) &&
+              !resolved )
+        {
+          var dataObj = {
+            htracker: htracker,
+            stream: cameraStream,
+            canvasOverlay: canvasOverlay,
+            overlayContext: overlayContext,
+            getPicture: function takepicture() {
+              // canvasInput.width = width;
+              // canvasInput.height = height;
+              canvasInput.getContext('2d').drawImage(videoInput, 0, 0, width, height);
+              var data = canvasInput.toDataURL('image/png');
+              return data;
+              //photo.setAttribute('src', data);
+            }
+          };
 
-            // emit event
-            // var event = new Event('localStreamReady');
-            // event.stream = htracker.stream;
-            // document.dispatchEvent(event);
-
-            var dataObj = {
-              htracker: htracker,
-              stream: htracker.stream,
-              canvasOverlay: canvasOverlay,
-              overlayContext: overlayContext
-            };
-
-            deferred.resolve(dataObj);
-
-          }, 1); // Delay this so that headtrackr.js finishes initializing stream
-        } else {
-          console.log(e.status);
-          deferred.reject("error getting stream");
+          resolved = true;
+          deferred.resolve(dataObj);
         }
 
         // Debug messages
         if (e.status in supportMessages) {
           var messagep = document.getElementById('gUMMessage');
           messagep.innerHTML = supportMessages[e.status];
+
+          if (!resolved) {
+            resolved = true;
+            deferred.reject('Couldn\'t get camera/microphone');
+          }
+
         } else if (e.status in statusMessages) {
           var messagep = document.getElementById('headtrackerMessage');
           messagep.innerHTML = statusMessages[e.status];
@@ -108,7 +108,8 @@ angular.module('gameRtcApp')
       }
 
       return {
-        getHTrackMedia: function() {
+        getHTrackMedia: function(localStream) {
+          cameraStream = localStream;
           return deferred.promise;
         }
       };

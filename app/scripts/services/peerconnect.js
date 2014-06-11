@@ -9,15 +9,19 @@ angular.module('gameRtcApp.factories')
     function ($q, $rootScope, $sce, $location) {
 
     var deferred = $q.defer();
-    // var streamReady = false;
     var peerIdReady = false;
     var allReady = false;
     var peerLocalStream;
+    var peer;
+    var blobURL;
 
     var existingCall;
 
     var peerKey = '7k99lrngvwle4s4i';
     var stunURL = 'stun:stun.l.google.com:19302';
+
+    // Compatibility shim
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
     // PeerJS object
     // -- Peer JS CLOUD
@@ -29,33 +33,57 @@ angular.module('gameRtcApp.factories')
     // var peer = new Peer({ host: 'wardsng-peerjs.herokuapp.com', path: '/', port: 80, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
     // ]}});
 
-    var peer = new Peer({ host: $location.host(), path: '/', port: 3000, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
-    ]}});
+    // var myvideo = document.getElementById('my-video');
 
-    // var peer = new Peer({ host: 'localhost', path: '/', port: 3000, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
-    // ]}});
+    navigator.getUserMedia({audio: true, video: true}, function(stream){
+      // Set your video displays
+      // myvideo.prop('src', URL.createObjectURL(stream));
 
-    peer.on('open', function(){
-      peerIdReady = true;
-      resolvePeer();
-    });
+      blobURL = $sce.trustAsResourceUrl(URL.createObjectURL(stream));
+      window.localStream = stream;
 
-    // document.addEventListener('localStreamReady', function(event) {
-    //   streamReady = true;
-    //   resolvePeer();
-    // });
+      peerLocalStream = stream;
 
-    // document.addEventListener('localStreamFail', function(event) {
-    //   deferred.reject(event);
-    // });
+      peer = new Peer({ host: $location.host(), path: '/', port: 3000, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
+      ]}});
+
+      peer.on('open', function(){
+        peerIdReady = true;
+        resolvePeer();
+      });
+
+      // Receiving a call
+      peer.on('call', function(call){
+        // Answer the call automatically (instead of prompting user) for demo purposes
+        console.log('Answering a call!');
+
+        call.answer(peerLocalStream);
+        initiateCall(call);
+      });
+      peer.on('error', function(err){
+        alert(err.message);
+        // Return to step 2 if error occurs
+        step2();
+      });
+
+      // Receiving a connection
+      peer.on('connection', function(connection) {
+        console.log('Answering a connection!', connection);
+
+        $rootScope.$emit('connectionChange', connection);
+      });
+
+    }, function(){ deferred.reject('Failed to getUserMedia!'); });
+
 
     function resolvePeer() {
-      // allReady = streamReady && peerIdReady;
       allReady = peerIdReady;
 
       if (allReady) {
         var peerObject = {
           peer: peer,
+          peerLocalStream: peerLocalStream,
+          videoURL: blobURL,
           makeCall: function(remotePeerId) {
             // Initiate a call!
             console.log('Initiating a call to: ', remotePeerId);
@@ -79,31 +107,7 @@ angular.module('gameRtcApp.factories')
       }
     }
 
-    // Receiving a call
-    peer.on('call', function(call){
-      // Answer the call automatically (instead of prompting user) for demo purposes
-      console.log('Answering a call!');
 
-      // call.answer(window.localStream);
-      call.answer(peerLocalStream);
-      initiateCall(call);
-    });
-    peer.on('error', function(err){
-      alert(err.message);
-      // Return to step 2 if error occurs
-      step2();
-    });
-
-    // Receiving a connection
-    peer.on('connection', function(connection) {
-      console.log('Answering a connection!', connection);
-
-      // connection.on('data', function(data) {
-      //   console.log('Received:', data);
-      // });
-
-      $rootScope.$emit('connectionChange', connection);
-    });
 
     // // Click handlers setup
     // $(function(){
@@ -162,8 +166,7 @@ angular.module('gameRtcApp.factories')
     }
 
     return {
-      getPeer: function(localStream) {
-        peerLocalStream = localStream;
+      getPeer: function() {
         return deferred.promise;
       }
     };

@@ -82,7 +82,7 @@
     <div class="col-md-4 no-pad">
       <div>
         <canvas id="my-video-canvas"style="display:none"></canvas>
-        <video id="my-video" autoplay loop></video>
+        <video id="my-video" ng-src="{{videoURL}}" autoplay loop></video>
         <canvas id="my-overlay"></canvas>
         <canvas id="my-gamecanvas"></canvas>
       </div>
@@ -96,7 +96,7 @@
       </div>
     </div>
 
-    <div class="col-md-4 no-pad" ng-show="connected">
+    <div class="col-md-4 no-pad">
       <div>
         <canvas id="their-video-canvas"style="display:none"></canvas>
         <video id="their-video" ng-src="{{peerURL}}" autoplay></video>
@@ -105,7 +105,7 @@
       </div>
     </div>
 
-    <div class="col-md-2 no-pad" ng-show="connected">
+    <div class="col-md-2 no-pad">
       <div id="menu">
         <p><canvas id="their-upcoming"></canvas></p>
         <p>SCORE <span id="their-score">00000</span></p>
@@ -143,7 +143,8 @@
 </div>
 
 <canvas id="debug" width="640" height="480"></canvas>
-<button id="startbutton">Take photo</button>
+<button id="startbutton" ng-click="getPicture()">Take photo</button>
+<img ng-src="{{photo}}" id="photo" alt="photo" ng-show="!!photo">
 
 <!-- <img src="http://placekitten.com/g/320/261" id="photo" alt="photo"> -->
 <!-- peerurl {{peerURL}} -->
