@@ -27,6 +27,7 @@ angular.module('gameRtcApp')
 
       socket.on('peer_pool', function(data) {
         $scope.onlineUsers = data.length;
+        $scope.peer_ids = data;
       });
 
       $scope.callRandomPeer = function() {
@@ -266,13 +267,13 @@ angular.module('gameRtcApp')
 
                 $scope.peerError = null;
 
-                $scope.$apply();
+                // $scope.$apply();
             }).error(function(data, status) {
                 console.log("Failed ", data, status);
 
                 $scope.peerError = data.error;
 
-                $scope.$apply();
+                // $scope.$apply();
             });
           };
 
@@ -283,6 +284,11 @@ angular.module('gameRtcApp')
             attachReceiptListeners();
 
             $scope.connected = true;
+          };
+
+          $scope.callPeerHelper = function(remotePeerId) {
+            $scope.remotePeerId = remotePeerId;
+            $scope.callPeer();
           };
 
           // $scope.sendData = function() {
