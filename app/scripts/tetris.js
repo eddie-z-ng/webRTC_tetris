@@ -113,12 +113,22 @@ function drawNext(uctx, canvas, boardRepresentation) {
   }
 }
 
-function drawScore(scoreID, boardRepresentation) {
+function drawVScore(scoreID, boardRepresentation) {
   var invalid = boardRepresentation.invalid;
   var vscore = boardRepresentation.vscore;
 
   if (invalid.score) {
     html(scoreID, ("00000" + Math.floor(vscore)).slice(-5));
+    invalid.score = false;
+  }
+}
+
+function drawScore(scoreID, boardRepresentation) {
+  var invalid = boardRepresentation.invalid;
+  var score = boardRepresentation.score;
+
+  if (invalid.score) {
+    html(scoreID, ("00000" + Math.floor(score)).slice(-5));
     invalid.score = false;
   }
 }
@@ -158,6 +168,7 @@ window.draw = draw;
 window.drawCourt = drawCourt;
 window.drawNext = drawNext;
 window.drawScore = drawScore;
+window.drawVScore = drawVScore;
 window.drawRows = drawRows;
 window.drawPiece = drawPiece;
 window.drawBlock = drawBlock;
@@ -302,8 +313,10 @@ window.drawBlock = drawBlock;
     showStats(); // initialize FPS counter
     addEvents(); // attach keydown and resize events
 
-    var last, now;
+    var last, now, sendTimeLast, sendTimeNow;
     last = now = timestamp();
+    sendTimeLast = sendTimeNow = timestamp();
+
     function frame() {
       var boardRepresentation;
 
@@ -312,18 +325,24 @@ window.drawBlock = drawBlock;
       if (playing) {
         update(Math.min(1, (now - last) / 1000.0));
 
-        boardRepresentation = collectBoardRepresentation();
+        sendTimeNow = timestamp();
 
-        // Dispatch the event
-        boardChangeEvent.boardRepresentation = boardRepresentation;
-        document.dispatchEvent(boardChangeEvent);
+        if (sendTimeNow - sendTimeLast > 1000/30) {
+          boardRepresentation = collectBoardRepresentation();
 
-        // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
-        draw(ctx, canvas, uctx, boardRepresentation);
-        drawScore('score', boardRepresentation);
-        drawRows('cleared-rows', boardRepresentation);
+          // Dispatch the event
+          boardChangeEvent.boardRepresentation = boardRepresentation;
+          document.dispatchEvent(boardChangeEvent);
 
-        resetBoardInvalidity(boardRepresentation);
+          // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
+          draw(ctx, canvas, uctx, boardRepresentation);
+          drawVScore('score', boardRepresentation);
+          drawRows('cleared-rows', boardRepresentation);
+
+          resetBoardInvalidity(boardRepresentation);
+
+          sendTimeLast = sendTimeNow;
+        }
       }
 
       stats.update();

@@ -2,8 +2,8 @@
 
 angular.module('gameRtcApp')
   .controller('MainCtrl',
-    ['$rootScope', '$scope', 'PeerConnect', 'HeadTrackerMedia', '$http', 'socket',
-    function ($rootScope, $scope, PeerConnect, HeadTrackerMedia, $http, socket) {
+    ['$rootScope', '$scope', 'PeerConnect', '$http', 'socket',
+    function ($rootScope, $scope, PeerConnect, $http, socket) {
 
       var theirCanvas  = document.getElementById('their-gamecanvas'),
           theirCtx     = theirCanvas.getContext('2d'),
@@ -50,7 +50,7 @@ angular.module('gameRtcApp')
       })();
       console.log($scope.musicEnabled);
 
-      $scope.allowMusic = true;
+      $scope.allowMusic = false;
 
       window.addEventListener('resize', resize);
 
@@ -133,6 +133,7 @@ angular.module('gameRtcApp')
         }
       };
 
+      var lastProcessed = new Date();
       function handleReceiptPeerData (data) {
         if (data.drawEvent) {
           // draw the received rectangle event
@@ -144,13 +145,18 @@ angular.module('gameRtcApp')
 
           data = JSON.parse(data);
           if (data.boardData) {
+            var now = new Date();
 
-            data.invalid.court = true; // prevent blinking
-            data.invalid.next = true;
+            if(now - lastProcessed > 1000/30) {
+              lastProcessed = new Date();
 
-            window.draw(theirCtx, theirCanvas, theirUctx, data);
-            window.drawScore('their-score', data);
-            window.drawRows('their-cleared-rows', data);
+              data.invalid.court = true; // prevent blinking
+              data.invalid.next = true;
+
+              window.draw(theirCtx, theirCanvas, theirUctx, data);
+              window.drawScore('their-score', data);
+              window.drawRows('their-cleared-rows', data);
+            }
 
           } else if (data.garbageRowData) {
 
@@ -173,8 +179,8 @@ angular.module('gameRtcApp')
             $scope.playing = false;
             $scope.gameWon = true;
 
-            $scope.getPicture();
-console.log('PHOTO', $scope.photo);
+//             $scope.getPicture();
+// console.log('PHOTO', $scope.photo);
 
             $scope.$apply();
 
@@ -210,8 +216,8 @@ console.log('PHOTO', $scope.photo);
           $scope.playing = false;
           $scope.gameWon = false;
 
-          $scope.getPicture();
-console.log('PHOTO', $scope.photo);
+//           $scope.getPicture();
+// console.log('PHOTO', $scope.photo);
           $scope.$apply();
         });
 
@@ -304,31 +310,31 @@ console.log('PHOTO', $scope.photo);
         //   $scope.peerDataConnection.send($scope.dataToSend);
         // };
 
-        HeadTrackerMedia.getHTrackMedia(peerObject.peerLocalStream)
-        .then(function(hTrackObject) {
-          console.log('Htrack object: ', hTrackObject);
+        // HeadTrackerMedia.getHTrackMedia(peerObject.peerLocalStream)
+        // .then(function(hTrackObject) {
+        //   console.log('Htrack object: ', hTrackObject);
 
-          $rootScope.$on('drawEvent', function(event, dataEvent) {
-            if ($scope.peerDataConnection) {
-              var data = {
-                x: dataEvent.x,
-                y: dataEvent.y,
-                angle: dataEvent.angle,
-                detection: dataEvent.detection,
-                width: dataEvent.width,
-                height: dataEvent.height,
-                style: '#3052db'
-              };
-              data.drawEvent = true;
-              $scope.peerDataConnection.send(data);
-            }
-          });
+        //   $rootScope.$on('drawEvent', function(event, dataEvent) {
+        //     if ($scope.peerDataConnection) {
+        //       var data = {
+        //         x: dataEvent.x,
+        //         y: dataEvent.y,
+        //         angle: dataEvent.angle,
+        //         detection: dataEvent.detection,
+        //         width: dataEvent.width,
+        //         height: dataEvent.height,
+        //         style: '#3052db'
+        //       };
+        //       data.drawEvent = true;
+        //       $scope.peerDataConnection.send(data);
+        //     }
+        //   });
 
-          $scope.getPicture = function() {
-            $scope.photo = hTrackObject.getPicture();
-          };
+        //   $scope.getPicture = function() {
+        //     $scope.photo = hTrackObject.getPicture();
+        //   };
 
-        });
+        // });
 
       });
 
