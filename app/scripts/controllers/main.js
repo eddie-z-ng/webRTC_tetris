@@ -2,8 +2,8 @@
 
 angular.module('gameRtcApp')
   .controller('MainCtrl',
-    ['$rootScope', '$scope', 'PeerConnect', '$http', 'socket',
-    function ($rootScope, $scope, PeerConnect, $http, socket) {
+    ['$rootScope', '$scope', 'PeerConnect', 'HeadTrackerMedia', '$http', 'socket',
+    function ($rootScope, $scope, PeerConnect, HeadTrackerMedia, $http, socket) {
 
       var theirCanvas  = document.getElementById('their-gamecanvas'),
           theirCtx     = theirCanvas.getContext('2d'),
@@ -179,8 +179,8 @@ angular.module('gameRtcApp')
             $scope.playing = false;
             $scope.gameWon = true;
 
-//             $scope.getPicture();
-// console.log('PHOTO', $scope.photo);
+            $scope.getPicture();
+console.log('PHOTO', $scope.photo);
 
             $scope.$apply();
 
@@ -216,8 +216,8 @@ angular.module('gameRtcApp')
           $scope.playing = false;
           $scope.gameWon = false;
 
-//           $scope.getPicture();
-// console.log('PHOTO', $scope.photo);
+          $scope.getPicture();
+console.log('PHOTO', $scope.photo);
           $scope.$apply();
         });
 
@@ -306,35 +306,35 @@ angular.module('gameRtcApp')
           $scope.callPeer();
         };
 
-        // $scope.sendData = function() {
-        //   $scope.peerDataConnection.send($scope.dataToSend);
-        // };
+        $scope.sendData = function() {
+          $scope.peerDataConnection.send($scope.dataToSend);
+        };
 
-        // HeadTrackerMedia.getHTrackMedia(peerObject.peerLocalStream)
-        // .then(function(hTrackObject) {
-        //   console.log('Htrack object: ', hTrackObject);
+        HeadTrackerMedia.getHTrackMedia(peerObject.peerLocalStream)
+        .then(function(hTrackObject) {
+          console.log('Htrack object: ', hTrackObject);
 
-        //   $rootScope.$on('drawEvent', function(event, dataEvent) {
-        //     if ($scope.peerDataConnection) {
-        //       var data = {
-        //         x: dataEvent.x,
-        //         y: dataEvent.y,
-        //         angle: dataEvent.angle,
-        //         detection: dataEvent.detection,
-        //         width: dataEvent.width,
-        //         height: dataEvent.height,
-        //         style: '#3052db'
-        //       };
-        //       data.drawEvent = true;
-        //       $scope.peerDataConnection.send(data);
-        //     }
-        //   });
+          $rootScope.$on('drawEvent', function(event, dataEvent) {
+            if ($scope.peerDataConnection) {
+              var data = {
+                x: dataEvent.x,
+                y: dataEvent.y,
+                angle: dataEvent.angle,
+                detection: dataEvent.detection,
+                width: dataEvent.width,
+                height: dataEvent.height,
+                style: '#3052db'
+              };
+              data.drawEvent = true;
+              $scope.peerDataConnection.send(data);
+            }
+          });
 
-        //   $scope.getPicture = function() {
-        //     $scope.photo = hTrackObject.getPicture();
-        //   };
+          $scope.getPicture = function() {
+            $scope.photo = hTrackObject.getPicture();
+          };
 
-        // });
+        });
 
       });
 
