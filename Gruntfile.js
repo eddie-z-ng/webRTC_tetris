@@ -249,6 +249,7 @@ module.exports = function (grunt) {
     // additional tasks can operate on them
     useminPrepare: {
       html: ['<%= yeoman.app %>/views/index.html',
+             '<%= yeoman.app %>/views/partials/main.html',
              '<%= yeoman.app %>/views/index.jade'],
       options: {
         dest: '<%= yeoman.dist %>/public'
