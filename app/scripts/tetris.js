@@ -390,6 +390,10 @@ window.drawBlock = drawBlock;
         case KEY.SPACE:  actions.push('FASTDROP'); handled = true; break;
       }
     }
+    // if (ev.keyCode == KEY.ESC) {
+    //   play();
+    //   handled = true;
+    // }
     if (handled){
       ev.preventDefault(); // prevent arrow keys from scrolling the page (supported in IE9+ and all other browsers)
     }
