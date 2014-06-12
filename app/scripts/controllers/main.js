@@ -160,7 +160,7 @@ angular.module('gameRtcApp')
 
           } else if (data.garbageRowData) {
 
-            console.log('Received ', data.garbageRowData, ' garbage lines');
+            // console.log('Received ', data.garbageRowData, ' garbage lines');
             window.queueGarbageLines(data.garbageRowData);
 
           } else if (data.gameStart) {
@@ -179,8 +179,8 @@ angular.module('gameRtcApp')
             $scope.playing = false;
             $scope.gameWon = true;
 
-            $scope.getPicture();
-console.log('PHOTO', $scope.photo);
+//             $scope.getPicture();
+// console.log('PHOTO', $scope.photo);
 
             $scope.$apply();
 
@@ -216,8 +216,8 @@ console.log('PHOTO', $scope.photo);
           $scope.playing = false;
           $scope.gameWon = false;
 
-          $scope.getPicture();
-console.log('PHOTO', $scope.photo);
+//           $scope.getPicture();
+// console.log('PHOTO', $scope.photo);
           $scope.$apply();
         });
 
@@ -249,7 +249,7 @@ console.log('PHOTO', $scope.photo);
           console.log('Failed ', data, status);
 
           $scope.peerError = data.error;
-          $scope.$apply();
+          // $scope.$apply();
         });
 
         $rootScope.$on('connectionChange', function (event, connection) {
@@ -335,6 +335,7 @@ console.log('PHOTO', $scope.photo);
           };
 
         });
+
 
       });
 

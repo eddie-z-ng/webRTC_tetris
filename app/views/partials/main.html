@@ -152,9 +152,9 @@
         <button class="btn btn-default" ng-click="pauseMusic()"><i class="fa fa-pause"></i> PAUSE</button>
         <button class="btn btn-default" ng-click="stopMusic()"><i class="fa fa-stop"></i> STOP</button>
 
-        <div ng-show="peerIDs.length > 1">
+        <div ng-show="!connected && my_id && peerIDs.length > 1">
           <h3>Online Users:</h3>
-          <ul id="onlinePeersList" ng-show="!connected && my_id" class="list-group">
+          <ul id="onlinePeersList" class="list-group">
             <li class="list-group-item" ng-repeat="peerID in peerIDs" ng-if="my_id!=peerID">
               <div class="row">
                 <div class="col-xs-8">Peer ID: {{peerID}}</div>

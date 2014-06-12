@@ -386,7 +386,7 @@ window.drawBlock = drawBlock;
         case KEY.RIGHT:  actions.push(DIR.RIGHT); handled = true; break;
         case KEY.UP:     actions.push(DIR.UP);    handled = true; break;
         case KEY.DOWN:   actions.push(DIR.DOWN);  handled = true; break;
-        case KEY.ESC:    lose(true);                  handled = true; break;
+        // case KEY.ESC:    lose(true);                  handled = true; break;
         case KEY.SPACE:  actions.push('FASTDROP'); handled = true; break;
       }
     }
@@ -547,7 +547,7 @@ window.drawBlock = drawBlock;
   }
 
   function addGarbageLines(n) {
-    console.log("Adding ", n, " garbage lines");
+    // console.log("Adding ", n, " garbage lines");
     var x, y;
     var holeIndex = Math.floor(Math.random()*nx);
 

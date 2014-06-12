@@ -35,6 +35,7 @@ angular.module('gameRtcApp.factories')
 
     // var myvideo = document.getElementById('my-video');
 
+    // navigator.getUserMedia({audio: true, video: true}, function(stream) {
     navigator.getUserMedia({audio: true, video: true}, function(stream) {
       // Set your video displays
       // myvideo.prop('src', URL.createObjectURL(stream));
