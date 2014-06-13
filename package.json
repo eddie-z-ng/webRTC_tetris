@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "body-parser": "~1.0.0",
-    "compression": "~1.0.1",
+    "compression": "^1.0.6",
     "cookie-parser": "~1.0.1",
     "ejs": "~0.8.4",
     "errorhandler": "~1.0.0",

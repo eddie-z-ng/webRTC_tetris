@@ -83,6 +83,7 @@ body {
 
 #main-header {
   text-align: center;
+  padding-top: 100px;
 
   span {
     display: block;
@@ -120,6 +121,16 @@ body {
 #gamestatus {
   text-align: center;
   text-transform: uppercase;
+
+  position: absolute;
+  z-index: 1800;
+  margin: 0 auto;
+  // width: 100%;
+  // bottom: 35%;
+
+  width: 30%;
+  left: 35%;
+  bottom: 5%;
 }
 
 #gameDirections {
@@ -132,6 +143,19 @@ body {
   overflow: scroll;
 }
 
+.white-border {
+    border: 2px solid white;
+}
+
+#step1 {
+  text-align: center;
+  p {
+    width: 50%;
+    left: 25%;
+    position: relative;
+  }
+}
+
 #step1-error, #step2, #step3 {
   display: none;
 }
@@ -139,12 +163,23 @@ body {
   font-weight: bold;
 }
 
-canvas, video {
-  width: 96%;
-  height: 100%;
-  display: block;
-  margin: 0 auto;
+.video-container {
+  position: relative;
+
+  video {
+    width: 96%;
+    height: 100%;
+    display: block;
+    margin: 0 auto;
+  }
+
+  canvas {
+    width: 96%;
+    // height: 50%; // need to fix this
+  }
+
 }
+
 
 video {
   background-color: #eee;
@@ -153,7 +188,7 @@ video {
 
 #upcoming, #their-upcoming {
   width: 100%;
-  height: 100%;
+  // height: 100%;
 }
 
 #my-overlay, #their-overlay {
@@ -194,6 +229,21 @@ video {
     font-size: 1.5em;
 }
 
+.bottom-left {
+  z-index: 500;
+  position: absolute;
+  bottom: 0px;
+  width: 100px;
+}
+
+.bottom-right {
+  z-index: 500;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 100px;
+}
+
 /* Animated Checkbox */
 @import '/styles/component.css';
 
@@ -206,3 +256,6 @@ video {
 
 /* Split Layout */
 @import '/styles/splitlayout.css';
+
+/* Animated Navigation Links */
+@import '/styles/animatednav-style.css';

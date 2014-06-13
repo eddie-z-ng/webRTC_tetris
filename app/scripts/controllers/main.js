@@ -9,6 +9,10 @@ angular.module('gameRtcApp')
           theirCtx     = theirCanvas.getContext('2d'),
           theirUcanvas = document.getElementById('their-upcoming'),
           theirUctx    = theirUcanvas.getContext('2d');
+
+      var homeBtn = document.getElementById('moveToHome');
+      var gameBtn = document.getElementById('moveToGame');
+
       var musicPaused = false;
       var musicLoopEnabled = false;
 
@@ -55,8 +59,8 @@ angular.module('gameRtcApp')
       window.addEventListener('resize', resize);
 
       function resize(event) {
-        theirCanvas.width   = theirCanvas.clientWidth;  // set canvas logical size equal to its physical size
-        theirCanvas.height  = theirCanvas.clientHeight; // (ditto)
+        // theirCanvas.width   = theirCanvas.clientWidth;  // set canvas logical size equal to its physical size
+        // theirCanvas.height  = theirCanvas.clientHeight; // (ditto)
         theirUcanvas.width  = theirUcanvas.clientWidth;
         theirUcanvas.height = theirUcanvas.clientHeight;
       }
@@ -76,9 +80,10 @@ angular.module('gameRtcApp')
 
             $scope.remotePeerId = res.peerID;
 
+            $scope.peerError = null;
+
             $scope.callPeer();
 
-            $scope.peerError = null;
           }).error(function(data, status) {
             console.log('Failed ', data, status);
 
@@ -153,7 +158,7 @@ angular.module('gameRtcApp')
               data.invalid.court = true; // prevent blinking
               data.invalid.next = true;
 
-              window.draw(theirCtx, theirCanvas, theirUctx, data);
+              window.drawTetris(theirCtx, theirCanvas, theirUctx, data);
               window.drawScore('their-score', data);
               window.drawRows('their-cleared-rows', data);
             }
@@ -268,6 +273,8 @@ angular.module('gameRtcApp')
         $rootScope.$on('peerStream', function(event, objURL) {
           console.log('Peer video stream received!', objURL);
           $scope.peerURL = objURL;
+
+           gameBtn.click();
           $scope.$apply();
         });
 
@@ -299,6 +306,8 @@ angular.module('gameRtcApp')
           attachReceiptListeners();
 
           $scope.connected = true;
+
+          gameBtn.click();
         };
 
         $scope.callPeerHelper = function(remotePeerId) {

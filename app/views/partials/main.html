@@ -1,56 +1,40 @@
 <!-- <div ng-include="'partials/navbar'"></div> -->
 <div class="pt-wrapper">
-
-    <div class="pt-trigger-container">
-        <button class="pt-trigger" data-animation="1" data-goto="-1">Go to next page</button>
-        <button class="pt-trigger" data-animation="2" data-goto="-2">Go to previous page</button>
-        <button class="pt-trigger" data-animation="59-60-61-62-63-64-65-66-67" data-goto="-1">Next page - random anims</button>
-        <button class="pt-trigger" data-animation="50-51-52-53-54-55-56-57-58" data-goto="-2">Previous page - random anims</button>
-        <button class="pt-trigger" data-animation="50" data-goto="1">Go to page 1</button>
-        <button class="pt-trigger" data-animation="51" data-goto="2">Go to page 2</button>
-        <button class="pt-trigger" data-animation="52" data-goto="3">Go to page 3</button>
-        <button class="pt-trigger" data-animation="53" data-goto="4">Go to page 4</button>
-        <button class="pt-trigger" data-animation="58" data-goto="5">Go to page 5</button>
-        <button class="pt-trigger" data-animation="59-60-61-62-63-64-65-66-67" data-goto="6">Go to page 6</button>
-    </div>
-
-
     <!--All Pages-->
     <div class="pt-page pt-page-1">
 
         <div id="main-header">
-        <span>WEBTRIS</span>
-        <span>Web RTC Tetris</span>
+          <span>WEBTRIS</span>
+          <span>Web RTC Tetris</span>
         </div>
 
         <!-- Get local audio/video stream -->
         <div id="step1" ng-show="!streamReady">
-          <p>Please click `allow` on the top of the screen so we can access your webcam and microphone for calls.</p>
-
+          <p class="white-border">Please click <strong>Allow</strong> on the top of the screen so we can access your webcam and microphone for calls.</p>
         </div>
 
         <div class="container">
           <div class="row">
 
-            <div class="col-md-1">
-              <div id="stats-menu"></div>
-            </div>
-
-            <div class="col-md-5">
-              <h3>Your Peer ID: {{my_id}}</h3>
+            <div class="col-md-6" ng-show="my_id">
+              <p class="white-border">
+                <strong>Your Peer ID: {{my_id}}</strong>
+              </p>
             </div>
 
             <div class="col-md-6">
-              <h3 ng-show="connected && !peerError">Opponent's Peer ID: {{remotePeerId}}</h3>
+              <p class="white-border" ng-show="connected && !peerError">
+                <strong>Opponent's Peer ID: {{remotePeerId}}</strong>
+              </p>
               <div ng-show="peerError" class="alert alert-danger">{{peerError}}</div>
             </div>
 
           </div>
-        </div>
+          <br>
 
-<!--         <div class="container">
-          <div class="row"> -->
-            <div class="col-md-7" ng-show="my_id">
+          <div class="row">
+
+            <div class="col-md-6" ng-show="my_id">
               <div class="input-group" ng-show="!connected">
                 <span class="input-group-addon">#</span>
                 <input type="text" class="form-control" ng-model="remotePeerId" type="text" placeholder="Enter remote peer id!">
@@ -71,101 +55,22 @@
               </div>
             </div>
 
-            <div class="col-md-5" ng-show="!connected && my_id">
+            <div class="col-md-6" ng-show="!connected && my_id">
               <button class="btn btn-primary" ng-click="callRandomPeer()" type="button"><i class="fa fa-users"></i> Find random peer</button>
               <span class="badge" ng-show="my_id">Online Users: {{onlineUsers}}</span>
             </div>
-            <div class="col-md-5" ng-show="connected && !playing">
-              <button class="btn btn-success" ng-click="play(true)" ng-show="gameStartCount==0 && connected"><i class="fa fa-play-circle-o"></i> Start Game</button>
-            </div>
-            <div class="col-md-5" ng-show="connected && waiting">
-              <p ng-show="countDown">Starting in {{countDown}}</p>
-              <p ng-show="!countDown"><i class="fa fa-cog fa-spin"></i> Waiting for opponent...</p>
-            </div>
 
-            <div ng-show="!connected && my_id && peerIDs.length > 1">
-              <h3>Online Users:</h3>
-              <ul id="onlinePeersList" class="list-group">
-                <li class="list-group-item" ng-repeat="peerID in peerIDs" ng-if="my_id!=peerID">
-                  <div class="row">
-                    <div class="col-xs-8">Peer ID: {{peerID}}</div>
-                    <div class="col-xs-4"><button class="btn btn-primary" ng-click="callPeerHelper(peerID)" type="button"><i class="fa fa-phone"></i> Call Peer</button></div>
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-<!--           </div>
-        <div> -->
-
-
-
-    </div>
-
-    <div class="pt-page pt-page-2">
-
-      <!-- videos -->
-<!--       <div class="container">
-        <div class="row">
-
-          <div class="col-md-4 no-pad">
-            <div>
-              <canvas id="my-video-canvas"style="display:none"></canvas>
-              <video id="my-video" ng-src="{{videoURL}}" autoplay loop></video>
-              <canvas id="my-overlay"></canvas>
-              <canvas id="my-gamecanvas"></canvas>
-            </div>
-          </div>
-
-          <div class="col-md-2 no-pad">
-            <div id="menu">
-              <p><canvas id="upcoming"></canvas></p>
-              <p>SCORE <span id="score">00000</span></p>
-              <p>CLEARED ROWS <span id="cleared-rows">0</span></p>
-            </div>
-          </div>
-
-          <div class="col-md-4 no-pad">
-            <div>
-              <canvas id="their-video-canvas"style="display:none"></canvas>
-              <video id="their-video" ng-src="{{peerURL}}" autoplay></video>
-              <canvas id="their-overlay"></canvas>
-              <canvas id="their-gamecanvas"></canvas>
-            </div>
-          </div>
-
-          <div class="col-md-2 no-pad">
-            <div id="menu">
-              <p><canvas id="their-upcoming"></canvas></p>
-              <p>SCORE <span id="their-score">00000</span></p>
-              <p>CLEARED ROWS <span id="their-cleared-rows">0</span></p>
-            </div>
           </div>
 
         </div>
 
-      </div> -->
-
-      <div id="gamestatus" ng-show="connected">
-        <div class="alert alert-info" ng-show="!playing && !gameCount">
-          <h3>Twiddling your thumbs eh?</h3>
-        </div>
-        <div class="alert alert-info" ng-show="playing">
-          <h3>Who's it gonna be?!</h3>
-        </div>
-        <div class="alert alert-success" ng-show="gameWon && !playing && gameCount">
-          <h3>You win!</h3>
-        </div>
-        <div class="alert alert-danger" ng-show="!gameWon && !playing && gameCount">
-          <h3>You lose!</h3>
-        </div>
-      </div>
 
       <!-- Dashboard keyboard and music -->
       <div class="container">
         <div class="row">
           <div id="gameDirections" class="col-md-6">
-            <i class="fa fa-keyboard-o"></i> Keyboard Controls
+
+            <h5><i class="fa fa-keyboard-o"></i> Keyboard Controls</h5>
             <ul class="list-group">
               <li class="list-group-item"><i class="fa fa-arrow-circle-up"></i> UP: Rotates the tetronome</li>
               <li class="list-group-item"><i class="fa fa-arrow-circle-down"></i> DOWN: Moves the tetronome down</li>
@@ -179,7 +84,7 @@
               <form class="ac-custom ac-checkbox ac-checkmark">
                 <ul>
                   <li><input type="checkbox" ng-model="allowMusic" id="cb1" name="cb1"><label for="cb1">Play music on start</label></li>
-                <ul>
+                </ul>
               </form>
 
               MUSIC:
@@ -187,45 +92,71 @@
               <button class="btn btn-default" ng-click="pauseMusic()"><i class="fa fa-pause"></i> PAUSE</button>
               <button class="btn btn-default" ng-click="stopMusic()"><i class="fa fa-stop"></i> STOP</button>
             </div>
-
           </div>
+
         </div>
-<!--         <p id='gUMMessage'></p>
-        <p>Status : <span id='headtrackerMessage'></span></p>
-        <p><input type="button" onclick="htracker.stop();htracker.start();" value="reinitiate facedetection"></input> -->
+
       </div>
 
+    <button class="pt-trigger bottom-left btn btn-success" id="moveToGame" data-animation="60" data-goto="2">Game</button>
+
+    <button ng-show="!connected && my_id && peerIDs.length > 1" class="pt-trigger bottom-right btn btn-success" id="moveToUsers" data-animation="60" data-goto="3">User List</button>
     </div>
 
 
-    <div class="pt-page pt-page-3">
-        <h1><strong>Page 3</strong></h1>
+    <div class="pt-page pt-page-2">
+
+        <div id="gamestatus" ng-show="connected">
+
+          <div ng-show="connected && !playing">
+            <button class="btn btn-success" ng-click="play(true)" ng-show="gameStartCount==0 && connected"><i class="fa fa-play-circle-o"></i> Start Game</button>
+          </div>
+          <div ng-show="connected && waiting">
+            <p ng-show="countDown">Starting in {{countDown}}</p>
+            <p ng-show="!countDown"><i class="fa fa-cog fa-spin"></i> Waiting for opponent...</p>
+          </div>
+
+            <div class="alert alert-info" ng-show="!playing && !gameCount">
+              <strong>Twiddling your thumbs eh?</strong>
+            </div>
+            <div class="alert alert-info" ng-show="playing">
+              <strong>Who's it gonna be?!</strong>
+            </div>
+            <div class="alert alert-success" ng-show="gameWon && !playing && gameCount">
+              <strong>You win!</strong>
+            </div>
+            <div class="alert alert-danger" ng-show="!gameWon && !playing && gameCount">
+              <strong>You lose!</strong>
+            </div>
+        </div>
+
+        <button class="pt-trigger bottom-left btn btn-success" id="moveToHome" data-animation="61" data-goto="1">Home</button>
 
         <div class="side side-left">
-
-            <div class="intro-content">
-<!--               <div class="profile"><img src="img/profile1.jpg" alt="profile1"></div> -->
-            <div>
+          <div class="video-container">
               <canvas id="my-video-canvas"style="display:none"></canvas>
               <video id="my-video" ng-src="{{videoURL}}" autoplay loop></video>
               <canvas id="my-overlay"></canvas>
               <canvas id="my-gamecanvas"></canvas>
 
-            <div id="menu">
-              <p><canvas id="upcoming"></canvas></p>
-              <p>SCORE <span id="score">00000</span></p>
-              <p>CLEARED ROWS <span id="cleared-rows">0</span></p>
-            </div>
+          <div id="menu">
+            <p><canvas id="upcoming"></canvas></p>
+            <p>SCORE <span id="score">00000</span></p>
+            <p>CLEARED ROWS <span id="cleared-rows">0</span></p>
+          </div>
 
           </div>
-              <h1><span>You</span><span>Weekend Warrior</span></h1>
-            </div>
-            <div class="overlay"></div>
+
+          <div class="intro-content">
+            <h1><span>You</span><span>Weekend Warrior</span></h1>
           </div>
+
+
+        </div>
+
           <div class="side side-right">
-            <div class="intro-content">
-<!--               <div class="profile"><img src="img/profile2.jpg" alt="profile2"></div> -->
-              <div>
+
+              <div class="video-container">
                   <canvas id="their-video-canvas"style="display:none"></canvas>
                   <video id="their-video" ng-src="{{peerURL}}" autoplay></video>
                   <canvas id="their-overlay"></canvas>
@@ -237,15 +168,32 @@
                   <p>CLEARED ROWS <span id="their-cleared-rows">0</span></p>
                 </div>
               </div>
+
+
+            <div class="intro-content">
+<!--               <div class="profile"><img src="img/profile2.jpg" alt="profile2"></div> -->
               <h1><span>Rival</span><span>Fiesty Fighter</span></h1>
             </div>
-            <div class="overlay"></div>
+
           </div>
 
 
     </div>
-    <div class="pt-page pt-page-4">
-        <h1><strong>Page 4</strong></h1>
+
+    <div class="pt-page pt-page-3">
+        <div class="onlineUserGroup" ng-show="!connected && my_id && peerIDs.length > 1">
+          <h3>Online Users:</h3>
+          <ul id="onlinePeersList" class="list-group">
+            <li class="list-group-item" ng-repeat="peerID in peerIDs" ng-if="my_id!=peerID">
+              <div class="row">
+                <div class="col-xs-8">Peer ID: {{peerID}}</div>
+                <div class="col-xs-4"><button class="btn btn-primary" ng-click="callPeerHelper(peerID)" type="button"><i class="fa fa-phone"></i> Call Peer</button></div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <button class="pt-trigger bottom-left btn btn-success" data-animation="61" data-goto="1">Home</button>
     </div>
 
 </div>
@@ -255,31 +203,6 @@
 </div>
 
 <canvas id="debug" width="640" height="480"></canvas>
-<!-- <button id="startbutton" ng-click="getPicture()">Take photo</button>
-<img ng-src="{{photo}}" id="photo" alt="photo" ng-show="!!photo"> -->
-
-<!-- <img src="http://placekitten.com/g/320/261" id="photo" alt="photo"> -->
-<!-- peerurl {{peerURL}} -->
-
-
-<!-- <br/><br/>
-<input type="checkbox" onclick="showProbabilityCanvas()" value="asdfasd"></input>Show probability-map</p> -->
-
-<!-- <input ng-model="dataToSend" type="text" placeholder="Data to send" ng-change="sendData()">
-<button ng-click="sendData()">Send Data</button> -->
-
-<!-- <div class="container-fluid">
-  <div class="row">
-    <div class="col-md-6">
-      <h1>Sent Data</h1>
-      <p>{{dataToSend}}</p>
-    </div>
-    <div class="col-md-6">
-      <h1>Received Data</h1>
-      <p>{{receivedData}}</p>
-    </div>
-  </div>
-</div> -->
 
 
   <nav id="bt-menu" class="bt-menu">
@@ -292,7 +215,6 @@
         <li><a href="#" class="bt-icon icon-bubble">Contact</a></li> -->
     </ul>
   </nav>
-
 
 
 <!-- <img id="image" src="/images/github.png"> -->
@@ -314,7 +236,6 @@
 <!-- build:js({.tmp,app}) scripts/tetris.js -->
 <script type='text/javascript-lazy' src="scripts/vendor/stats.js"></script>
 <script type='text/javascript-lazy' src="scripts/tetris.js"></script>
-
 <script type='text/javascript-lazy' src="scripts/vendor/svgcheckbx.js"></script>
 <script type='text/javascript-lazy' src="scripts/vendor/classie.js"></script>
 <script type='text/javascript-lazy' src="scripts/vendor/borderMenu.js"></script>
@@ -322,5 +243,7 @@
 <scrupt type='text/javascript-lazy' src="scripts/vendor/jquery-1.9.1.min.js"></scrupt>
 <script type='text/javascript-lazy' src="scripts/vendor/transition.js"></script>
 <!-- endbuild -->
+
+
 
 

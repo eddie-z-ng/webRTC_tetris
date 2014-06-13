@@ -70,14 +70,16 @@ body {
 
 /* Intro content, profile image and name, back button */
 .intro-content {
-  position: absolute;
+/*  position: absolute;
   top: 50%;
   left: 50%;
   padding: 0 1em;
   width: 50%;
-  cursor: pointer;
-  -webkit-transform: translateY(-50%) translateX(-50%);
-  transform: translateY(-50%) translateX(-50%);
+  cursor: pointer;*/
+/*  -webkit-transform: translateY(-50%) translateX(-50%);
+  transform: translateY(-50%) translateX(-50%);*/
+
+  margin: 0 auto;
 }
 
 .profile {
@@ -96,12 +98,16 @@ body {
 
 .intro-content h1 > span {
   display: block;
-  white-space: nowrap;
+
 }
 
 .intro-content h1 > span:first-child {
-  font-weight: 300;
-  font-size: 2em;
+/*  font-weight: 300;
+  font-size: 2em;*/
+
+  font-weight: 200;
+  font-size: 1.2em;
+  white-space: nowrap;
 }
 
 .intro-content h1 > span:nth-child(2) {

@@ -58,14 +58,15 @@
 .pt-trigger-container {
     position: absolute;
     z-index: 999999;
-    margin-top: 75px;
+    margin-top: 200px;
+    margin-left: 200px;
     -webkit-transform: translateX(-50%);
     -moz-transform: translateX(-50%);
     -ms-transform: translateX(-50%);
     transform: translateX(-50%);
 }
 
-.pt-trigger {
+/*.pt-trigger {
     border: none;
     font-size: 16px;
     font-weight: 700;
@@ -79,8 +80,7 @@
     display: block;
     font-family: Calibri;
     box-shadow: 0 3px 0 rgba(0,0,0,0.3);
-
-}
+}*/
 
 /* Page Styles */
 .pt-page-ontop {
