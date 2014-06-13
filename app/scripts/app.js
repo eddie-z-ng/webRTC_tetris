@@ -5,8 +5,8 @@ angular.module('gameRtcApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'gameRtcApp.factories'
-  // 'gameRtcApp.directives'
+  'gameRtcApp.factories',
+  'gameRtcApp.directives'
 ])
   .config(function ($routeProvider, $locationProvider) {
     $routeProvider
@@ -22,3 +22,4 @@ angular.module('gameRtcApp', [
   });
 
 angular.module('gameRtcApp.factories', []);
+angular.module('gameRtcApp.directives', []);

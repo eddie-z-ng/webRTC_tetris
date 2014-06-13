@@ -11,10 +11,14 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
 
 /* Space out content a bit */
 body {
-    font-family: 'Audiowide', Helvetica Neue;
+    // font-family: 'Audiowide', Helvetica Neue;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
     padding-top: 20px;
     padding-bottom: 20px;
-    background-image:url('/images/gplaypattern.png')
+    background-color: hsl(218, 53%, 55%);
+    // background-image:url('/images/gplaypattern.png')
+
+    padding: 0px;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -49,25 +53,6 @@ body {
     margin: 30px 0;
 }
 
-/* Main marketing message and sign up button */
-.jumbotron {
-    text-align: center;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.jumbotron .btn {
-    font-size: 21px;
-    padding: 14px 24px;
-}
-
-/* Supporting marketing content */
-.marketing {
-    margin: 40px 0;
-}
-
-.marketing p + h4 {
-    margin-top: 28px;
-}
 
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
@@ -92,49 +77,45 @@ body {
     }
 }
 
-// #inputVideo, #inputCanvas {
-//     width: 640;
-//     height: 480;
-// }
-
-// #inputCanvas {
-//     // display: none;
-// }
-
-// #inputVideo {
-//     margin: 10px auto;
-//     display: none;
-// }
-
-
-.pure-button-success,
-.pure-button-error,
-.pure-button-warning,
-.pure-button-secondary {
-  color: white;
-  border-radius: 4px;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-}
-.pure-button-success {
-  background: rgb(28, 184, 65); /* this is a green */
-}
-.pure-button-error {
-  background: rgb(202, 60, 60); /* this is a maroon */
-}
-.pure-button-warning {
-  background: rgb(223, 117, 20); /* this is an orange */
-}
-.pure-button-secondary {
-  background: rgb(66, 184, 221); /* this is a light blue */
-}
-
 *, *:before, *:after {
   -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 }
 
 #main-header {
   text-align: center;
+
+  span {
+    display: block;
+    white-space: nowrap;
+
+    &:first-child {
+      margin: 0;
+      font-weight: 800;
+      font-size: 3em;
+    }
+
+    &:last-child {
+      position: relative;
+      margin-top: 0.5em;
+      padding: 0.8em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.8em;
+
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 25%;
+        width: 50%;
+        height: 2px;
+        background: #fff;
+        content: '';
+      }
+    }
+  }
+
 }
+
 
 #gamestatus {
   text-align: center;
@@ -212,3 +193,16 @@ video {
 #rows, #their-rows {
     font-size: 1.5em;
 }
+
+/* Animated Checkbox */
+@import '/styles/component.css';
+
+/* Animated Border */
+@import '/styles/animatedborder-style3.css';
+
+/* Page Transitions */
+@import '/styles/transition-animation.css';
+@import '/styles/single-page-transition.css';
+
+/* Split Layout */
+@import '/styles/splitlayout.css';

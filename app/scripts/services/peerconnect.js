@@ -64,9 +64,7 @@ angular.module('gameRtcApp.factories')
         initiateCall(call);
       });
       peer.on('error', function(err){
-        alert(err.message);
-        // Return to step 2 if error occurs
-        step2();
+        deferred.reject(err.message);
       });
 
       // Receiving a connection
@@ -136,10 +134,10 @@ angular.module('gameRtcApp.factories')
     //   step1();
     // });
 
-    function step1 () {
-      console.log("Step 1: Local Stream is: ", window.localStream);
-      step2();
-    }
+    // function step1 () {
+    //   console.log("Step 1: Local Stream is: ", window.localStream);
+    //   step2();
+    // }
 
     // function step2 () {
     //   $('#step1, #step3').hide();
