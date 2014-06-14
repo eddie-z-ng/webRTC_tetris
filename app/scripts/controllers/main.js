@@ -58,6 +58,25 @@ angular.module('gameRtcApp')
 
       window.addEventListener('resize', resize);
 
+      function callPeer(peerObject) {
+        var remotePeerId = $scope.remotePeerId;
+        $scope.peerDataConnection = peerObject.makeCall(remotePeerId);
+
+        $scope.peerDataConnection.on('open', function () {
+          attachReceiptListeners();
+
+          $scope.peerError = null;
+          $scope.connected = true;
+          gameBtn.click();
+
+          $scope.$apply();
+        });
+
+        $scope.peerDataConnection.on('error', function(err) {
+          console.log('Failed to connect to given peerID', err);
+        });
+      }
+
       function resize(event) {
         // theirCanvas.width   = theirCanvas.clientWidth;  // set canvas logical size equal to its physical size
         // theirCanvas.height  = theirCanvas.clientHeight; // (ditto)
@@ -74,25 +93,6 @@ angular.module('gameRtcApp')
         $scope.onlineUsers = data.length;
         $scope.peerIDs = data;
       });
-
-      $scope.callRandomPeer = function() {
-        if ($scope.my_id) {
-          $http.post('/connectRandom', { id: $scope.my_id }).success(function(res) {
-            console.log(res);
-
-            $scope.remotePeerId = res.peerID;
-
-            $scope.peerError = null;
-
-            $scope.callPeer();
-
-          }).error(function(data, status) {
-            console.log('Failed ', data, status);
-
-            $scope.peerError = data.error;
-          });
-        }
-      };
 
       $scope.play = function(originator) {
         $scope.gameWon = false;
@@ -264,11 +264,16 @@ angular.module('gameRtcApp')
       PeerConnect.getPeer().then(function(peerObject) {
         $scope.my_id = peerObject.peer.id;
         $scope.streamReady = true;
+        var mysecret = Math.random().toString(36).substring(10);
 
         $scope.videoURL = peerObject.videoURL;
 
-        $http.post('/addPool', { id: $scope.my_id }).success(function(res) {
+        $http.post('/confirmID', {
+          id: $scope.my_id,
+          secret: mysecret,
+        }).success(function(res) {
           console.log(res);
+
         }).error(function(data, status) {
           console.log('Failed ', data, status);
 
@@ -316,7 +321,7 @@ angular.module('gameRtcApp')
           $scope.playing = false;
           $scope.waiting = false;
 
-          $http.post('/returnPool', { id: $scope.my_id }).success(function(res) {
+          $http.post('/endCall', { id: $scope.my_id }).success(function(res) {
               console.log(res);
               $scope.remotePeerId = null;
 
@@ -333,29 +338,46 @@ angular.module('gameRtcApp')
           peerObject.endCall();
         };
 
-        $scope.callPeer = function() {
-          var remotePeerId = $scope.remotePeerId;
-          $scope.peerDataConnection = peerObject.makeCall(remotePeerId);
+        $scope.callRandomPeer = function() {
+          $http.post('/callRandom', {
+            id: $scope.my_id
+          }).success(function(res) {
+            console.log(res);
 
-          $scope.peerDataConnection.on('open', function () {
-            attachReceiptListeners();
-
+            $scope.remotePeerId = res.peerID;
             $scope.peerError = null;
-            $scope.connected = true;
-            gameBtn.click();
+            callPeer(peerObject);
 
-            $scope.$apply();
+          }).error(function(data, status) {
+            console.log('Failed ', data, status);
+
+            $scope.peerError = data.error;
           });
+        };
 
-          $scope.peerDataConnection.on('error', function(err) {
-            console.log('Failed to connect to given peerID', err);
-          });
+        $scope.callRequestedPeer = function() {
+          var remotePeerId = $scope.remotePeerId;
+          if (remotePeerId) {
+            $http.post('/callPeer', {
+              id: $scope.my_id,
+              callee_id: remotePeerId
+            }).success(function(res) {
+              console.log(res);
 
+              $scope.remotePeerId = res.peerID;
+              $scope.peerError = null;
+              callPeer(peerObject);
+
+            }).error(function(data, status) {
+              console.log('Failed ', data, status);
+              $scope.peerError = data.error;
+            });
+          }
         };
 
         $scope.callPeerHelper = function(remotePeerId) {
           $scope.remotePeerId = remotePeerId;
-          $scope.callPeer();
+          $scope.callRequestedPeer();
         };
 
       });
