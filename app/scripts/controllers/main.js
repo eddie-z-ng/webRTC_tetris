@@ -270,7 +270,7 @@ angular.module('gameRtcApp')
 
         $http.post('/confirmID', {
           id: $scope.my_id,
-          secret: mysecret,
+          secret: mysecret
         }).success(function(res) {
           console.log(res);
 
@@ -321,7 +321,7 @@ angular.module('gameRtcApp')
           $scope.playing = false;
           $scope.waiting = false;
 
-          $http.post('/endCall', { id: $scope.my_id }).success(function(res) {
+          $http.post('/endCall', { id: $scope.my_id, secret: mysecret }).success(function(res) {
               console.log(res);
               $scope.remotePeerId = null;
 
@@ -340,7 +340,8 @@ angular.module('gameRtcApp')
 
         $scope.callRandomPeer = function() {
           $http.post('/callRandom', {
-            id: $scope.my_id
+            id: $scope.my_id,
+            secret: mysecret
           }).success(function(res) {
             console.log(res);
 
@@ -360,7 +361,8 @@ angular.module('gameRtcApp')
           if (remotePeerId) {
             $http.post('/callPeer', {
               id: $scope.my_id,
-              callee_id: remotePeerId
+              callee_id: remotePeerId,
+              secret: mysecret
             }).success(function(res) {
               console.log(res);
 
