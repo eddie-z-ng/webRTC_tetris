@@ -1,12 +1,15 @@
-/*/*/*nav a {
+.nav-fillpath > a {
   position: absolute;
-  top: 50%;
+/*  top: 50%;*/
+  bottom: 0%;
   display: block;
   outline: none;
   text-align: left;
   z-index: 1000;
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
+
+  cursor: pointer;
 }
 
 nav a.prev {
@@ -1451,4 +1454,4 @@ nav a svg {
     -webkit-transform: translateY(-50%) scale(0.6);
     transform: translateY(-50%) scale(0.6);
   }
-}*/*/*/
+}

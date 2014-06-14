@@ -37,7 +37,10 @@ var PageTransitions = (function () {
         });
 
         // Adding click event to .pt-trigger
-        $('.pt-trigger').click(function() {
+
+        $('.pt-trigger').click(function(e) {
+            e.preventDefault();
+            // console.log("Click event for ", this);
             $pageTrigger = $(this);
             Animate($pageTrigger);
         });

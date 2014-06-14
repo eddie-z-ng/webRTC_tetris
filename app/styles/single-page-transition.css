@@ -28,13 +28,14 @@
 
 .pt-page {
     width: 100%;
-    /*height: 100%;*/
-    height: 800px;
+    height: 100%;
+/*    height: 800px;*/
     position: absolute;
     top: 0;
     left: 0;
     visibility: hidden;
-    overflow: hidden;
+/*    overflow: hidden;*/
+    overflow: auto;
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -109,7 +110,8 @@
 }
 
 .pt-page-3 {
-    background: #60d7a9;
+    /*background: #60d7a9;*/
+    background: #fdc162;
 }
 
 .pt-page-4 {

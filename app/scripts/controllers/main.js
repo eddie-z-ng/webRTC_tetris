@@ -61,6 +61,8 @@ angular.module('gameRtcApp')
       function resize(event) {
         // theirCanvas.width   = theirCanvas.clientWidth;  // set canvas logical size equal to its physical size
         // theirCanvas.height  = theirCanvas.clientHeight; // (ditto)
+
+        console.log("WINDOW RESIZED", window.clientHeight, window.clientWidth);
         theirUcanvas.width  = theirUcanvas.clientWidth;
         theirUcanvas.height = theirUcanvas.clientHeight;
       }
@@ -307,7 +309,7 @@ angular.module('gameRtcApp')
 
           $scope.connected = true;
 
-          gameBtn.click();
+          // gameBtn.click();
         };
 
         $scope.callPeerHelper = function(remotePeerId) {

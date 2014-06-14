@@ -2,6 +2,17 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
 
 @import 'bootstrap-sass-official/vendor/assets/stylesheets/bootstrap';
 
+html, body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.entryView, #mainView {
+  height: 100%;
+}
+
 .browsehappy {
     margin: 0.2em 0;
     background: #ccc;
@@ -13,12 +24,11 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
 body {
     // font-family: 'Audiowide', Helvetica Neue;
     font-family: 'Lato', Calibri, Arial, sans-serif;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    // padding-top: 20px;
+    // padding-bottom: 20px;
     background-color: hsl(218, 53%, 55%);
     // background-image:url('/images/gplaypattern.png')
-
-    padding: 0px;
+    // padding: 0px;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -55,27 +65,27 @@ body {
 
 
 /* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
-    .container {
-        // max-width: 730px;
-    }
+// @media screen and (min-width: 768px) {
+//     .container {
+//         // max-width: 730px;
+//     }
 
-    /* Remove the padding we set earlier */
-    .header,
-    .marketing,
-    .footer {
-        padding-left: 0;
-        padding-right: 0;
-    }
-    /* Space out the masthead */
-    .header {
-        margin-bottom: 30px;
-    }
-    /* Remove the bottom border on the jumbotron for visual effect */
-    .jumbotron {
-        border-bottom: 0;
-    }
-}
+//     /* Remove the padding we set earlier */
+//     .header,
+//     .marketing,
+//     .footer {
+//         padding-left: 0;
+//         padding-right: 0;
+//     }
+//     /* Space out the masthead */
+//     .header {
+//         margin-bottom: 30px;
+//     }
+//     /* Remove the bottom border on the jumbotron for visual effect */
+//     .jumbotron {
+//         border-bottom: 0;
+//     }
+// }
 
 *, *:before, *:after {
   -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
@@ -92,7 +102,9 @@ body {
     &:first-child {
       margin: 0;
       font-weight: 800;
-      font-size: 3em;
+      font-size: 4em;
+      letter-spacing: 8px;
+      color: rgba(66, 109, 122, 0.47);
     }
 
     &:last-child {
@@ -101,7 +113,7 @@ body {
       padding: 0.8em;
       text-transform: uppercase;
       letter-spacing: 1px;
-      font-size: 0.8em;
+      font-size: 1em;
 
       &::before {
         position: absolute;
@@ -114,7 +126,21 @@ body {
       }
     }
   }
+}
 
+#onlineUserGroup {
+  p {
+    text-align: center;
+    padding-top: 100px;
+    white-space: nowrap;
+
+    text-transform: uppercase;
+    margin: 0;
+    font-weight: 700;
+    font-size: 2.5em;
+    letter-spacing: 2px;
+    color: rgba(83, 124, 92, 0.47);
+  }
 }
 
 
@@ -125,8 +151,6 @@ body {
   position: absolute;
   z-index: 1800;
   margin: 0 auto;
-  // width: 100%;
-  // bottom: 35%;
 
   width: 30%;
   left: 35%;
@@ -140,7 +164,7 @@ body {
 }
 
 #onlinePeersList {
-  overflow: scroll;
+  // overflow: scroll;
 }
 
 .white-border {
@@ -165,6 +189,19 @@ body {
 
 .video-container {
   position: relative;
+  max-width: 500px;
+  margin: 0 auto;
+  // margin-top: 10%;
+
+  &::before{
+    position: absolute;
+    top: -5px;
+    left: 35%;
+    width: 30%;
+    height: 2px;
+    background: #fff;
+    content: '';
+  }
 
   video {
     width: 96%;
@@ -202,7 +239,7 @@ video {
 
 #my-gamecanvas, #their-gamecanvas {
   position: absolute;
-  top: 0px;
+  top: 0;
   left: 27%;
   z-index: 100001;
   display: block;
@@ -243,6 +280,23 @@ video {
   right: 0px;
   width: 100px;
 }
+
+.alert {
+  text-align: center;
+  font-weight: 600;
+}
+
+.gameheader {
+
+  h2 {
+    font-size: 1.8em;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+}
+
+
 
 /* Animated Checkbox */
 @import '/styles/component.css';

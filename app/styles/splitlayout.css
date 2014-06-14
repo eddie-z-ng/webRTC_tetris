@@ -63,7 +63,8 @@ body {
   right: 0;
 /*  background: #fff;*/
 /*  color: #47a3da;*/
-  background: rgba(51, 175, 96, 0.56);
+  /*background: rgba(51, 175, 96, 0.56);*/
+  background: #fd6a62;
   color: #fff;
   outline: 1px solid #fff; /* avoid gap */
 }

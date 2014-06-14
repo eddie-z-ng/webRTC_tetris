@@ -1,11 +1,11 @@
 <!-- <div ng-include="'partials/navbar'"></div> -->
-<div class="pt-wrapper">
+<div id="mainView" class="pt-wrapper">
     <!--All Pages-->
     <div class="pt-page pt-page-1">
 
         <div id="main-header">
           <span>WEBTRIS</span>
-          <span>Web RTC Tetris</span>
+          <span>Two-Player Roulette Tetris with Web RTC</span>
         </div>
 
         <!-- Get local audio/video stream -->
@@ -57,7 +57,10 @@
 
             <div class="col-md-6" ng-show="!connected && my_id">
               <button class="btn btn-primary" ng-click="callRandomPeer()" type="button"><i class="fa fa-users"></i> Find random peer</button>
+
               <span class="badge" ng-show="my_id">Online Users: {{onlineUsers}}</span>
+<!--               <button ng-show="!connected && my_id && peerIDs.length > 1" class="pt-trigger btn btn-success" id="moveToUsers" data-animation="60" data-goto="3">User List</button> -->
+
             </div>
 
           </div>
@@ -100,7 +103,26 @@
 
     <button class="pt-trigger bottom-left btn btn-success" id="moveToGame" data-animation="60" data-goto="2">Game</button>
 
-    <button ng-show="!connected && my_id && peerIDs.length > 1" class="pt-trigger bottom-right btn btn-success" id="moveToUsers" data-animation="60" data-goto="3">User List</button>
+    <nav class="nav-fillpath" ng-show="!connected">
+<!--       <a class="prev" href="/item1">
+        <span class="icon-wrap"></span>
+        <h3><strong>Game</strong></h3>
+      </a> -->
+<!--       <a class="next pt-trigger" id="moveToGame" data-animation="60" data-goto="2">
+        <span class="icon-wrap"></span>
+        <h3><strong>Play</strong> Game</h3>
+      </a> -->
+      <a class="prev pt-trigger" data-animation="59" data-goto="3">
+        <span class="icon-wrap"></span>
+        <h3><strong>Online</strong> Users</h3>
+      </a>
+      <a class="next pt-trigger" data-animation="58" data-goto="3">
+        <span class="icon-wrap"></span>
+        <h3><strong>Online</strong> Users</h3>
+      </a>
+
+    </nav>
+
     </div>
 
 
@@ -133,6 +155,9 @@
         <button class="pt-trigger bottom-left btn btn-success" id="moveToHome" data-animation="61" data-goto="1">Home</button>
 
         <div class="side side-left">
+          <div class="gameheader">
+            <h2>Hometown Hero</h2>
+          </div>
           <div class="video-container">
               <canvas id="my-video-canvas"style="display:none"></canvas>
               <video id="my-video" ng-src="{{videoURL}}" autoplay loop></video>
@@ -147,32 +172,23 @@
 
           </div>
 
-          <div class="intro-content">
-            <h1><span>You</span><span>Weekend Warrior</span></h1>
-          </div>
-
-
         </div>
 
           <div class="side side-right">
+            <div class="gameheader">
+              <h2>Rude Rival</h2>
+            </div>
+            <div class="video-container">
+                <canvas id="their-video-canvas"style="display:none"></canvas>
+                <video id="their-video" ng-src="{{peerURL}}" autoplay></video>
+                <canvas id="their-overlay"></canvas>
+                <canvas id="their-gamecanvas"></canvas>
 
-              <div class="video-container">
-                  <canvas id="their-video-canvas"style="display:none"></canvas>
-                  <video id="their-video" ng-src="{{peerURL}}" autoplay></video>
-                  <canvas id="their-overlay"></canvas>
-                  <canvas id="their-gamecanvas"></canvas>
-
-                <div id="menu">
-                  <p><canvas id="their-upcoming"></canvas></p>
-                  <p>SCORE <span id="their-score">00000</span></p>
-                  <p>CLEARED ROWS <span id="their-cleared-rows">0</span></p>
-                </div>
+              <div id="menu">
+                <p><canvas id="their-upcoming"></canvas></p>
+                <p>SCORE <span id="their-score">00000</span></p>
+                <p>CLEARED ROWS <span id="their-cleared-rows">0</span></p>
               </div>
-
-
-            <div class="intro-content">
-<!--               <div class="profile"><img src="img/profile2.jpg" alt="profile2"></div> -->
-              <h1><span>Rival</span><span>Fiesty Fighter</span></h1>
             </div>
 
           </div>
@@ -181,9 +197,9 @@
     </div>
 
     <div class="pt-page pt-page-3">
-        <div class="onlineUserGroup" ng-show="!connected && my_id && peerIDs.length > 1">
-          <h3>Online Users:</h3>
-          <ul id="onlinePeersList" class="list-group">
+        <div id="onlineUserGroup">
+          <p>Online Users: {{onlineUsers}}</p>
+          <ul ng-show="!connected && my_id && peerIDs.length > 1" id="onlinePeersList" class="list-group">
             <li class="list-group-item" ng-repeat="peerID in peerIDs" ng-if="my_id!=peerID">
               <div class="row">
                 <div class="col-xs-8">Peer ID: {{peerID}}</div>
@@ -193,7 +209,17 @@
           </ul>
         </div>
 
-        <button class="pt-trigger bottom-left btn btn-success" data-animation="61" data-goto="1">Home</button>
+
+        <nav class="nav-fillpath">
+          <a class="prev pt-trigger" data-animation="59" data-goto="1">
+            <span class="icon-wrap"></span>
+            <h3><strong>Go</strong> Home</h3>
+          </a>
+          <a class="next pt-trigger" data-animation="58" data-goto="1">
+            <span class="icon-wrap"></span>
+            <h3><strong>Go</strong> Home</h3>
+          </a>
+        </nav>
     </div>
 
 </div>
@@ -202,12 +228,14 @@
     <p>Your browser does not support CSS animations.</p>
 </div>
 
-<canvas id="debug" width="640" height="480"></canvas>
+<!-- <canvas id="debug" width="640" height="480"></canvas> -->
 
 
   <nav id="bt-menu" class="bt-menu">
     <a href="#" class="bt-menu-trigger"><span>Menu</span></a>
     <ul>
+
+
         <li><a ng-href="http://eddieng.org" class="bt-icon icon-user-outline">About</a></li>
         <li><a ng-href="https://github.com/wardsng" class="bt-icon icon-sun"><i class="fa fa-github"></i>Github</a></li>
 <!--         <li><a href="#" class="bt-icon icon-windows">Work</a></li> -->
