@@ -104,11 +104,15 @@ angular.module('gameRtcApp.factories')
 
             existingConn = peer.connect(remotePeerId, peerLocalStream);
 
+            existingConn.on('close', function() {
+              console.log("Data connection closed!");
+            });
+
             return existingConn;
           },
           endCall: function() {
-            existingCall.close();
-            existingConn.close();
+            if(existingCall) { existingCall.close(); }
+            if(existingConn) { existingConn.close(); }
           }
         };
         deferred.resolve(peerObject);

@@ -423,7 +423,8 @@ window.drawBlock = drawBlock;
     playing = true;
     console.log('Starting game!');
   }
-  window.play = play;
+  window.playTetris = play;
+  window.resetTetris = reset;
 
   function lose(orig) {
     if (orig) {
