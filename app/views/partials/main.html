@@ -13,6 +13,25 @@
           <p class="white-border">Please click <strong>Allow</strong> on the top of the screen so we can access your webcam and microphone for calls.</p>
         </div>
 
+
+        <form id="theForm" class="simform" autocomplete="off">
+          <div class="simform-inner" ng-show="!connected">
+
+            <span><label for="q1">What peer ID do you want to connect to?</label></span>
+            <div id="inputPeer">
+              <input id="q1" name="q1" type="text" ng-model="remotePeerId"/>
+            </div>
+
+            <div class="control">
+              <button ng-click="callPeer()" type="button"><i class="fa fa-phone"></i></button>
+            </div>
+
+          </div><!-- /simform-inner -->
+<!--           <div class="simform-inner" ng-show="connected">
+            In a call with {{remotePeerId}}
+          </div> -->
+        </form><!-- /simform -->
+
         <div class="container">
           <div class="row">
 
@@ -59,7 +78,6 @@
               <button class="btn btn-primary" ng-click="callRandomPeer()" type="button"><i class="fa fa-users"></i> Find random peer</button>
 
               <span class="badge" ng-show="my_id">Online Users: {{onlineUsers}}</span>
-<!--               <button ng-show="!connected && my_id && peerIDs.length > 1" class="pt-trigger btn btn-success" id="moveToUsers" data-animation="60" data-goto="3">User List</button> -->
 
             </div>
 
@@ -128,7 +146,7 @@
 
     <div class="pt-page pt-page-2">
 
-        <div id="gamestatus" ng-show="connected">
+        <div id="gamestatus">
 
           <div ng-show="connected && !playing">
             <button class="btn btn-success" ng-click="play(true)" ng-show="gameStartCount==0 && connected"><i class="fa fa-play-circle-o"></i> Start Game</button>
@@ -138,18 +156,26 @@
             <p ng-show="!countDown"><i class="fa fa-cog fa-spin"></i> Waiting for opponent...</p>
           </div>
 
-            <div class="alert alert-info" ng-show="!playing && !gameCount">
-              <strong>Twiddling your thumbs eh?</strong>
-            </div>
-            <div class="alert alert-info" ng-show="playing">
-              <strong>Who's it gonna be?!</strong>
-            </div>
-            <div class="alert alert-success" ng-show="gameWon && !playing && gameCount">
-              <strong>You win!</strong>
-            </div>
-            <div class="alert alert-danger" ng-show="!gameWon && !playing && gameCount">
-              <strong>You lose!</strong>
-            </div>
+          <div ng-show="!connected">
+            <button class="btn btn-primary" ng-click="callRandomPeer()" type="button"><i class="fa fa-users"></i> Find random peer</button>
+
+            <span class="badge" ng-show="my_id">Online Users: {{onlineUsers}}</span>
+          </div>
+          <div class="alert alert-warning" ng-show="!connected">
+            <strong>Connected...with NOONE!</strong>
+          </div>
+          <div class="alert alert-info" ng-show="connected && !playing && !gameCount">
+            <strong>Twiddling your thumbs eh?</strong>
+          </div>
+          <div class="alert alert-info" ng-show="connected && playing">
+            <strong>Who's it gonna be?!</strong>
+          </div>
+          <div class="alert alert-success" ng-show="gameWon && !playing && gameCount">
+            <strong>You win!</strong>
+          </div>
+          <div class="alert alert-danger" ng-show="!gameWon && !playing && gameCount">
+            <strong>You lose!</strong>
+          </div>
         </div>
 
         <button class="pt-trigger bottom-left btn btn-success" id="moveToHome" data-animation="61" data-goto="1">Home</button>
