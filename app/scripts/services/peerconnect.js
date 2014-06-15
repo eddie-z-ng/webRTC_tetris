@@ -9,6 +9,7 @@ angular.module('gameRtcApp.factories')
     function ($q, $rootScope, $sce, $location) {
 
     var deferred = $q.defer();
+    var deferredEnd = $q.defer();
     var peerIdReady = false;
     var allReady = false;
     var peerLocalStream;
@@ -16,6 +17,7 @@ angular.module('gameRtcApp.factories')
     var blobURL;
 
     var existingCall;
+    var existingConn;
 
     var peerKey = '7k99lrngvwle4s4i';
     var stunURL = 'stun:stun.l.google.com:19302';
@@ -63,10 +65,12 @@ angular.module('gameRtcApp.factories')
         call.answer(peerLocalStream);
         initiateCall(call);
       });
+
       peer.on('error', function(err){
-        alert(err.message);
-        // Return to step 2 if error occurs
-        step2();
+        console.log('ERROR! Couldn\'t connect to given peer');
+
+        $rootScope.$emit('callFailed', err);
+
       });
 
       // Receiving a connection
@@ -98,58 +102,30 @@ angular.module('gameRtcApp.factories')
             // Initiate a data connection!
             console.log('Initiating a data connection to: ', remotePeerId);
 
-            var conn = peer.connect(remotePeerId, peerLocalStream);
+            existingConn = peer.connect(remotePeerId, peerLocalStream);
 
-            return conn;
+            existingConn.on('close', function() {
+              console.log("Data connection closed!");
+            });
+
+            return existingConn;
           },
           endCall: function() {
-            existingCall.close();
+            if(existingCall) { existingCall.close(); }
+            if(existingConn) { existingConn.close(); }
           }
         };
         deferred.resolve(peerObject);
       }
     }
 
-
-
-    // // Click handlers setup
-    // $(function(){
-    //   // $('#make-call').click(function(){
-    //   //   // Initiate a call!
-    //   //   var call = peer.call($('#callto-id').val(), window.localStream);
-
-    //   //   step3(call);
-    //   // });
-
-    //   // $('#end-call').click(function(){
-    //   //   window.existingCall.close();
-    //   //   step2();
-    //   // });
-
-    //   // // Retry if getUserMedia fails
-    //   // $('#step1-retry').click(function(){
-    //   //   $('#step1-error').hide();
-    //   //   step1();
-    //   // });
-
-    //   // Get things started
-    //   step1();
-    // });
-
-    function step1 () {
-      console.log("Step 1: Local Stream is: ", window.localStream);
-      step2();
-    }
-
-    // function step2 () {
-    //   $('#step1, #step3').hide();
-    //   $('#step2').show();
-    // }
-
     function initiateCall (call) {
       // Hang up on an existing call if present
       if (existingCall) {
         existingCall.close();
+      }
+      if (existingConn) {
+        existingConn.close();
       }
 
       // Wait for stream on the call, then set peer video display
@@ -159,13 +135,33 @@ angular.module('gameRtcApp.factories')
         $rootScope.$emit('peerStream', blobURL);
       });
 
+      // When either you or the other ends the call
+      call.on('close', function() {
+        console.log('You have been disconnected from ', existingCall);
+        $rootScope.$emit('callEnd', existingCall);
+
+        if (existingCall) {
+          existingCall.close();
+        }
+        if (existingConn) {
+          existingConn.close();
+        }
+      });
+
+      call.on('error', function(err) {
+        console.log('Call Error: ', err);
+
+        if (existingCall) {
+          existingCall.close();
+        }
+        if (existingConn) {
+          existingConn.close();
+        }
+      });
+
       // UI stuff
       existingCall = call;
 
-      // $('#their-id').text(call.peer);
-      // call.on('close', step2);
-      // $('#step1, #step2').hide();
-      // $('#step3').show();
     }
 
     return {

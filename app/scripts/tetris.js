@@ -37,7 +37,7 @@ function eachblock(type, x, y, dir, fn) {
 
 function getBlock(blocks,x,y)   { return (blocks && blocks[x] ? blocks[x][y] : null); }
 
-function draw(ctx, canvas, uctx, boardRepresentation) {
+function drawTetris(ctx, canvas, uctx, boardRepresentation) {
   ctx.save();
   ctx.lineWidth = uctx.lineWidth = 1;
   ctx.translate(0.5, 0.5); // for crisp 1px black lines
@@ -164,7 +164,7 @@ function drawBlock(ctx, x, y, color, dx, dy) {
 
 window.eachblock = eachblock;
 window.getBlock = getBlock;
-window.draw = draw;
+window.drawTetris = drawTetris;
 window.drawCourt = drawCourt;
 window.drawNext = drawNext;
 window.drawScore = drawScore;
@@ -196,7 +196,7 @@ window.drawBlock = drawBlock;
 
   var KEY     = { ESC: 27, SPACE: 32, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40 },
       DIR     = { UP: 0, RIGHT: 1, DOWN: 2, LEFT: 3, MIN: 0, MAX: 3 },
-      stats   = new Stats(),
+      // stats   = new Stats(),
       canvas  = get('my-gamecanvas'),
       ctx     = canvas.getContext('2d'),
       ucanvas = get('upcoming'),
@@ -310,7 +310,7 @@ window.drawBlock = drawBlock;
 
   function run() {
 
-    showStats(); // initialize FPS counter
+    // showStats(); // initialize FPS counter
     addEvents(); // attach keydown and resize events
 
     var last, now, sendTimeLast, sendTimeNow;
@@ -335,7 +335,7 @@ window.drawBlock = drawBlock;
           document.dispatchEvent(boardChangeEvent);
 
           // using requestAnimationFrame have to be able to handle large delta's caused when it 'hibernates' in a background or non-visible tab
-          draw(ctx, canvas, uctx, boardRepresentation);
+          drawTetris(ctx, canvas, uctx, boardRepresentation);
           drawVScore('score', boardRepresentation);
           drawRows('cleared-rows', boardRepresentation);
 
@@ -345,7 +345,7 @@ window.drawBlock = drawBlock;
         }
       }
 
-      stats.update();
+      // stats.update();
       last = now;
       window.requestAnimationFrame(frame, canvas);
     }
@@ -356,21 +356,36 @@ window.drawBlock = drawBlock;
 
   }
 
-  function showStats() {
-    stats.domElement.id = 'stats';
-    get('stats-menu').appendChild(stats.domElement);
-  }
+  // function showStats() {
+  //   stats.domElement.id = 'stats';
+  //   get('stats-menu').appendChild(stats.domElement);
+  // }
 
   function addEvents() {
     document.addEventListener('keydown', keydown, false);
     window.addEventListener('resize', resize, false);
   }
 
+  var myVid = document.getElementById('my-video');
+  var theirVid = document.getElementById('their-video');
+
+  var theirCanvas = document.getElementById('their-gamecanvas');
+  var theirUCanvas = document.getElementById('their-upcoming');
+
   function resize(event) {
-    canvas.width   = canvas.clientWidth;  // set canvas logical size equal to its physical size
-    canvas.height  = canvas.clientHeight; // (ditto)
-    ucanvas.width  = ucanvas.clientWidth;
-    ucanvas.height = ucanvas.clientHeight;
+    canvas.width = myVid.clientWidth;
+    canvas.height = myVid.clientHeight;
+
+    theirCanvas.width = theirVid.clientWidth;
+    theirCanvas.height = theirVid.clientHeight;
+
+    ucanvas.width = theirUCanvas.clientWidth;
+    ucanvas.height = theirUCanvas.clientHeight;
+
+    // canvas.width   = canvas.clientWidth;  // set canvas logical size equal to its physical size
+    // canvas.height  = canvas.clientHeight; // (ditto)
+    // ucanvas.width  = ucanvas.clientWidth;
+    // ucanvas.height = ucanvas.clientHeight;
 
     dx = canvas.width  / nx / 2; // pixel size of a single tetris block
     dy = canvas.height / ny; // (ditto)
@@ -408,7 +423,8 @@ window.drawBlock = drawBlock;
     playing = true;
     console.log('Starting game!');
   }
-  window.play = play;
+  window.playTetris = play;
+  window.resetTetris = reset;
 
   function lose(orig) {
     if (orig) {
@@ -440,6 +456,7 @@ window.drawBlock = drawBlock;
 
   function reset() {
     dt = 0;
+    resize();
     clearActions();
     clearTasks();
     clearBlocks();

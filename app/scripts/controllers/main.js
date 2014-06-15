@@ -9,6 +9,10 @@ angular.module('gameRtcApp')
           theirCtx     = theirCanvas.getContext('2d'),
           theirUcanvas = document.getElementById('their-upcoming'),
           theirUctx    = theirUcanvas.getContext('2d');
+
+      var homeBtn = document.getElementById('moveToHome');
+      var gameBtn = document.getElementById('moveToGame');
+
       var musicPaused = false;
       var musicLoopEnabled = false;
 
@@ -17,8 +21,10 @@ angular.module('gameRtcApp')
       $scope.streamReady = false;
       $scope.connected = false;
       $scope.gameCount = 0;
+      $scope.gameStart = false;
       $scope.playing = false;
       $scope.waiting = false;
+      $scope.otherWaiting = false;
 
       $scope.musicEnabled = (function() {
         if (window.tetrisMusic) {
@@ -48,15 +54,36 @@ angular.module('gameRtcApp')
           return false;
         }
       })();
-      console.log($scope.musicEnabled);
+      console.log("Music enabled: ", $scope.musicEnabled);
 
       $scope.allowMusic = false;
 
       window.addEventListener('resize', resize);
 
+      function callPeer(peerObject) {
+        var remotePeerId = $scope.remotePeerId;
+        $scope.peerDataConnection = peerObject.makeCall(remotePeerId);
+
+        $scope.peerDataConnection.on('open', function () {
+          attachReceiptListeners();
+
+          $scope.peerError = null;
+          $scope.connected = true;
+          gameBtn.click();
+
+          $scope.$apply();
+        });
+
+        $scope.peerDataConnection.on('error', function(err) {
+          console.log('Failed to connect to given peerID', err);
+        });
+      }
+
       function resize(event) {
-        theirCanvas.width   = theirCanvas.clientWidth;  // set canvas logical size equal to its physical size
-        theirCanvas.height  = theirCanvas.clientHeight; // (ditto)
+        // theirCanvas.width   = theirCanvas.clientWidth;  // set canvas logical size equal to its physical size
+        // theirCanvas.height  = theirCanvas.clientHeight; // (ditto)
+
+        // console.log("WINDOW RESIZED", window.clientHeight, window.clientWidth);
         theirUcanvas.width  = theirUcanvas.clientWidth;
         theirUcanvas.height = theirUcanvas.clientHeight;
       }
@@ -69,30 +96,10 @@ angular.module('gameRtcApp')
         $scope.peerIDs = data;
       });
 
-      $scope.callRandomPeer = function() {
-        if ($scope.my_id) {
-          $http.post('/connectRandom', { id: $scope.my_id }).success(function(res) {
-            console.log(res);
-
-            $scope.remotePeerId = res.peerID;
-
-            $scope.callPeer();
-
-            $scope.peerError = null;
-          }).error(function(data, status) {
-            console.log('Failed ', data, status);
-
-            $scope.peerError = data.error;
-          });
-        }
-      };
-
       $scope.play = function(originator) {
         $scope.gameWon = false;
         $scope.gameCount = 0;
-
         $scope.gameStartCount += 1;
-        $scope.waiting = true;
 
         if (originator) {
           var data = {};
@@ -100,6 +107,14 @@ angular.module('gameRtcApp')
 
           data = JSON.stringify(data);
           $scope.peerDataConnection.send(data);
+
+          $scope.waiting = true;
+          $scope.gameStart = true;
+
+        } else {
+          console.log('Otherwaiting is true');
+          $scope.otherWaiting = true;
+          $scope.$apply();
         }
 
         if ($scope.gameStartCount >= 2) {
@@ -117,7 +132,8 @@ angular.module('gameRtcApp')
               }
 
               $scope.waiting = false;
-              window.play();
+              $scope.otherWaiting = false;
+              window.playTetris();
 
               $scope.playing = true;
               $scope.gameCount += 1;
@@ -153,7 +169,7 @@ angular.module('gameRtcApp')
               data.invalid.court = true; // prevent blinking
               data.invalid.next = true;
 
-              window.draw(theirCtx, theirCanvas, theirUctx, data);
+              window.drawTetris(theirCtx, theirCanvas, theirUctx, data);
               window.drawScore('their-score', data);
               window.drawRows('their-cleared-rows', data);
             }
@@ -176,6 +192,7 @@ angular.module('gameRtcApp')
             window.lose(false);
 
             $scope.gameStartCount = 0;
+            $scope.gameStart = false;
             $scope.playing = false;
             $scope.gameWon = true;
 
@@ -192,42 +209,60 @@ angular.module('gameRtcApp')
         }
       }
 
+      var attached = false;
+
       function attachReceiptListeners() {
-        // Connected to peer -- listen for boardChange event
-        document.addEventListener('boardChange', function(event) {
-          if (event.boardRepresentation) {
-            var data = event.boardRepresentation;
-            data.boardData = true;
+        // Reset if currently playing
+        if ($scope.playing) {
+          window.lose(false);
+        }
 
-            data = JSON.stringify(data);
-            $scope.peerDataConnection.send(data);
-          }
-        });
+        // These are event listeners for our own events from Tetris
+        // No need to attach these listeners again after initial connection
+        if (!attached) {
+          // Connected to peer -- listen for boardChange event
+          document.addEventListener('boardChange', function(event) {
+            if($scope.connected) {
+              if (event.boardRepresentation) {
+                var data = event.boardRepresentation;
+                data.boardData = true;
 
-        // Connected to peer -- listen for gameOver event
-        document.addEventListener('gameOver', function(event) {
-          var data = {};
-          data.gameOver = true;
+                data = JSON.stringify(data);
+                $scope.peerDataConnection.send(data);
+              }
+            }
+          });
 
-          data = JSON.stringify(data);
-          $scope.peerDataConnection.send(data);
+          // Connected to peer -- listen for gameOver event
+          document.addEventListener('gameOver', function(event) {
+            if ($scope.connected) {
+              var data = {};
+              data.gameOver = true;
 
-          $scope.gameStartCount = 0;
-          $scope.playing = false;
-          $scope.gameWon = false;
+              data = JSON.stringify(data);
+              $scope.peerDataConnection.send(data);
+            }
 
-//           $scope.getPicture();
-// console.log('PHOTO', $scope.photo);
-          $scope.$apply();
-        });
+            $scope.gameStartCount = 0;
+            $scope.gameStart = false;
+            $scope.playing = false;
+            $scope.gameWon = false;
 
-        // Connected to peer -- listen for garbageRow event
-        document.addEventListener('garbageRow', function(event) {
-          var data = { garbageRowData: event.garbageRows};
+            $scope.$apply();
+          });
 
-          data = JSON.stringify(data);
-          $scope.peerDataConnection.send(data);
-        });
+          // Connected to peer -- listen for garbageRow event
+          document.addEventListener('garbageRow', function(event) {
+            if ($scope.connected) {
+              var data = { garbageRowData: event.garbageRows};
+
+              data = JSON.stringify(data);
+              $scope.peerDataConnection.send(data);
+            }
+          });
+
+          attached = true;
+        }
 
         // Set up receipt of data (this is the original peer receiver)
         $scope.peerDataConnection.on('data', handleReceiptPeerData);
@@ -240,16 +275,27 @@ angular.module('gameRtcApp')
       PeerConnect.getPeer().then(function(peerObject) {
         $scope.my_id = peerObject.peer.id;
         $scope.streamReady = true;
+        var mysecret = Math.random().toString(36).substring(10);
 
         $scope.videoURL = peerObject.videoURL;
 
-        $http.post('/confirmID', { id: $scope.my_id }).success(function(res) {
+        $http.post('/confirmID', {
+          id: $scope.my_id,
+          secret: mysecret
+        }).success(function(res) {
           console.log(res);
+
         }).error(function(data, status) {
           console.log('Failed ', data, status);
 
           $scope.peerError = data.error;
           // $scope.$apply();
+        });
+
+        $rootScope.$on('callFailed', function(event, error) {
+          console.log("Call failed: ", error, error.message);
+          $scope.peerError = error.message;
+          $scope.$apply();
         });
 
         $rootScope.$on('connectionChange', function (event, connection) {
@@ -268,19 +314,26 @@ angular.module('gameRtcApp')
         $rootScope.$on('peerStream', function(event, objURL) {
           console.log('Peer video stream received!', objURL);
           $scope.peerURL = objURL;
+
+          gameBtn.click();
           $scope.$apply();
         });
 
+        $rootScope.$on('callEnd', function(event, callObject) {
+          console.log('Peer Disconnected!', callObject);
 
-        $scope.endCall = function() {
-          peerObject.endCall();
+          if ($scope.playing) {
+            window.lose(false);
+            $scope.gameWon = true;
+          }
 
           $scope.gameStartCount = 0;
           $scope.connected = false;
           $scope.playing = false;
           $scope.waiting = false;
+          $scope.otherWaiting = false;
 
-          $http.post('/returnPool', { id: $scope.my_id }).success(function(res) {
+          $http.post('/endCall', { id: $scope.my_id, secret: mysecret }).success(function(res) {
               console.log(res);
               $scope.remotePeerId = null;
 
@@ -290,48 +343,56 @@ angular.module('gameRtcApp')
 
               $scope.peerError = data.error;
           });
+
+        });
+
+        $scope.endCall = function() {
+          peerObject.endCall();
         };
 
-        $scope.callPeer = function() {
+        $scope.callRandomPeer = function() {
+          $http.post('/callRandom', {
+            id: $scope.my_id,
+            secret: mysecret
+          }).success(function(res) {
+            console.log(res);
+
+            $scope.remotePeerId = res.peerID;
+            $scope.peerError = null;
+            callPeer(peerObject);
+
+          }).error(function(data, status) {
+            console.log('Failed ', data, status);
+
+            $scope.peerError = data.error;
+          });
+        };
+
+        $scope.callRequestedPeer = function() {
           var remotePeerId = $scope.remotePeerId;
-          $scope.peerDataConnection = peerObject.makeCall(remotePeerId);
+          if (remotePeerId) {
+            $http.post('/callPeer', {
+              id: $scope.my_id,
+              callee_id: remotePeerId,
+              secret: mysecret
+            }).success(function(res) {
+              console.log(res);
 
-          attachReceiptListeners();
+              $scope.remotePeerId = res.peerID;
+              $scope.peerError = null;
+              callPeer(peerObject);
 
-          $scope.connected = true;
+            }).error(function(data, status) {
+              console.log('Failed ', data, status);
+              $scope.peerError = data.error;
+            });
+          }
         };
 
         $scope.callPeerHelper = function(remotePeerId) {
           $scope.remotePeerId = remotePeerId;
-          $scope.callPeer();
+          $scope.callRequestedPeer();
         };
-
-        // HeadTrackerMedia.getHTrackMedia(peerObject.peerLocalStream)
-        // .then(function(hTrackObject) {
-        //   console.log('Htrack object: ', hTrackObject);
-
-        //   $rootScope.$on('drawEvent', function(event, dataEvent) {
-        //     if ($scope.peerDataConnection) {
-        //       var data = {
-        //         x: dataEvent.x,
-        //         y: dataEvent.y,
-        //         angle: dataEvent.angle,
-        //         detection: dataEvent.detection,
-        //         width: dataEvent.width,
-        //         height: dataEvent.height,
-        //         style: '#3052db'
-        //       };
-        //       data.drawEvent = true;
-        //       $scope.peerDataConnection.send(data);
-        //     }
-        //   });
-
-        //   $scope.getPicture = function() {
-        //     $scope.photo = hTrackObject.getPicture();
-        //   };
-
-        // });
-
 
       });
 
