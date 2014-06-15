@@ -57,7 +57,7 @@ body {
 .side-left {
   left: 0;
   background: #47a3da;
-  color: #fff;
+/*  color: #fff;*/
   outline: 1px solid #47a3da; /* avoid gap */
 }
 
@@ -67,7 +67,7 @@ body {
 /*  color: #47a3da;*/
   /*background: rgba(51, 175, 96, 0.56);*/
   background: #fd6a62;
-  color: #fff;
+/*  color: #fff;*/
   outline: 1px solid #fff; /* avoid gap */
 }
 

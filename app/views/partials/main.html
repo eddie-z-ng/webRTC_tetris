@@ -10,70 +10,57 @@
 
         <!-- Get local audio/video stream -->
         <div id="step1" ng-show="!streamReady">
-          <p class="white-border">Please click <strong>Allow</strong> on the top of the screen so we can access your webcam and microphone for calls.
-          Do note, that once you click allow, someone could challenge you at any time!...until you close the window or refresh the browser</p>
+          <p class="white-border"><i class="fa fa-exclamation-circle"></i> Please click <strong>Allow</strong> on the top of the screen so we can access your webcam and microphone for calls.
+          Note that once you click <strong>Allow</strong>, anyone can challenge you at any time...until you close the window or refresh the browser!</p>
         </div>
 
-        <div ng-show="peerError" class="alert alert-danger">{{peerError}}</div>
-        <div class="alert alert-warning" ng-show="connected && otherWaiting && !waiting && !countDown">
+        <div ng-show="streamReady">
+          <form id="theForm" class="simform" autocomplete="off">
+            <div class="simform-inner" ng-show="!connected">
+
+              <span>What peer ID do you want to connect to?</span>
+              <div class="beforeInput">
+                <input class="inputLeft" id="q1" name="q1" type="text" ng-model="remotePeerId"/>
+              </div>
+
+              <div class="control">
+                <button ng-click="callRequestedPeer()" type="button"><i class="fa fa-phone"></i></button>
+              </div>
+
+            </div><!-- /simform-inner -->
+            <div class="simform-inner" ng-show="connected">
+              <span>Currently in a call with</span>
+              <div class="beforeInput">
+                <input class="inputLeft" ng-model="remotePeerId" disabled/>
+              </div>
+
+              <div class="control">
+                <button ng-click="endCall()" type="button"><i class="fa fa-power-off"></i></button>
+              </div>
+            </div>
+          </form><!-- /simform -->
+
+          <p class="peer-id-box" ng-show="my_id">
+            <strong>Your Peer ID: {{my_id}}</strong>
+          </p>
+          <p class="peer-id-box" ng-show="connected && !peerError">
+            <strong>Rival Peer ID: {{remotePeerId}}</strong>
+          </p>
+        </div>
+
+
+        <span id="main-badge" class="badge" ng-show="my_id && !connected">Online Users: {{onlineUsers}}</span>
+        <ul id="homeNavigator">
+          <li ng-show="!connected && my_id"><button class="special-btn btn-1 btn-1f" ng-click="callRandomPeer()"><i class="fa fa-users"></i> Call Random</button></li>
+          <li><button class="special-btn btn-1 btn-1f pt-trigger" data-animation="60" data-goto="2"><i class="fa fa-video-camera" id="moveToGame"></i> Game Room</button></li>
+        </ul>
+
+        <div ng-show="peerError" class="custom-alert white-border"><i class="fa fa-exclamation-circle"></i> {{peerError}}</div>
+        <div class="custom-alert white-border" ng-show="connected && otherWaiting && !waiting && !countDown">
+          <i class="fa fa-exclamation-circle"></i>
           <strong>Hey you, click the Start Game button. They're waiting for you!</strong>
         </div>
-
-        <form id="theForm" class="simform" autocomplete="off">
-          <div class="simform-inner" ng-show="!connected">
-
-            <span>What peer ID do you want to connect to?</span>
-            <div class="beforeInput">
-              <input class="inputLeft" id="q1" name="q1" type="text" ng-model="remotePeerId"/>
-            </div>
-
-            <div class="control">
-              <button ng-click="callRequestedPeer()" type="button"><i class="fa fa-phone"></i></button>
-            </div>
-
-          </div><!-- /simform-inner -->
-          <div class="simform-inner" ng-show="connected">
-
-            <span>Currently in a call with</span>
-            <div class="beforeInput">
-              <input class="inputLeft" ng-model="remotePeerId" disabled/>
-            </div>
-
-            <div class="control">
-              <button ng-click="endCall()" type="button"><i class="fa fa-power-off"></i></button>
-            </div>
-          </div>
-        </form><!-- /simform -->
-
-        <p class="white-border" ng-show="my_id">
-          <strong>Your Peer ID: {{my_id}}</strong>
-        </p>
-
-        <p class="white-border" ng-show="connected && !peerError">
-          <strong>Opponent's Peer ID: {{remotePeerId}}</strong>
-        </p>
-
-        <div ng-show="!connected && my_id">
-          <button class="btn btn-primary" ng-click="callRandomPeer()" type="button"><i class="fa fa-users"></i> Find random peer</button>
-
-          <span class="badge" ng-show="my_id">Online Users: {{onlineUsers}}</span>
-        </div>
-
-      <!-- Dashboard keyboard and music -->
-      <div class="container">
-        <div class="row">
-          <div id="gameDirections" class="col-md-6">
-
-            <h5><i class="fa fa-keyboard-o"></i> Keyboard Controls</h5>
-            <ul class="list-group">
-              <li class="list-group-item"><i class="fa fa-arrow-circle-up"></i> UP: Rotates the tetronome</li>
-              <li class="list-group-item"><i class="fa fa-arrow-circle-down"></i> DOWN: Moves the tetronome down</li>
-              <li class="list-group-item"><i class="fa fa-arrow-circle-left"></i> LEFT: Moves the tetronome left</li>
-              <li class="list-group-item"><i class="fa fa-arrow-circle-right"></i> RIGHT: Moves the tetronome right</li>
-              <li class="list-group-item"><i class="fa fa-square-o"></i> SPACEBAR: Drops the tetronome</li>
-            </ul>
-          </div>
-          <div class="col-md-6">
+<!--           <div class="col-md-6">
             <div ng-show="musicEnabled">
               <form class="ac-custom ac-checkbox ac-checkmark">
                 <ul>
@@ -81,18 +68,12 @@
                 </ul>
               </form>
             </div>
-          </div>
+          </div> -->
 
-        </div>
-
-      </div>
-
-    <button class="pt-trigger bottom-left btn btn-success" id="moveToGame" data-animation="60" data-goto="2">Game</button>
-
-    <nav class="nav-fillpath" ng-show="!connected">
-      <a class="prev pt-trigger" data-animation="59" data-goto="3">
+    <nav class="nav-fillpath">
+      <a class="prev pt-trigger" data-animation="59" data-goto="4">
         <span class="icon-wrap"></span>
-        <h3><strong>Online</strong> Users</h3>
+        <h3><strong>Game</strong> Instructions</h3>
       </a>
       <a class="next pt-trigger" data-animation="58" data-goto="3">
         <span class="icon-wrap"></span>
@@ -128,7 +109,9 @@
         <div class="side side-left">
           <div class="gameheader">
             <h2>Hometown Hero</h2>
-            <strong ng-show="my_id">{{my_id}}</strong>
+            <p class="peer-id-box" ng-show="my_id">
+              <strong>Your Peer ID: {{my_id}}</strong>
+            </p>
           </div>
           <div class="video-container">
             <canvas id="my-video-canvas"style="display:none"></canvas>
@@ -177,7 +160,9 @@
       <div class="side side-right">
         <div class="gameheader">
           <h2>Rude Rival</h2>
-          <strong ng-show="connected && !peerError">{{remotePeerId}}</strong>
+          <p class="peer-id-box" ng-show="connected && !peerError">
+            <strong>Rival Peer ID: {{remotePeerId}}</strong>
+          </p>
         </div>
         <div class="video-container">
           <canvas id="their-video-canvas"style="display:none"></canvas>
@@ -197,13 +182,27 @@
     </div>
 
     <div class="pt-page pt-page-3">
-        <div id="onlineUserGroup">
+
+        <div id="user-page-hide" ng-show="connected">
+          <p>You're already connected with someone. Need help getting there?</p>
+          <button class="special-btn btn-1 btn-1f pt-trigger" data-animation="60" data-goto="2"><i class="fa fa-video-camera"></i> Game Room</button>
+        </div>
+
+        <div id="onlineUserGroup" ng-show="!connected">
+          <button class="special-btn btn-1 btn-1f pt-trigger" data-animation="60" data-goto="2"><i class="fa fa-video-camera"></i> Game Room</button>
           <p>Online Users: {{onlineUsers}}</p>
           <ul ng-show="!connected && my_id && peerIDs.length > 1" id="onlinePeersList" class="list-group">
-            <li class="list-group-item" ng-repeat="peerID in peerIDs" ng-if="my_id!=peerID">
-              <div class="row">
-                <div class="col-xs-8">Peer ID: {{peerID}}</div>
-                <div class="col-xs-4"><button class="btn btn-primary" ng-click="callPeerHelper(peerID)" type="button"><i class="fa fa-phone"></i> Call Peer</button></div>
+            <li ng-repeat="peerID in peerIDs" ng-if="my_id!=peerID">
+              <div class="simform">
+                <div class="simform-inner">
+                  <div class="beforeInput">
+                    <input class="inputLeft" ng-model="peerID" disabled/>
+                  </div>
+
+                  <div class="control">
+                    <button ng-click="callPeerHelper(peerID)" type="button"><i class="fa fa-phone"></i></button>
+                  </div>
+                </div>
               </div>
             </li>
           </ul>
@@ -214,11 +213,39 @@
             <span class="icon-wrap"></span>
             <h3><strong>Go</strong> Home</h3>
           </a>
-          <a class="next pt-trigger" data-animation="58" data-goto="1">
+          <a class="next pt-trigger" data-animation="58" data-goto="4">
             <span class="icon-wrap"></span>
-            <h3><strong>Go</strong> Home</h3>
+            <h3><strong>Game</strong> Instructions</h3>
           </a>
         </nav>
+    </div>
+
+    <div class="pt-page pt-page-4">
+      <!-- Dashboard keyboard and music -->
+      <div id="gameInstructions">
+        <span><i class="fa fa-keyboard-o"></i> Keyboard Controls</span>
+
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-info"><i class="fa fa-arrow-circle-up"></i> UP: Rotates the tetronome</li>
+          <li class="list-group-item list-group-item-info"><i class="fa fa-arrow-circle-down"></i> DOWN: Moves the tetronome down</li>
+          <li class="list-group-item list-group-item-info"><i class="fa fa-arrow-circle-left"></i> LEFT: Moves the tetronome left</li>
+          <li class="list-group-item list-group-item-info"><i class="fa fa-arrow-circle-right"></i> RIGHT: Moves the tetronome right</li>
+          <li class="list-group-item list-group-item-info"><i class="fa fa-square-o"></i> SPACEBAR: Drops the tetronome</li>
+        </ul>
+      </div>
+
+      <button class="center-block special-btn btn-1 btn-1f pt-trigger" data-animation="60" data-goto="2"><i class="fa fa-video-camera"></i> Game Room</button>
+
+      <nav class="nav-fillpath">
+        <a class="prev pt-trigger" data-animation="59" data-goto="3">
+            <span class="icon-wrap"></span>
+            <h3><strong>Online</strong> Users</h3>
+        </a>
+        <a class="next pt-trigger" data-animation="58" data-goto="1">
+            <span class="icon-wrap"></span>
+            <h3><strong>Go</strong> Home</h3>
+        </a>
+      </nav>
     </div>
 
 </div>
@@ -260,7 +287,7 @@
 <!-- build:js({.tmp,app}) scripts/tetris.js -->
 <script type='text/javascript-lazy' src="scripts/vendor/stats.js"></script>
 <script type='text/javascript-lazy' src="scripts/tetris.js"></script>
-<script type='text/javascript-lazy' src="scripts/vendor/svgcheckbx.js"></script>
+<!-- <script type='text/javascript-lazy' src="scripts/vendor/svgcheckbx.js"></script> -->
 <script type='text/javascript-lazy' src="scripts/vendor/classie.js"></script>
 <script type='text/javascript-lazy' src="scripts/vendor/borderMenu.js"></script>
 

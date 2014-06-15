@@ -214,6 +214,7 @@
 @media screen and (max-width: 55.5em) {
   .bt-menu ul li {
     margin: 0 15px;
+    width: 10%;
   }
 
 /*  .bt-menu ul li a {
@@ -233,6 +234,7 @@
 
   .bt-menu ul li {
     margin: 0 2%;
+    width: 15%;
   }
 
   .bt-menu ul li:first-child, .bt-menu ul li:nth-child(3) {

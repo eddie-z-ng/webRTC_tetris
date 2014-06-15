@@ -24,11 +24,8 @@ html, body {
 body {
     // font-family: 'Audiowide', Helvetica Neue;
     font-family: 'Lato', Calibri, Arial, sans-serif;
-    // padding-top: 20px;
-    // padding-bottom: 20px;
     background-color: hsl(218, 53%, 55%);
-    // background-image:url('/images/gplaypattern.png')
-    // padding: 0px;
+    color: rgba(0, 0, 0, 0.4);
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -128,6 +125,11 @@ body {
   }
 }
 
+.center-block {
+  display: block;
+  margin: 0 auto;
+}
+
 #onlineUserGroup {
   p {
     text-align: center;
@@ -140,6 +142,12 @@ body {
     font-size: 2.5em;
     letter-spacing: 2px;
     color: rgba(83, 124, 92, 0.47);
+  }
+
+  &>button {
+    display: block;
+    margin: 0 auto;
+    margin-top: 3em;
   }
 }
 
@@ -157,27 +165,52 @@ body {
   top: 10px;
 }
 
-#gameDirections {
+.peer-id-box {
+  width: 80%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0.5em;
+  font-size: 1.2em;
+  margin-bottom: 1em;
+  text-align: center;
+  letter-spacing: 1px;
+  color: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(0, 0, 0, 0.4);
+}
+
+#gameInstructions {
+  padding-top: 2em;
+  text-align: center;
+  font-size: 2em;
+  color: rgba(255, 122, 0, 0.8);
+
   ul {
     list-style: none;
+    text-align: center;
+  }
+  li.list-group-item {
+    text-align: left;
+    color: rgba(255, 122, 0, 0.8);
+    background: rgba(255, 122, 0, 0.2);
+    border: none;
+    border-bottom: 5px solid rgba(255,200,1, 0.3);
   }
 }
 
 #onlinePeersList {
-  // overflow: scroll;
+  list-style: none;
 }
 
 .white-border {
     border: 2px solid white;
 }
 
-#step1 {
+#step1, .custom-alert {
   text-align: center;
-  p {
-    width: 50%;
-    left: 25%;
-    position: relative;
-  }
+  width: 70%;
+  left: 15%;
+  position: relative;
+  font-size: 1.2em;
 }
 
 #step1-error, #step2, #step3 {
@@ -189,18 +222,18 @@ body {
 
 .video-container {
   position: relative;
-  max-width: 600px;
+  max-width: 550px;
   margin: 0 auto;
 
-  &::before{
-    position: absolute;
-    top: -25px;
-    left: 35%;
-    width: 30%;
-    height: 2px;
-    background: #fff;
-    content: '';
-  }
+  // &::before{
+  //   position: absolute;
+  //   top: -25px;
+  //   left: 35%;
+  //   width: 30%;
+  //   height: 2px;
+  //   background: #fff;
+  //   content: '';
+  // }
 
   video {
     width: 96%;
@@ -300,10 +333,13 @@ video {
 
 $transparent-text-color: rgba(0,0,0,0.4);
 
+#theForm {
+  padding: 1em 0 0.5em 0;
+}
+
 .simform {
   position: relative;
   margin: 0 auto;
-  padding: 2em 0;
   max-width: 860px;
   width: 80%;
   text-align: center;
@@ -436,6 +472,32 @@ $mid-nav-color: #2dcb89;
 
 }
 
+// #gamePlayer {
+//   button {
+//     // background: $right-side-color;
+//     background: #0ac2d2;
+
+//     &:hover {
+//       background: #fff;
+//     }
+
+//     &:hover:after {
+//       // color: $right-side-color;
+//       color: #0ac2d2;
+//     }
+//   }
+// }
+
+#homeNavigator {
+  list-style: none;
+  text-align: center;
+  padding: 0;
+
+  li {
+    display: inline-block;
+  }
+}
+
 #musicPlayer {
   position: absolute;
   top: 15px;
@@ -455,15 +517,6 @@ $mid-nav-color: #2dcb89;
     }
   }
 
-  .bp-icon-play:after {
-    content: "\f04b";
-  }
-  .bp-icon-pause:after {
-    content: "\f04c";
-  }
-  .bp-icon-stop:after {
-    content: "\f04d";
-  }
 }
 
 #callPlayer {
@@ -485,21 +538,7 @@ $mid-nav-color: #2dcb89;
     }
   }
 
-  .bp-icon-home:after {
-    content: "\f015";
-  }
 
-  .bp-icon-endcall:after {
-    content: "\f011";
-  }
-
-  .bp-icon-startgame:after {
-    content: "\f144";
-  }
-
-  .bp-icon-callrandom:after {
-    content: "\f0c0";
-  }
 }
 
 #top-nav {
@@ -510,8 +549,63 @@ $mid-nav-color: #2dcb89;
   z-index: 101;
 }
 
+
+.bp-icon-gamevideo:after {
+  content: "\f03d";
+}
+
+.bp-icon-home:after {
+  content: "\f015";
+}
+
+.bp-icon-endcall:after {
+  content: "\f011";
+}
+
+// .bp-icon-startgame:after {
+//   content: "\f144";
+// }
+
+.bp-icon-callrandom:after {
+  content: "\f0c0";
+}
+
+.bp-icon-play:after {
+  content: "\f04b";
+}
+.bp-icon-pause:after {
+  content: "\f04c";
+}
+.bp-icon-stop:after {
+  content: "\f04d";
+}
+
+#main-badge {
+  text-transform: uppercase;
+  display: block;
+  margin: 0 auto;
+  width: 125px;
+  margin-bottom: 5px;
+  padding: 5px 5px;
+}
+
+#user-page-hide {
+  p {
+    font-size: 3em;
+    text-align: center;
+    padding: 3em 1em 0 1em;
+    color: rgba(0, 176, 96, 0.7);
+  }
+
+  button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+
 /* Animated Checkbox */
-@import '/styles/component.css';
+// @import '/styles/component.css';
 
 /* Animated Border */
 @import '/styles/animatedborder-style3.css';
