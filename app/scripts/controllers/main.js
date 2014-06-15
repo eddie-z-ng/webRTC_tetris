@@ -21,8 +21,10 @@ angular.module('gameRtcApp')
       $scope.streamReady = false;
       $scope.connected = false;
       $scope.gameCount = 0;
+      $scope.gameStart = false;
       $scope.playing = false;
       $scope.waiting = false;
+      $scope.otherWaiting = false;
 
       $scope.musicEnabled = (function() {
         if (window.tetrisMusic) {
@@ -52,7 +54,7 @@ angular.module('gameRtcApp')
           return false;
         }
       })();
-      console.log($scope.musicEnabled);
+      console.log("Music enabled: ", $scope.musicEnabled);
 
       $scope.allowMusic = false;
 
@@ -97,9 +99,7 @@ angular.module('gameRtcApp')
       $scope.play = function(originator) {
         $scope.gameWon = false;
         $scope.gameCount = 0;
-
         $scope.gameStartCount += 1;
-        $scope.waiting = true;
 
         if (originator) {
           var data = {};
@@ -107,6 +107,14 @@ angular.module('gameRtcApp')
 
           data = JSON.stringify(data);
           $scope.peerDataConnection.send(data);
+
+          $scope.waiting = true;
+          $scope.gameStart = true;
+
+        } else {
+          console.log('Otherwaiting is true');
+          $scope.otherWaiting = true;
+          $scope.$apply();
         }
 
         if ($scope.gameStartCount >= 2) {
@@ -124,6 +132,7 @@ angular.module('gameRtcApp')
               }
 
               $scope.waiting = false;
+              $scope.otherWaiting = false;
               window.playTetris();
 
               $scope.playing = true;
@@ -183,6 +192,7 @@ angular.module('gameRtcApp')
             window.lose(false);
 
             $scope.gameStartCount = 0;
+            $scope.gameStart = false;
             $scope.playing = false;
             $scope.gameWon = true;
 
@@ -234,6 +244,7 @@ angular.module('gameRtcApp')
             }
 
             $scope.gameStartCount = 0;
+            $scope.gameStart = false;
             $scope.playing = false;
             $scope.gameWon = false;
 
@@ -320,6 +331,7 @@ angular.module('gameRtcApp')
           $scope.connected = false;
           $scope.playing = false;
           $scope.waiting = false;
+          $scope.otherWaiting = false;
 
           $http.post('/endCall', { id: $scope.my_id, secret: mysecret }).success(function(res) {
               console.log(res);

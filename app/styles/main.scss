@@ -144,17 +144,17 @@ body {
 }
 
 
-#gamestatus {
+#top-nav-status {
   text-align: center;
   text-transform: uppercase;
 
   position: absolute;
-  z-index: 1800;
+  z-index: 101;
   margin: 0 auto;
 
   width: 30%;
   left: 35%;
-  bottom: 5%;
+  top: 10px;
 }
 
 #gameDirections {
@@ -189,13 +189,12 @@ body {
 
 .video-container {
   position: relative;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
-  // margin-top: 10%;
 
   &::before{
     position: absolute;
-    top: -5px;
+    top: -25px;
     left: 35%;
     width: 30%;
     height: 2px;
@@ -226,6 +225,9 @@ video {
 #upcoming, #their-upcoming {
   width: 100%;
   // height: 100%;
+  position: absolute;
+  top: 0;
+  left: 2.5%;
 }
 
 #my-overlay, #their-overlay {
@@ -296,6 +298,8 @@ video {
 
 }
 
+$transparent-text-color: rgba(0,0,0,0.4);
+
 .simform {
   position: relative;
   margin: 0 auto;
@@ -304,12 +308,13 @@ video {
   width: 80%;
   text-align: center;
   font-size: 2em;
+  color: $transparent-text-color;
 
   .simform-inner {
     position: relative;
   }
 
-  #inputPeer {
+  .beforeInput {
     position: relative;
 
      &:before {
@@ -325,13 +330,12 @@ video {
     }
   }
 
-  input[type="text"] {
+  .inputLeft {
     display: block;
     padding: 0.5em 1em 0.5em 0.7em;
     border: none;
     background: transparent;
-    color: rgba(0,0,0,0.8);
-    font-size: 1em;
+    font-size: 0.8em;
     line-height: 1;
     width: calc(100% - 2em);
     /* opacity: 0; */
@@ -346,16 +350,16 @@ video {
   button {
     position: absolute;
     right: 0;
-    bottom: 0.1em;
+    bottom: 0;
     display: block;
     padding: 0;
     width: 2em;
     height: 2em;
     border: none;
     background: none;
-    color: rgba(0,0,0,0.4);
+    color: $transparent-text-color;
     text-align: center;
-    // opacity: 0;
+
     z-index: 100;
     cursor: pointer;
     -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
@@ -366,7 +370,7 @@ video {
     outline: none;
 
     &:hover {
-      color: rgba(0,0,0,0.5);
+      color: rgba(0,0,0,0.7);
     }
   }
 
@@ -377,6 +381,133 @@ video {
     transition: width 0.4s ease-in-out;
   }
 
+}
+
+$left-side-color: #47a3da;
+$right-side-color: #fd6a62;
+$mid-nav-color: #2dcb89;
+
+.navplayer {
+  button {
+    display: inline-block;
+    position: relative;
+    text-align: left;
+    width: 2.5em;
+    height: 2.5em;
+    border-radius: 50%;
+    margin: 0 0.1em;
+    border: 3px solid #fff;
+
+    &:hover:before {
+      content: attr(data-info);
+      color: #fff;
+      position: absolute;
+      width: 600%;
+      top: 120%;
+      text-align: right;
+      right: 0;
+      pointer-events: none;
+    }
+
+  }
+
+  span {
+    display: none;
+  }
+
+  .bp-icon:after {
+    font-family: FontAwesome;
+
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    text-align: center;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    line-height: 2;
+    text-indent: 0;
+  }
+
+}
+
+#musicPlayer {
+  position: absolute;
+  top: 15px;
+  left: 8.5%;
+
+  button {
+    // background: $right-side-color;
+    background: inherit;
+
+    &:hover {
+      background: #fff;
+    }
+
+    &:hover:after {
+      // color: $right-side-color;
+      color: $left-side-color;
+    }
+  }
+
+  .bp-icon-play:after {
+    content: "\f04b";
+  }
+  .bp-icon-pause:after {
+    content: "\f04c";
+  }
+  .bp-icon-stop:after {
+    content: "\f04d";
+  }
+}
+
+#callPlayer {
+  position: absolute;
+  top: 15px;
+  right: 8.5%;
+
+  button {
+    // background: $mid-nav-color;
+    background: inherit;
+
+    &:hover {
+      background: #fff;
+    }
+
+    &:hover:after {
+      // color: $mid-nav-color;
+      color: $right-side-color;
+    }
+  }
+
+  .bp-icon-home:after {
+    content: "\f015";
+  }
+
+  .bp-icon-endcall:after {
+    content: "\f011";
+  }
+
+  .bp-icon-startgame:after {
+    content: "\f144";
+  }
+
+  .bp-icon-callrandom:after {
+    content: "\f0c0";
+  }
+}
+
+#top-nav {
+  position: relative;
+  width: 100%;
+  height: 70px;
+  background-color: rgba(74, 17, 174, 0.5);
+  z-index: 101;
 }
 
 /* Animated Checkbox */
@@ -394,3 +525,7 @@ video {
 
 /* Animated Navigation Links */
 @import '/styles/animatednav-style.css';
+
+/* Animated Button */
+/** Start Game button **/
+@import '/styles/animatedbuttons.css';

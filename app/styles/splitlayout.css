@@ -26,6 +26,8 @@ body {
   height: 100%;
   text-align: center;
   -webkit-backface-visibility: hidden;
+
+  padding-top: 60px;
 }
 
 .open-left .side,
