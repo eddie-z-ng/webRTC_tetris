@@ -608,18 +608,18 @@ $mid-nav-color: #2dcb89;
 // @import '/styles/component.css';
 
 /* Animated Border */
-@import '/styles/animatedborder-style3.css';
+@import 'animatedborder-style';
 
 /* Page Transitions */
-@import '/styles/transition-animation.css';
-@import '/styles/single-page-transition.css';
+@import 'transition-animation';
+@import 'single-page-transition';
 
 /* Split Layout */
-@import '/styles/splitlayout.css';
+@import 'splitlayout';
 
 /* Animated Navigation Links */
-@import '/styles/animatednav-style.css';
+@import 'animatednav-style';
 
 /* Animated Button */
 /** Start Game button **/
-@import '/styles/animatedbuttons.css';
+@import 'animatedbuttons';

@@ -1,4 +1,3 @@
-<!-- <div ng-include="'partials/navbar'"></div> -->
 <div id="mainView" class="pt-wrapper">
     <!--All Pages-->
     <div class="pt-page pt-page-1">
@@ -255,46 +254,35 @@
 </div>
 
 
-  <nav id="bt-menu" class="bt-menu">
-    <a href="#" class="bt-menu-trigger"><span>Menu</span></a>
-    <ul>
+<nav id="bt-menu" class="bt-menu">
+  <a href="#" class="bt-menu-trigger"><span>Menu</span></a>
+  <ul>
 
-        <li><a ng-href="http://eddieng.org" class="bt-icon icon-user-outline">About</a></li>
-        <li><a ng-href="https://github.com/wardsng" class="bt-icon icon-sun"><i class="fa fa-github"></i>Github</a></li>
+      <li><a ng-href="http://eddieng.org" class="bt-icon icon-user-outline">About</a></li>
+      <li><a ng-href="https://github.com/wardsng" class="bt-icon icon-sun"><i class="fa fa-github"></i>Github</a></li>
 <!--         <li><a href="#" class="bt-icon icon-windows">Work</a></li> -->
 <!--         <li><a href="#" class="bt-icon icon-star">Clients</a></li>
-        <li><a href="#" class="bt-icon icon-bubble">Contact</a></li> -->
-    </ul>
-  </nav>
-
-
-<!-- <img id="image" src="/images/github.png"> -->
-<!-- <script type='text/javascript-lazy'>
-  function drawRectangle(canvasInput, overlayContext, event) {
-    overlayContext.clearRect(0,0,canvasInput.width, canvasInput.height);
-    // once we have stable tracking, draw rectangle
-    if (event.detection == "CS") {
-      overlayContext.translate(event.x, event.y)
-      overlayContext.rotate(event.angle-(Math.PI/2));
-      overlayContext.strokeStyle = event.style || "#BADA55";
-      overlayContext.strokeRect((-(event.width/2)) >> 0, (-(event.height/2)) >> 0, event.width, event.height/1.2);
-      overlayContext.rotate((Math.PI/2)-event.angle);
-      overlayContext.translate(-event.x, -event.y);
-    }
-  }
-</script> -->
+      <li><a href="#" class="bt-icon icon-bubble">Contact</a></li> -->
+  </ul>
+</nav>
 
 <!-- build:js({.tmp,app}) scripts/tetris.js -->
-<script type='text/javascript-lazy' src="scripts/vendor/stats.js"></script>
-<script type='text/javascript-lazy' src="scripts/tetris.js"></script>
-<!-- <script type='text/javascript-lazy' src="scripts/vendor/svgcheckbx.js"></script> -->
-<script type='text/javascript-lazy' src="scripts/vendor/classie.js"></script>
-<script type='text/javascript-lazy' src="scripts/vendor/borderMenu.js"></script>
 
-<scrupt type='text/javascript-lazy' src="scripts/vendor/jquery-1.9.1.min.js"></scrupt>
-<script type='text/javascript-lazy' src="scripts/vendor/transition.js"></script>
+<script src="scripts/vendor/classie.js"></script>
+<script src="scripts/vendor/borderMenu.js"></script>
+
+<script src="scripts/vendor/jquery-1.9.1.min.js"></script>
+<script src="scripts/vendor/transition.js"></script>
+
+<script src="scripts/tetris.js"></script>
 <!-- endbuild -->
 
+<!--   <script type='text/javascript-lazy' src="scripts/vendor/stats.js"></script>
+  <script type='text/javascript-lazy' src="scripts/tetris.js"></script>
 
+  <script type='text/javascript-lazy' src="scripts/vendor/classie.js"></script>
+  <script type='text/javascript-lazy' src="scripts/vendor/borderMenu.js"></script>
 
+  <script type='text/javascript-lazy' src="scripts/vendor/jquery-1.9.1.min.js"></script>
+  <script type='text/javascript-lazy' src="scripts/vendor/transition.js"></script> -->
 

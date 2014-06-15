@@ -8,8 +8,8 @@ angular.module('gameRtcApp', [
   'gameRtcApp.factories',
   'gameRtcApp.directives'
 ])
-  .config(['$routeProvider', '$locationProvider', '$httpProvider',
-    function ($routeProvider, $locationProvider, $httpProvider) {
+  .config(['$routeProvider', '$locationProvider',
+    function ($routeProvider, $locationProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'partials/main',
@@ -20,11 +20,6 @@ angular.module('gameRtcApp', [
       });
 
     $locationProvider.html5Mode(true);
-
-    // allow cross-domain ajax
-    $httpProvider.defaults.useXDomain = true;
-    delete $httpProvider.defaults.headers.common['X-Requested-With'];
-
   }]);
 
 angular.module('gameRtcApp.factories', []);
