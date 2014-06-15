@@ -357,6 +357,11 @@ module.exports = function (grunt) {
           src: ['generated/*']
         }, {
           expand: true,
+          cwd: '<%= yeoman.app %>/sounds',
+          dest: '<%= yeoman.dist %>/public/sounds',
+          src: ['**.*']
+        }, {
+          expand: true,
           dest: '<%= yeoman.dist %>',
           src: [
             'package.json',
