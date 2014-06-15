@@ -125,11 +125,6 @@ body {
   }
 }
 
-.center-block {
-  display: block;
-  margin: 0 auto;
-}
-
 #onlineUserGroup {
   p {
     text-align: center;
@@ -195,6 +190,11 @@ body {
     border: none;
     border-bottom: 5px solid rgba(255,200,1, 0.3);
   }
+}
+
+#keyboardButton {
+  display: block;
+  margin: 0 auto;
 }
 
 #onlinePeersList {
@@ -603,9 +603,6 @@ $mid-nav-color: #2dcb89;
   }
 }
 
-
-/* Animated Checkbox */
-// @import '/styles/component.css';
 
 /* Animated Border */
 @import 'animatedborder-style';

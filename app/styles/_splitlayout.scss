@@ -352,95 +352,99 @@ body {
   transform: translateX(0%);
 }
 
-/* Media Queries */
-@media screen and (max-width: 83em) {
-  .intro-content { font-size: 60%; }
+// /* Media Queries */
+// @media screen and (max-width: 83em) {
+//   .intro-content { font-size: 60%; }
+// }
+
+// @media screen and (max-width: 58em) {
+//   body { font-size: 90%; }
+// }
+
+// @media screen and (max-width: 49.4375em) {
+//   .open-right .side-right {
+//     -webkit-transform: translateX(-175%);
+//     transform: translateX(-175%);
+//   }
+
+//   .open-right .side-left {
+//     -webkit-transform: translateX(-100%);
+//     transform: translateX(-100%);
+//   }
+
+//   .open-left .side-right {
+//     -webkit-transform: translateX(100%);
+//     transform: translateX(100%);
+//   }
+
+//   .open-left .side-left {
+//     -webkit-transform: translateX(175%);
+//     transform: translateX(175%);
+//   }
+
+//   .page {
+//     width: 100%;
+//   }
+
+//   .page-right {
+//     left: 0;
+//     padding-left: 15%;
+//   }
+
+//   .page-left {
+//     padding-right: 15%;
+//   }
+
+//   .intro-content {
+//     width: 100%;
+//   }
+
+//   .open-right .side-right .intro-content {
+//     top: 100%;
+//     -webkit-transform: translateY(-150px) translateX(-12.5%) scale(0.5);
+//     transform: translateY(-150px) translateX(-12.5%) scale(0.5);
+//   }
+
+//   .open-left .side-left .intro-content {
+//     top: 100%;
+//     -webkit-transform: translateY(-150px) translateX(-87.5%) scale(0.5);
+//     transform: translateY(-150px) translateX(-87.5%) scale(0.5);
+//   }
+
+//   .open-right .intro-content h1,
+//   .open-left .intro-content h1 {
+//     opacity: 0;
+//   }
+
+//   .back-left {
+//     left: 6.25%;
+//   }
+
+//   .back-right {
+//     right: 6.25%;
+//   }
+// }
+
+// @media screen and (max-width: 42.5em) {
+//   body { font-size: 99%; }
+//   // .intro-content { font-size: 50%; }
+// }
+
+// @media screen and (max-height: 41.125em) {
+//   .intro-content {
+//     -webkit-transform: translateY(-25%) translateX(-50%);
+//     transform: translateY(-25%) translateX(-50%);
+//   }
+// }
+
+@media screen and (max-width: 540px) {
+  body { font-size: 99% };
 }
 
-@media screen and (max-width: 58em) {
-  body { font-size: 90%; }
-}
+// @media screen and (max-width: 39.375em) {
+//   .intro-content .profile { -webkit-transform: scale(0.5); transform: scale(0.5); }
+// }
 
-@media screen and (max-width: 49.4375em) {
-  .open-right .side-right {
-    -webkit-transform: translateX(-175%);
-    transform: translateX(-175%);
-  }
-
-  .open-right .side-left {
-    -webkit-transform: translateX(-100%);
-    transform: translateX(-100%);
-  }
-
-  .open-left .side-right {
-    -webkit-transform: translateX(100%);
-    transform: translateX(100%);
-  }
-
-  .open-left .side-left {
-    -webkit-transform: translateX(175%);
-    transform: translateX(175%);
-  }
-
-  .page {
-    width: 100%;
-  }
-
-  .page-right {
-    left: 0;
-    padding-left: 15%;
-  }
-
-  .page-left {
-    padding-right: 15%;
-  }
-
-  .intro-content {
-    width: 100%;
-  }
-
-  .open-right .side-right .intro-content {
-    top: 100%;
-    -webkit-transform: translateY(-150px) translateX(-12.5%) scale(0.5);
-    transform: translateY(-150px) translateX(-12.5%) scale(0.5);
-  }
-
-  .open-left .side-left .intro-content {
-    top: 100%;
-    -webkit-transform: translateY(-150px) translateX(-87.5%) scale(0.5);
-    transform: translateY(-150px) translateX(-87.5%) scale(0.5);
-  }
-
-  .open-right .intro-content h1,
-  .open-left .intro-content h1 {
-    opacity: 0;
-  }
-
-  .back-left {
-    left: 6.25%;
-  }
-
-  .back-right {
-    right: 6.25%;
-  }
-}
-
-@media screen and (max-width: 42.5em) {
-  body { font-size: 80%; }
-  .intro-content { font-size: 50%; }
-}
-
-@media screen and (max-height: 41.125em) {
-  .intro-content {
-    -webkit-transform: translateY(-25%) translateX(-50%);
-    transform: translateY(-25%) translateX(-50%);
-  }
-}
-
-@media screen and (max-width: 39.375em) {
-  .intro-content .profile { -webkit-transform: scale(0.5); transform: scale(0.5); }
-}
-
-@media screen and (max-width: 320px) {
-  body { font-size: 70%; }
-}
+// @media screen and (max-width: 320px) {
+//   body { font-size: 70%; }
+// }
