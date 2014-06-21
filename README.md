@@ -19,7 +19,6 @@ While screenshots are nice, I recommend playing around the web-app itself for so
 
 ###Game Room
 ![Gameroom](/screenshots/game.png)
-![Gameroom2](/screenshots/game2.png)
 
 ###Online Users
 ![OnlineUsers](/screenshots/onlineusers.png)
