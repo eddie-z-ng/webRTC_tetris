@@ -1,13 +1,12 @@
 Webtris
 =============
-A web-app that allows two-player roulette Tetris. The app uses WebRTC to to allow video chat calls and connections directly within the browser.
-
-Pardon the mess!
+A web-app that allows two-player roulette Tetris. The app uses WebRTC to allow video chat calls and connections directly within the browser.
 
 See it at [webtris](http://web-tris.com).
 
 Please note that this currently works only in WebRTC capable browsers (e.g. Chrome, Opera, Firefox).
 
+Pardon the mess!
 
 Screenshots
 --------
