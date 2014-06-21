@@ -106,7 +106,7 @@ angular.module('gameRtcApp.factories')
       // ]}});
 
       // navigator.getUserMedia({audio: true, video: true}, function(stream) {
-      navigator.getUserMedia({audio: false, video: true}, function(stream) {
+      navigator.getUserMedia({audio: true, video: true}, function(stream) {
         var peerLocalStream = stream;
         var blobURL = $sce.trustAsResourceUrl(URL.createObjectURL(stream));
         var peer = new Peer({ host: $location.host(), path: '/', port: 3000, debug: 3, config: {'iceServers': [ { url: stunURL } // Pass in optional STUN and TURN server for maximum network compatibility
