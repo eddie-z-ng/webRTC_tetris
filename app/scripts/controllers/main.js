@@ -90,7 +90,6 @@ angular.module('gameRtcApp')
 
       // Socket listeners
       // ================
-
       socket.on('peer_pool', function(data) {
         $scope.onlineUsers = data.length;
         $scope.peerIDs = data;
@@ -151,13 +150,13 @@ angular.module('gameRtcApp')
 
       var lastProcessed = new Date();
       function handleReceiptPeerData (data) {
-        if (data.drawEvent) {
-          // draw the received rectangle event
-          var theirCanvasOverlay = document.getElementById('their-overlay');
-          var theirOverlayContext = theirCanvasOverlay.getContext('2d');
+        // if (data.drawEvent) {
+        //   // draw the received rectangle event
+        //   var theirCanvasOverlay = document.getElementById('their-overlay');
+        //   var theirOverlayContext = theirCanvasOverlay.getContext('2d');
 
-          window.drawRectangle(theirCanvasOverlay, theirOverlayContext, data);
-        } else {
+        //   window.drawRectangle(theirCanvasOverlay, theirOverlayContext, data);
+        // } else {
 
           data = JSON.parse(data);
           if (data.boardData) {
@@ -206,64 +205,61 @@ angular.module('gameRtcApp')
             $scope.$apply();
           }
 
-        }
+        // }
       }
 
-      var attached = false;
+      function attachLocalListeners() {
+        // These are event listeners for our own events from Tetris
+        // If we're connected to an opponent, we need to send these events over
+
+        // Listen for boardChange event
+        document.addEventListener('boardChange', function(event) {
+          if($scope.connected) {
+            if (event.boardRepresentation) {
+              var data = event.boardRepresentation;
+              data.boardData = true;
+
+              data = JSON.stringify(data);
+              $scope.peerDataConnection.send(data);
+            }
+          }
+        });
+
+        // Listen for gameOver event -- we lost,
+        document.addEventListener('gameOver', function(event) {
+          if ($scope.connected) {
+            var data = {};
+            data.gameOver = true;
+
+            data = JSON.stringify(data);
+            $scope.peerDataConnection.send(data);
+          }
+
+          $scope.gameStartCount = 0;
+          $scope.gameStart = false;
+          $scope.playing = false;
+          $scope.gameWon = false;
+
+          $scope.$apply();
+        });
+
+        // Listen for garbageRow event -- send garbage row to opponent
+        document.addEventListener('garbageRow', function(event) {
+          if ($scope.connected) {
+            var data = { garbageRowData: event.garbageRows};
+
+            data = JSON.stringify(data);
+            $scope.peerDataConnection.send(data);
+          }
+        });
+
+      }
 
       function attachReceiptListeners() {
         // Reset if currently playing
         if ($scope.playing) {
           window.lose(false);
         }
-
-        // These are event listeners for our own events from Tetris
-        // No need to attach these listeners again after initial connection
-        if (!attached) {
-          // Connected to peer -- listen for boardChange event
-          document.addEventListener('boardChange', function(event) {
-            if($scope.connected) {
-              if (event.boardRepresentation) {
-                var data = event.boardRepresentation;
-                data.boardData = true;
-
-                data = JSON.stringify(data);
-                $scope.peerDataConnection.send(data);
-              }
-            }
-          });
-
-          // Connected to peer -- listen for gameOver event
-          document.addEventListener('gameOver', function(event) {
-            if ($scope.connected) {
-              var data = {};
-              data.gameOver = true;
-
-              data = JSON.stringify(data);
-              $scope.peerDataConnection.send(data);
-            }
-
-            $scope.gameStartCount = 0;
-            $scope.gameStart = false;
-            $scope.playing = false;
-            $scope.gameWon = false;
-
-            $scope.$apply();
-          });
-
-          // Connected to peer -- listen for garbageRow event
-          document.addEventListener('garbageRow', function(event) {
-            if ($scope.connected) {
-              var data = { garbageRowData: event.garbageRows};
-
-              data = JSON.stringify(data);
-              $scope.peerDataConnection.send(data);
-            }
-          });
-
-          attached = true;
-        }
-
         // Set up receipt of data (this is the original peer receiver)
         $scope.peerDataConnection.on('data', handleReceiptPeerData);
       }
@@ -279,6 +275,7 @@ angular.module('gameRtcApp')
 
         $scope.videoURL = peerObject.videoURL;
 
+        // Confirm to the server that my peerID is ready to be connected to
         $http.post('/confirmID', {
           id: $scope.my_id,
           secret: mysecret
@@ -289,17 +286,20 @@ angular.module('gameRtcApp')
           console.log('Failed ', data, status);
 
           $scope.peerError = data.error;
-          // $scope.$apply();
         });
 
+        // Setup local Tetris game listeners so that we can send our events
+        attachLocalListeners();
+
+
         $rootScope.$on('callFailed', function(event, error) {
-          console.log("Call failed: ", error, error.message);
+          console.log('Call failed: ', error, error.message);
           $scope.peerError = error.message;
           $scope.$apply();
         });
 
-        $rootScope.$on('connectionChange', function (event, connection) {
-          console.log('Connection change event!', connection);
+        $rootScope.$on('peerConnectionReceived', function (event, connection) {
+          console.log('Peer DataConnection received', connection);
           $scope.peerDataConnection = connection;
 
           attachReceiptListeners();
@@ -311,15 +311,15 @@ angular.module('gameRtcApp')
           $scope.$apply();
         });
 
-        $rootScope.$on('peerStream', function(event, objURL) {
-          console.log('Peer video stream received!', objURL);
+        $rootScope.$on('peerStreamReceived', function(event, objURL) {
+          console.log('Peer MediaStream received!', objURL);
           $scope.peerURL = objURL;
 
           gameBtn.click();
           $scope.$apply();
         });
 
-        $rootScope.$on('callEnd', function(event, callObject) {
+        $rootScope.$on('callEnded', function(event, callObject) {
           console.log('Peer Disconnected!', callObject);
 
           if ($scope.playing) {
@@ -339,7 +339,7 @@ angular.module('gameRtcApp')
 
               $scope.peerError = null;
           }).error(function(data, status) {
-              console.log("Failed ", data, status);
+              console.log('Failed ', data, status);
 
               $scope.peerError = data.error;
           });

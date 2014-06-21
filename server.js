@@ -27,7 +27,7 @@ var server = app.listen(config.port, config.ip, function () {
   var peerServer = new PeerServer({port:3000, path:'/'});
 
   peerServer.on('connection', function(id) {
-   console.log('++Connection from ' + id);
+   console.log(new Date(), '++Connection from ', id);
 
    peerPool.addPeerToPool(id);
 
@@ -36,7 +36,7 @@ var server = app.listen(config.port, config.ip, function () {
   });
 
   peerServer.on('disconnect', function(id) {
-   console.log('--Disconnect of ' + id);
+   console.log(new Date(), '--Disconnect of ', id);
 
    peerPool.removePeerFromPool(id);
 
